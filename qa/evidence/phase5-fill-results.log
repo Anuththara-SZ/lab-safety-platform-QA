@@ -1,0 +1,17 @@
+2026-11-25T14:58:22+05:30
+367 checks read: 338 passed, 29 failed
+┌─────────┬──────┬──────┬──────────┐
+│ (index) │ Pass │ Fail │ Recorded │
+├─────────┼──────┼──────┼──────────┤
+│ TC      │ 32   │ 13   │          │
+│ EP      │ 33   │ 2    │ 7        │
+│ BVA     │ 31   │ 7    │ 2        │
+│ DT1     │ 27   │ 2    │          │
+│ DT2     │ 6    │      │ 2        │
+│ WB-CR   │ 10   │      │ 2        │
+│ WB-SI   │ 14   │ 1    │ 1        │
+└─────────┴──────┴──────┴──────────┘
+Changed cells: 
+EP-02 Actual Result: "Current behaviour recorded, as in the code (README silent)" -> "As expected (1 check)"
+EP-02 Status: "Recorded" -> "Pass"
+Rows without a test in the logs: none

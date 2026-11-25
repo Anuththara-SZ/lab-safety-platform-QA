@@ -1,5 +1,6 @@
 // Fills the Actual Result and Status columns of the design documents from the saved test logs.
 // Run from the qa folder:  node 02-stlc-test-cases/fill-results.js
+// It can be run again: it writes the same columns again and prints every cell that changed.
 // A row is filled only when a test with its ID is found in a log. Rows without a test are listed at the end.
 const fs = require('fs');
 const path = require('path');
@@ -13,8 +14,8 @@ const addJest = (file) => {
     if (m) tests.push({ ok: m[1] === '√' || m[1] === '✓', name: m[2], log: path.basename(file) });
   }
 };
-addJest('evidence/phase2-rerun-main.log');
-addJest('evidence/phase2-rerun-known-defects.log');
+addJest('evidence/phase5-rerun-main.log');
+addJest('evidence/phase5-rerun-known-defects.log');
 for (const line of read('evidence/phase2-rerun-ui.log').split(/\r?\n/)) {
   const m = line.match(/\[ui-test\]\s+([✔✖])\s+(.*?)\s+\([\d.]+ms\)/);
   if (m) tests.push({ ok: m[1] === '✔', name: m[2], log: 'phase2-rerun-ui.log' });
@@ -55,6 +56,8 @@ const find = (id) => {
 };
 
 const missing = [];
+const changed = [];
+const split = (line) => line.split(/(?<!\\)\|/);
 const stats = {};
 const result = (id) => {
   const hit = find(id);
@@ -64,7 +67,8 @@ const result = (id) => {
     if (ACTUAL[id] === undefined) throw new Error('no actual text for failing ' + id);
     return { actual: ACTUAL[id], status: 'Fail', bad, hit };
   }
-  const rec = hit.every((t) => /characterisation/.test(t.name));
+  // EP-02 is not "Recorded": its expected result (201) is defined, only the lower case of the email is recorded.
+  const rec = hit.every((t) => /characterisation, README silent/.test(t.name));
   return {
     actual: rec ? 'Current behaviour recorded, as in the code (README silent)' : `As expected (${hit.length} check${hit.length > 1 ? 's' : ''})`,
     status: rec ? 'Recorded' : 'Pass',
@@ -74,9 +78,18 @@ const result = (id) => {
 };
 
 const fill = (file, note) => {
+  let cols = {};
   let out = read(file).split(/\r?\n/).map((line) => {
+    if (!line.startsWith('|')) cols = {}; // the table has ended, its columns must not be used for the next table
+    if (/^\| ID \|/.test(line)) cols = Object.fromEntries(split(line).map((h, i) => [h.trim(), i]));
     const m = line.match(/^\| (TC-[A-Z]+-\d+|EP-\d+|BVA-\d+|WB-(?:CR|SI)-\d+|DT[12]-\d+) \|/);
-    if (!m || !line.includes('| Not executed |')) return line;
+    if (!m || !cols.Status) return line;
+    const set = (id, col, text) => {
+      const old = cells[cols[col]].trim();
+      if (old !== text) changed.push(`${id} ${col}: "${old}" -> "${text}"`);
+      cells[cols[col]] = ` ${text} `;
+    };
+    const cells = split(line);
     const id = m[1];
     const r = result(id);
     if (!r) { missing.push(id); return line; }
@@ -86,16 +99,19 @@ const fill = (file, note) => {
     if (id.startsWith('DT1-')) {
       const passed = r.hit.length - r.bad.length;
       const cell = r.bad.length ? `Fail (${passed} of ${r.hit.length} cells pass): Insp-N got 200 (BUG-003)` : `Pass (${r.hit.length} cells)`;
-      return line.replace('| Not executed |', () => `| ${cell} |`);
+      set(id, 'Status', cell);
+      return cells.join('|');
     }
-    return line.replace('| Not executed | Not executed |', () => `| ${r.actual} | ${r.status} |`);
+    set(id, 'Actual Result', r.actual);
+    set(id, 'Status', r.status);
+    return cells.join('|');
   }).join('\n');
-  out = out.replace('Status of all cases: **Not executed**', () => `Status: filled on 2026-11-25. ${note}`);
+  out = out.replace(/^Status(?: of all cases: \*\*Not executed\*\*|: filled on .*)$/m, () => `Status: filled on 2026-11-25. ${note}`);
   fs.writeFileSync(path.join(qa, file), out);
 };
 
 const note =
-  'Source: `qa/evidence/phase2-rerun-main.log`, `phase2-rerun-known-defects.log` and `phase2-rerun-ui.log`, filled in by `qa/02-stlc-test-cases/fill-results.js`. ' +
+  'Source: `qa/evidence/phase5-rerun-main.log`, `phase5-rerun-known-defects.log` and `phase2-rerun-ui.log`, filled in by `qa/02-stlc-test-cases/fill-results.js`. ' +
   '"Recorded" means the README does not define the case and the test only records what the code does today.';
 fill('02-stlc-test-cases/test-cases.md', note);
 fill('03-black-box/equivalence-partitioning.md', note);
@@ -105,4 +121,5 @@ fill('04-white-box/coverage-test-design.md', note);
 
 console.log(`${tests.length} checks read: ${tests.filter((t) => t.ok).length} passed, ${tests.filter((t) => !t.ok).length} failed`);
 console.table(stats);
+console.log('Changed cells:', changed.length ? '\n' + changed.join('\n') : 'none');
 console.log('Rows without a test in the logs:', missing.length ? missing.join(', ') : 'none');

@@ -63,7 +63,7 @@ Real results of failing tests, but not among the six.
 | O-05 | Unknown response id is ignored silently on submit | Reasonable expectation | TC-INS-07 (1) | All real items are still answered and scored, the extra entry has no effect |
 | O-07 | A date in the past is accepted | Reasonable expectation | TC-INS-03, BVA-29 (2) | Entering a past visit later may be wanted, the README is silent |
 | O-08 | Malformed JSON gives 500 | Reasonable expectation | TC-AUTH-07 (1) | Only the status code is wrong, like BUG-005 but with another cause (`errorHandler.js:7`) |
-| O-11 | Stack trace in the error body when NODE_ENV is not set | Documented requirement (README line 138), but line 157 promises it only for production | TC-LAB-07b (1) | Depends on the setup. With NODE_ENV=production there is no stack (TC-LAB-07a passes) |
+| O-11 | Stack trace in the error body when NODE_ENV is not set | Reasonable expectation (README line 157 forbids it only in production, line 138 gives only the general error format) | TC-LAB-07b (1) | Depends on the setup. With NODE_ENV=production there is no stack (TC-LAB-07a passes) |
 | O-12 | A template used by a scheduled inspection can be deleted | Reasonable expectation | TC-TPL-04.1, 04.2 (2) | The inspection keeps its own copy of the items (README line 73, TC-TPL-04.3 passes) |
 | O-13 | Editing a resolved incident changes the resolved date | Reasonable expectation | TC-INC-05 (1) | The README does not say what the date means after an edit, owner must decide |
 | O-15 | Dashboard shows a technician the incidents of other people | Reasonable expectation | DASH-06 (1) | All roles may see the dashboard (README line 32) and its content is not defined, owner must decide |

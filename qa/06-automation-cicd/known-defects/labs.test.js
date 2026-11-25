@@ -11,7 +11,7 @@ test('TC-LAB-04 [reasonable expectation] search sent as an array must not crash 
 });
 
 // README section 4: errors are { "message": "..." }. README section 5 promises "no stack traces" only for production.
-test('TC-LAB-07b [documented requirement, README s.4 line 138; s.5 line 157 is narrower] NODE_ENV not set: error body has only a message', async () => {
+test('TC-LAB-07b [reasonable expectation; README s.5 line 157 forbids it only in production] NODE_ENV not set: error body has only a message', async () => {
   const old = process.env.NODE_ENV;
   delete process.env.NODE_ENV; // the error handler reads it for every request
   try {

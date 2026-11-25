@@ -18,7 +18,7 @@ Measured on 2026-11-25. Log names are files in `qa/evidence/`. The values before
 
 **Notes**
 - Coverage is for the backend without `seed.js` and `server.js`. The frontend has no unit tests, so it has no coverage value.
-- The 335 passing checks include 12 that only record what the code does today, because the README is silent. Two of them (all N/A, unknown item id) record behaviour that our known-defect checks say is wrong.
+- The 335 passing checks include 11 that only record what the code does today, because the README is silent. Two of them (all N/A, unknown item id) record behaviour that our known-defect checks say is wrong.
 - High coverage does not mean no bugs. `calculateResult()` has 100% branch coverage and still has BUG-002.
 
 ## 2. Test case results
@@ -27,7 +27,7 @@ Measured on 2026-11-25. Log names are files in `qa/evidence/`. The values before
 |---|---|---|---|
 | Test cases (task 3.2) | 32 | 13 | 45 |
 
-Pass rate: 32 / 45 = **71.1%**. Evidence: `phase4-fill-results.log`.
+Pass rate: 32 / 45 = **71.1%**. Evidence: `phase5-fill-results.log`.
 
 ## 3. Where coverage is missing
 

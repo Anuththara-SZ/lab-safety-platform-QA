@@ -1,8 +1,8 @@
 # Task 3.2: Test Cases
 
 Total: **45** test cases. **32 pass, 13 fail** (run on 2026-11-25). A case fails when at least one of its checks fails.
-Source of the Actual Result and Status columns: `qa/evidence/phase2-rerun-main.log`, `phase2-rerun-known-defects.log` and `phase2-rerun-ui.log`,
-filled in by `fill-results.js` (output: `qa/evidence/phase4-fill-results.log`). The failed checks are explained in `qa/08-defects`.
+Source of the Actual Result and Status columns: `qa/evidence/phase5-rerun-main.log`, `phase5-rerun-known-defects.log` and `phase2-rerun-ui.log`,
+filled in by `fill-results.js` (output: `qa/evidence/phase5-fill-results.log`). The failed checks are explained in `qa/08-defects`.
 The API cases were run as automated tests with the same requests; they were not typed by hand. TC-USR-04 passes as designed. An extra
 variation of it (own id in capital letters) fails and belongs to BUG-004.
 
@@ -99,7 +99,7 @@ curl.exe -i -X PUT "http://localhost:5000/api/inspections/$ID/submit" -H "Author
 | TC-LAB-04 | Search sent as an array must not crash the API | SEED | TECH `GET /api/labs?search[]=x` (with curl use `-g`) | 400, or 200 with the value treated as text. Never 500. [Reasonable expectation] | 500 "req.query.search.replace is not a function" (BUG-005) | Fail |
 | TC-LAB-05 | Invalid and unknown lab ids | SEED | ADMIN:<br>1. `GET /api/labs/abc`<br>2. `PUT /api/labs/abc` `{"name":"X","code":"X-1","building":"B"}`<br>3. `DELETE /api/labs/abc`<br>4. `GET /api/labs/000000000000000000000000` | 1, 2, 3: 400, not 500. 4: 404. [README s.4 codes; reasonable expectation] | As expected (4 checks) | Pass |
 | TC-LAB-06 | Deleting a lab with linked records leaves no orphans | SEED+ | ADMIN:<br>1. `DELETE /api/labs/<HV01_ID>`<br>2. `GET /api/labs/<HV01_ID>`<br>3. `GET /api/inspections?lab=<HV01_ID>`<br>4. `DELETE /api/labs/<TMP99_ID>`<br>5. `GET /api/labs/<TMP99_ID>` | 1: 409 with a reason. 2: 200, lab still there. 3: inspections still listed with lab data. 4: 200. 5: 404. [README silent on linked records; reasonable expectation] | As expected (2 checks) | Pass |
-| TC-LAB-07 | Error body does not show a stack trace | SEED | a. Start the backend with `NODE_ENV=production`. ADMIN `GET /api/labs/000000000000000000000000`<br>b. Start it as in README s.3 (`NODE_ENV` not set). Repeat the request | 404 both times. Body has only `message` and no `stack`. [a: README s.5. b: README s.4 error format `{ "message": "..." }`; reasonable expectation] | b: body also has `stack` (observation O-11). a as expected | Fail |
+| TC-LAB-07 | Error body does not show a stack trace | SEED | a. Start the backend with `NODE_ENV=production`. ADMIN `GET /api/labs/000000000000000000000000`<br>b. Start it as in README s.3 (`NODE_ENV` not set). Repeat the request | 404 both times. Body has only `message` and no `stack`. [a: README s.5 line 157, documented. b: reasonable expectation, because README s.5 forbids stack traces only in production and s.4 line 138 gives only the general error format] | b: body also has `stack` (observation O-11). a as expected | Fail |
 
 ## 4. Checklist templates (5)
 

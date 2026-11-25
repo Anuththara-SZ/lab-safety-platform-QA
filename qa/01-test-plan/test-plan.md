@@ -153,7 +153,7 @@ Names follow the 2011 edition. The 2023 edition renamed "usability" to "interact
 | Security | Three roles and private data | Permission matrix for 4 roles; 2 OWASP checks; stack trace check; `npm audit` | No wrong cell in the matrix, or a defect is logged | `qa/02-stlc-test-cases`, `qa/07-performance-security` |
 | Reliability | One bad request must not crash the API | Number of 500 responses for invalid input; orphan records after a delete; error % under load | 0 responses with 500 for client mistakes | `qa/02-stlc-test-cases`, `qa/07-performance-security` |
 | Usability | Users must understand errors and see only useful controls | 3 Selenium UI cases; check that messages are clear. No user survey is planned | All 3 UI cases executed | `qa/02-stlc-test-cases` + `qa/06-automation-cicd` |
-| Performance efficiency | Many students use it at the same time | JMeter: average, 95th percentile, throughput, error % | README gives no target; the group sets one before the run | `qa/07-performance-security` |
+| Performance efficiency | Many students use it at the same time | JMeter: average, 95th percentile, throughput, error % | README gives no target; targets proposed by the AI assistant, to be confirmed by the group | `qa/07-performance-security` |
 
 `npm audit` note: 1 high severity package (mongoose) reported by npm audit for the backend, exploitability not tested
 (`qa/evidence/phase0-npm-audit-backend.log`). It is not counted as a confirmed vulnerability.

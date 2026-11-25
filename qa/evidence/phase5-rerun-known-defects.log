@@ -1,0 +1,619 @@
+$ npm run test:defects   2026-11-25T14:56:48+05:30
+
+> lab-safety-qa@1.0.0 test:defects
+> jest --config 06-automation-cicd/known-defects/jest.config.js
+
+FAIL 06-automation-cicd/known-defects/calculateResult.test.js
+  × BVA-15 [documented requirement, README s.1 line 26, strict reading] raw 59.5 is high (61 ms)
+  × BVA-17 [documented requirement, README s.1 line 26, strict reading] raw 79.5 is medium (32 ms)
+  × BVA-18 [documented requirement, README s.1 line 26, strict reading] raw 59.52 is high, smallest list that crosses 60 (11 ms)
+  × BVA-19 [documented requirement, README s.1 line 26, strict reading] raw 79.55 is medium, smallest list that crosses 80 (6 ms)
+
+  ● BVA-15 [documented requirement, README s.1 line 26, strict reading] raw 59.5 is high
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "119 pass, 81 fail: high"
+    Received: "119 pass, 81 fail: medium"
+
+      16 |   const inspection = new Inspection({ responses: [...items(pass, 'pass'), ...items(fail, 'fail')] });
+      17 |   inspection.calculateResult();
+    > 18 |   expect(`${pass} pass, ${fail} fail: ${inspection.riskLevel}`).toBe(`${pass} pass, ${fail} fail: ${riskLevel}`);
+         |                                                                 ^
+      19 | });
+      20 |
+
+      at qa/06-automation-cicd/known-defects/calculateResult.test.js:18:65
+
+  ● BVA-17 [documented requirement, README s.1 line 26, strict reading] raw 79.5 is medium
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "159 pass, 41 fail: medium"
+    Received: "159 pass, 41 fail: low"
+
+      16 |   const inspection = new Inspection({ responses: [...items(pass, 'pass'), ...items(fail, 'fail')] });
+      17 |   inspection.calculateResult();
+    > 18 |   expect(`${pass} pass, ${fail} fail: ${inspection.riskLevel}`).toBe(`${pass} pass, ${fail} fail: ${riskLevel}`);
+         |                                                                 ^
+      19 | });
+      20 |
+
+      at qa/06-automation-cicd/known-defects/calculateResult.test.js:18:65
+
+  ● BVA-18 [documented requirement, README s.1 line 26, strict reading] raw 59.52 is high, smallest list that crosses 60
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "25 pass, 17 fail: high"
+    Received: "25 pass, 17 fail: medium"
+
+      16 |   const inspection = new Inspection({ responses: [...items(pass, 'pass'), ...items(fail, 'fail')] });
+      17 |   inspection.calculateResult();
+    > 18 |   expect(`${pass} pass, ${fail} fail: ${inspection.riskLevel}`).toBe(`${pass} pass, ${fail} fail: ${riskLevel}`);
+         |                                                                 ^
+      19 | });
+      20 |
+
+      at qa/06-automation-cicd/known-defects/calculateResult.test.js:18:65
+
+  ● BVA-19 [documented requirement, README s.1 line 26, strict reading] raw 79.55 is medium, smallest list that crosses 80
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "35 pass, 9 fail: medium"
+    Received: "35 pass, 9 fail: low"
+
+      16 |   const inspection = new Inspection({ responses: [...items(pass, 'pass'), ...items(fail, 'fail')] });
+      17 |   inspection.calculateResult();
+    > 18 |   expect(`${pass} pass, ${fail} fail: ${inspection.riskLevel}`).toBe(`${pass} pass, ${fail} fail: ${riskLevel}`);
+         |                                                                 ^
+      19 | });
+      20 |
+
+      at qa/06-automation-cicd/known-defects/calculateResult.test.js:18:65
+
+FAIL 06-automation-cicd/known-defects/templates.test.js (6.621 s)
+  × TC-TPL-04.1 [reasonable expectation] delete of a template used by a scheduled inspection is refused with 409 (1856 ms)
+  × TC-TPL-04.2 [reasonable expectation] the template still exists after the delete request (66 ms)
+
+  ● TC-TPL-04.1 [reasonable expectation] delete of a template used by a scheduled inspection is refused with 409
+
+    DELETE /api/templates/6b06a9e10431a504ae31820a
+    Expected status: 409
+    Actual status:   200
+    Actual body:     {"message":"Template deleted"}
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/known-defects/templates.test.js:13:3)
+
+  ● TC-TPL-04.2 [reasonable expectation] the template still exists after the delete request
+
+    GET /api/templates/6b06a9e10431a504ae31820a
+    Expected status: 200
+    Actual status:   404
+    Actual body:     {"message":"Template not found"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/known-defects/templates.test.js:18:3)
+
+FAIL 06-automation-cicd/known-defects/labs.test.js (6.64 s)
+  × TC-LAB-04 [reasonable expectation] search sent as an array must not crash the API (1834 ms)
+  × TC-LAB-07b [reasonable expectation; README s.5 line 157 forbids it only in production] NODE_ENV not set: error body has only a message (57 ms)
+
+  ● TC-LAB-04 [reasonable expectation] search sent as an array must not crash the API
+
+    GET /api/labs?search[]=x
+    Expected status: 200 or 400
+    Actual status:   500
+    Actual body:     {"message":"req.query.search.replace is not a function"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/known-defects/labs.test.js:10:3)
+
+  ● TC-LAB-07b [reasonable expectation; README s.5 line 157 forbids it only in production] NODE_ENV not set: error body has only a message
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "message",
+    +   "stack",
+      ]
+
+      18 |     const res = await call('get', `/api/labs/${UNKNOWN_ID}`, d.tokens.admin);
+      19 |     expectStatus(res, 404);
+    > 20 |     expect(Object.keys(res.body)).toEqual(['message']);
+         |                                   ^
+      21 |   } finally {
+      22 |     process.env.NODE_ENV = old;
+      23 |   }
+
+      at Object.<anonymous> (qa/06-automation-cicd/known-defects/labs.test.js:20:35)
+
+FAIL 06-automation-cicd/known-defects/auth.test.js (6.736 s)
+  × TC-AUTH-04c [reasonable expectation] password sent as a number gives 400 or 401, not 500 (1929 ms)
+  × TC-AUTH-07 [reasonable expectation] malformed JSON body gives 400 (39 ms)
+
+  ● TC-AUTH-04c [reasonable expectation] password sent as a number gives 400 or 401, not 500
+
+    POST /api/auth/login
+    Expected status: 400 or 401
+    Actual status:   500
+    Actual body:     {"message":"Illegal arguments: number, string"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/known-defects/auth.test.js:10:3)
+
+  ● TC-AUTH-07 [reasonable expectation] malformed JSON body gives 400
+
+    POST /api/auth/login
+    Expected status: 400
+    Actual status:   500
+    Actual body:     {"message":"Expected double-quoted property name in JSON at position 25 (line 1 column 26)"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/known-defects/auth.test.js:18:3)
+
+FAIL 06-automation-cicd/known-defects/incidents-users-dashboard.test.js (7.448 s)
+  × TC-INC-05 [reasonable expectation] editing a resolved incident keeps the original resolved date (2397 ms)
+  × TC-USR-03.6 [reasonable expectation] an admin cannot change the own role with the id in capital letters (48 ms)
+  × TC-USR-04.5 variation [reasonable expectation] an admin cannot delete the own account with the id in capital letters (40 ms)
+  × DASH-06 [reasonable expectation] technician does not see incidents of other people on the dashboard (68 ms)
+
+  ● TC-INC-05 [reasonable expectation] editing a resolved incident keeps the original resolved date
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "2026-11-22T09:26:57.871Z"
+    Received: "2026-11-25T09:26:58.434Z"
+
+      14 |   expectStatus(res, 200);
+      15 |   expect(res.body.resolution).toBe('Stand is now required');
+    > 16 |   expect(res.body.resolvedAt).toBe(before.resolvedAt.toISOString());
+         |                               ^
+      17 | });
+      18 |
+      19 | const ownIdInCapitals = () => String(d.users.admin2._id).toUpperCase();
+
+      at Object.<anonymous> (qa/06-automation-cicd/known-defects/incidents-users-dashboard.test.js:16:31)
+
+  ● TC-USR-03.6 [reasonable expectation] an admin cannot change the own role with the id in capital letters
+
+    PUT /api/users/6B06A9E23D04693986CD01C8/role
+    Expected status: 400
+    Actual status:   200
+    Actual body:     {"_id":"6b06a9e23d04693986cd01c8","name":"Second Admin","email":"admin2@lab.com","role":"technician","createdAt":"2026-11-25T09:26:58.102Z","updatedAt":"2026-11-25T09:26:58.529Z","__v":0}
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/known-defects/incidents-users-dashboard.test.js:23:3)
+
+  ● TC-USR-04.5 variation [reasonable expectation] an admin cannot delete the own account with the id in capital letters
+
+    DELETE /api/users/6B06A9E23D04693986CD01C8
+    Expected status: 400
+    Actual status:   200
+    Actual body:     {"message":"User deleted"}
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/known-defects/incidents-users-dashboard.test.js:30:3)
+
+  ● DASH-06 [reasonable expectation] technician does not see incidents of other people on the dashboard
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "Reported by the inspector"
+    Received array:     ["Reported by the inspector", "Capacitor bank discharge spark", "Damaged earth-leakage warning lamp"]
+
+      42 |   const dashboard = await call('get', '/api/dashboard', d.tokens.technician);
+      43 |   expectStatus(dashboard, 200);
+    > 44 |   expect(dashboard.body.recentIncidents.map((i) => i.title)).not.toContain(title);
+         |                                                                  ^
+      45 | });
+      46 |
+
+      at Object.<anonymous> (qa/06-automation-cicd/known-defects/incidents-users-dashboard.test.js:44:66)
+
+FAIL 06-automation-cicd/known-defects/inspections.test.js (8.586 s)
+  × WB-SI-13 / EP-39 [reasonable expectation] responses not an array gives 400, not 500 (545 ms)
+  demo data
+    × TC-INS-02b [reasonable expectation] scheduledDate 2027-02-30 does not exist and is rejected (2425 ms)
+    × BVA-36 [reasonable expectation] scheduledDate 2027-02-29 does not exist and is rejected (59 ms)
+    × BVA-39 [reasonable expectation] scheduledDate 2028-02-30 does not exist and is rejected (52 ms)
+    × TC-INS-03 [reasonable expectation] scheduledDate 2020-01-01 is in the past and is rejected (45 ms)
+    × BVA-29 [reasonable expectation] scheduledDate yesterday is in the past and is rejected (46 ms)
+    × TC-INS-07 [reasonable expectation] unknown response id is rejected on submit (155 ms)
+    × TC-INS-08a [reasonable expectation] responses sent as text gives 400, not 500 (27 ms)
+    × TC-INS-08b [reasonable expectation] responses sent as an object gives 400, not 500 (30 ms)
+    × TC-INS-08c / EP-40 [reasonable expectation] null in responses gives 400, not 500 (23 ms)
+    × TC-INS-09.2 [documented requirement, README s.1 line 37; contradicted by s.4 line 125] inspector cannot open the inspection of another inspector (28 ms)
+    × DT1-15 [documented requirement, README s.1 line 37; contradicted by s.4 line 125] inspector2 opens a scheduled inspection of another inspector -> 403 (38 ms)
+    × DT1-16 [documented requirement, README s.1 line 37; contradicted by s.4 line 125] inspector2 opens a completed inspection of another inspector -> 403 (33 ms)
+    TC-INS-05 all items N/A
+      × TC-INS-05.1 [reasonable expectation] all N/A is not reported as score 100 and low risk (51 ms)
+      × TC-INS-05.2 [reasonable expectation] after all N/A the last score of the lab is not 100 (96 ms)
+
+  ● demo data › TC-INS-02b [reasonable expectation] scheduledDate 2027-02-30 does not exist and is rejected
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "savedDate": undefined,
+    -   "savedInspections": 0,
+    +   "savedDate": "2027-03-02T00:00:00.000Z",
+    +   "savedInspections": 1,
+        "sent": "2027-02-30",
+    -   "status": 400,
+    +   "status": 201,
+      }
+
+      24 |     });
+      25 |     const added = (await models.Inspection.countDocuments()) - before;
+    > 26 |     expect({ sent: scheduledDate, status: res.status, savedInspections: added, savedDate: res.body.scheduledDate }).toEqual({
+         |                                                                                                                     ^
+      27 |       sent: scheduledDate, status: 400, savedInspections: 0, savedDate: undefined,
+      28 |     });
+      29 |   });
+
+      at qa/06-automation-cicd/known-defects/inspections.test.js:26:117
+
+  ● demo data › BVA-36 [reasonable expectation] scheduledDate 2027-02-29 does not exist and is rejected
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "savedDate": undefined,
+    -   "savedInspections": 0,
+    +   "savedDate": "2027-03-01T00:00:00.000Z",
+    +   "savedInspections": 1,
+        "sent": "2027-02-29",
+    -   "status": 400,
+    +   "status": 201,
+      }
+
+      24 |     });
+      25 |     const added = (await models.Inspection.countDocuments()) - before;
+    > 26 |     expect({ sent: scheduledDate, status: res.status, savedInspections: added, savedDate: res.body.scheduledDate }).toEqual({
+         |                                                                                                                     ^
+      27 |       sent: scheduledDate, status: 400, savedInspections: 0, savedDate: undefined,
+      28 |     });
+      29 |   });
+
+      at qa/06-automation-cicd/known-defects/inspections.test.js:26:117
+
+  ● demo data › BVA-39 [reasonable expectation] scheduledDate 2028-02-30 does not exist and is rejected
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "savedDate": undefined,
+    -   "savedInspections": 0,
+    +   "savedDate": "2028-03-01T00:00:00.000Z",
+    +   "savedInspections": 1,
+        "sent": "2028-02-30",
+    -   "status": 400,
+    +   "status": 201,
+      }
+
+      24 |     });
+      25 |     const added = (await models.Inspection.countDocuments()) - before;
+    > 26 |     expect({ sent: scheduledDate, status: res.status, savedInspections: added, savedDate: res.body.scheduledDate }).toEqual({
+         |                                                                                                                     ^
+      27 |       sent: scheduledDate, status: 400, savedInspections: 0, savedDate: undefined,
+      28 |     });
+      29 |   });
+
+      at qa/06-automation-cicd/known-defects/inspections.test.js:26:117
+
+  ● demo data › TC-INS-03 [reasonable expectation] scheduledDate 2020-01-01 is in the past and is rejected
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "savedDate": undefined,
+    -   "savedInspections": 0,
+    +   "savedDate": "2020-01-01T00:00:00.000Z",
+    +   "savedInspections": 1,
+        "sent": "2020-01-01",
+    -   "status": 400,
+    +   "status": 201,
+      }
+
+      24 |     });
+      25 |     const added = (await models.Inspection.countDocuments()) - before;
+    > 26 |     expect({ sent: scheduledDate, status: res.status, savedInspections: added, savedDate: res.body.scheduledDate }).toEqual({
+         |                                                                                                                     ^
+      27 |       sent: scheduledDate, status: 400, savedInspections: 0, savedDate: undefined,
+      28 |     });
+      29 |   });
+
+      at qa/06-automation-cicd/known-defects/inspections.test.js:26:117
+
+  ● demo data › BVA-29 [reasonable expectation] scheduledDate yesterday is in the past and is rejected
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "savedDate": undefined,
+    -   "savedInspections": 0,
+    +   "savedDate": "2026-11-24T00:00:00.000Z",
+    +   "savedInspections": 1,
+        "sent": "2026-11-24",
+    -   "status": 400,
+    +   "status": 201,
+      }
+
+      24 |     });
+      25 |     const added = (await models.Inspection.countDocuments()) - before;
+    > 26 |     expect({ sent: scheduledDate, status: res.status, savedInspections: added, savedDate: res.body.scheduledDate }).toEqual({
+         |                                                                                                                     ^
+      27 |       sent: scheduledDate, status: 400, savedInspections: 0, savedDate: undefined,
+      28 |     });
+      29 |   });
+
+      at qa/06-automation-cicd/known-defects/inspections.test.js:26:117
+
+  ● demo data › TC-INS-05 all items N/A › TC-INS-05.1 [reasonable expectation] all N/A is not reported as score 100 and low risk
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /score=100|risk=low/
+    Received string:      "status 200, score=100, risk=low"
+
+      36 |       const res = await submitAllNa();
+      37 |       expectStatus(res, 200, 400);
+    > 38 |       expect(`status ${res.status}, score=${res.body.score}, risk=${res.body.riskLevel}`).not.toMatch(/score=100|risk=low/);
+         |                                                                                               ^
+      39 |     });
+      40 |
+      41 |     test('TC-INS-05.2 [reasonable expectation] after all N/A the last score of the lab is not 100', async () => {
+
+      at Object.<anonymous> (qa/06-automation-cicd/known-defects/inspections.test.js:38:95)
+
+  ● demo data › TC-INS-05 all items N/A › TC-INS-05.2 [reasonable expectation] after all N/A the last score of the lab is not 100
+
+    expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not "lastScore=100"
+
+      43 |       const lab = await call('get', `/api/labs/${d.labs['CH-05']}`, d.tokens.inspector);
+      44 |       expectStatus(lab, 200);
+    > 45 |       expect(`lastScore=${lab.body.lastScore}`).not.toBe('lastScore=100');
+         |                                                     ^
+      46 |     });
+      47 |   });
+      48 |
+
+      at Object.<anonymous> (qa/06-automation-cicd/known-defects/inspections.test.js:45:53)
+
+  ● demo data › TC-INS-07 [reasonable expectation] unknown response id is rejected on submit
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "inspection": "scheduled",
+    -   "score": undefined,
+    -   "status": 400,
+    +   "inspection": "completed",
+    +   "score": 100,
+    +   "status": 200,
+      }
+
+      53 |     const res = await submit(id, d.tokens.inspector, body);
+      54 |     const doc = await saved(id);
+    > 55 |     expect({ status: res.status, inspection: doc.status, score: doc.score }).toEqual({ status: 400, inspection: 'scheduled', score: undefined });
+         |                                                                              ^
+      56 |   });
+      57 |
+      58 |   test.each([
+
+      at Object.<anonymous> (qa/06-automation-cicd/known-defects/inspections.test.js:55:78)
+
+  ● demo data › TC-INS-08a [reasonable expectation] responses sent as text gives 400, not 500
+
+    PUT /api/inspections/6b06a9e10e94d6488c6964df/submit
+    Expected status: 400
+    Actual status:   500
+    Actual body:     {"message":"answers.forEach is not a function"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at qa/06-automation-cicd/known-defects/inspections.test.js:63:5
+
+  ● demo data › TC-INS-08b [reasonable expectation] responses sent as an object gives 400, not 500
+
+    PUT /api/inspections/6b06a9e10e94d6488c6964df/submit
+    Expected status: 400
+    Actual status:   500
+    Actual body:     {"message":"answers.forEach is not a function"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at qa/06-automation-cicd/known-defects/inspections.test.js:63:5
+
+  ● demo data › TC-INS-08c / EP-40 [reasonable expectation] null in responses gives 400, not 500
+
+    PUT /api/inspections/6b06a9e10e94d6488c6964df/submit
+    Expected status: 400
+    Actual status:   500
+    Actual body:     {"message":"Cannot read properties of null (reading '_id')"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at qa/06-automation-cicd/known-defects/inspections.test.js:63:5
+
+  ● demo data › TC-INS-09.2 [documented requirement, README s.1 line 37; contradicted by s.4 line 125] inspector cannot open the inspection of another inspector
+
+    GET /api/inspections/6b06a9e2571269c35a156dc7
+    Expected status: 403 or 404
+    Actual status:   200
+    Actual body:     {"_id":"6b06a9e2571269c35a156dc7","lab":{"_id":"6b06a9e10e94d6488c69649b","name":"High Voltage Laboratory","code":"HV-01","building":"EIE Block A","hazardLevel":"high"},"template":"6b06a9e10e94d6488c6964a1","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06a9e1571269c35a156db5","name":"Second Inspector","email":"inspector2@lab.com"},"status":"scheduled","responses":[{"t
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/known-defects/inspections.test.js:72:5)
+
+  ● demo data › DT1-15 [documented requirement, README s.1 line 37; contradicted by s.4 line 125] inspector2 opens a scheduled inspection of another inspector -> 403
+
+    GET /api/inspections/6b06a9e10e94d6488c6964df
+    Expected status: 403
+    Actual status:   200
+    Actual body:     {"_id":"6b06a9e10e94d6488c6964df","lab":{"_id":"6b06a9e10e94d6488c69649f","name":"Chemistry Support Laboratory","code":"CH-05","building":"Science Block","hazardLevel":"high"},"template":"6b06a9e10e94d6488c6964a1","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06a9e10e94d6488c696497","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-11-25T09:26:5
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at qa/06-automation-cicd/known-defects/inspections.test.js:80:5
+
+  ● demo data › DT1-16 [documented requirement, README s.1 line 37; contradicted by s.4 line 125] inspector2 opens a completed inspection of another inspector -> 403
+
+    GET /api/inspections/6b06a9e10e94d6488c6964b3
+    Expected status: 403
+    Actual status:   200
+    Actual body:     {"_id":"6b06a9e10e94d6488c6964b3","lab":{"_id":"6b06a9e10e94d6488c69649b","name":"High Voltage Laboratory","code":"HV-01","building":"EIE Block A","hazardLevel":"high"},"template":"6b06a9e10e94d6488c6964a1","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06a9e10e94d6488c696497","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-11-05T09:26:57.801Z"
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at qa/06-automation-cicd/known-defects/inspections.test.js:80:5
+
+  ● WB-SI-13 / EP-39 [reasonable expectation] responses not an array gives 400, not 500
+
+    PUT /api/inspections/6b06a9e3571269c35a157251/submit
+    Expected status: 400
+    Actual status:   500
+    Actual body:     {"message":"answers.forEach is not a function"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/known-defects/inspections.test.js:87:3)
+
+Test Suites: 6 failed, 6 total
+Tests:       29 failed, 29 total
+Snapshots:   0 total
+Time:        9.03 s
+Ran all test suites.
+exit code: 1

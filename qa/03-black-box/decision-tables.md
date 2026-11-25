@@ -1,7 +1,7 @@
 # Task 3.3 (c): Decision Tables
 
 System under test: Lab Safety Inspection Platform (backend REST API)
-Status: filled on 2026-11-25. Source: `qa/evidence/phase2-rerun-main.log`, `phase2-rerun-known-defects.log` and `phase2-rerun-ui.log`, filled in by `qa/02-stlc-test-cases/fill-results.js`. "Recorded" means the README does not define the case and the test only records what the code does today.
+Status: filled on 2026-11-25. Source: `qa/evidence/phase5-rerun-main.log`, `phase5-rerun-known-defects.log` and `phase2-rerun-ui.log`, filled in by `qa/02-stlc-test-cases/fill-results.js`. "Recorded" means the README does not define the case and the test only records what the code does today.
 
 - **DT1** tests who is allowed to do what (role x action).
 - **DT2** tests how the risk level is chosen.

@@ -80,7 +80,7 @@ Code: `inspectionRoutes.js` has no rule for `scheduledDate`.
 | Test | `scheduledDate` | Expected | Actual |
 |---|---|---|---|
 | TC-INS-03 | `2020-01-01` | 400, nothing saved | 201, saved as `2020-01-01T00:00:00.000Z` |
-| BVA-29 | yesterday (`2026-11-24`) | 400 (expectation of TC-INS-03; the BVA document says "Not specified") | 201, saved as `2026-11-24T00:00:00.000Z` |
+| BVA-29 | yesterday (`2026-11-24`) | 400, nothing saved (reasonable expectation, same as TC-INS-03) | 201, saved as `2026-11-24T00:00:00.000Z` |
 
 Basis: **Reasonable expectation.** README silent.
 
@@ -110,8 +110,10 @@ Basis: **Reasonable expectation.** README s.4 line 138 as in O-08. Code: `labCon
 |---|---|---|---|
 | TC-LAB-07b | NODE_ENV not set (README s.3 setup): `GET /api/labs/000000000000000000000000` | 404, body has only `message` | 404, body has `message` and `stack` |
 
-Basis: **Documented requirement.** README s.4 line 138: "Errors are returned as `{ "message": "..." }`".
-**README is not consistent:** s.5 line 157 promises "no stack traces in production" only, and `.env.example` does not set NODE_ENV.
+Basis: **Reasonable expectation** (corrected on 2026-11-25; it was marked as documented before). README s.5 line 157 is the rule about stack
+traces and forbids them only "in production". README s.4 line 138 ("Errors are returned as `{ "message": "..." }`") gives the general format and
+does not mention stack traces. `.env.example` does not set NODE_ENV, so a setup that follows README s.3 shows the stack.
+The test has a new name with this basis in `phase5-rerun-known-defects.log`. Its check and its result are the same.
 With `NODE_ENV=production` there is no stack (TC-LAB-07a passes). Code: `errorHandler.js:23`.
 
 ### O-12 A template used by a scheduled inspection can be deleted

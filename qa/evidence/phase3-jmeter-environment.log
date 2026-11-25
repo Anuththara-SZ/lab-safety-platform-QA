@@ -1,5 +1,5 @@
 Load test environment, recorded before the first run: 2026-11-25T11:07:10+05:30
-Targets set by the group BEFORE the first run (README has none, so these are our assumption):
+Targets proposed by the AI assistant, to be confirmed by the group, written BEFORE the first run (README has none):
   GET /api/labs p95 < 1000 ms; POST /api/auth/login p95 < 2000 ms; 0 % errors while inside the rate limits
 $ Get-CimInstance (PowerShell)
 Microsoft Windows 11 Home Single Language 10.0.26200
@@ -12,3 +12,4 @@ mongod 8.3.4
 express 4.22.3, bcryptjs 2.4.3 (pure JavaScript), express-rate-limit 7.5.1
 Other programs open: chrome.exe processes 27, node.exe processes 1
 Backend: node server.js, one process, NODE_ENV not set, morgan log written to a file. JMeter, backend and MongoDB on the same laptop.
+Note added 2026-11-25: the words "set by the group" in line 2 were corrected to "proposed by the AI assistant, to be confirmed by the group". No value was changed.

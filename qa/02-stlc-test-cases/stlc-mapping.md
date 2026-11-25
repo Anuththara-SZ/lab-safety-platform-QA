@@ -46,7 +46,7 @@ Environment setup (phase 4) was started before test design, because a baseline i
 | G4 | Deleting a template that is in use | Deleted without a check | Should be refused like labs and users (TC-TPL-04) |
 | G5 | Deleting labs and users with linked records | Refused with 409 | 409 is correct (TC-LAB-06, TC-USR-04) |
 | G6 | Rounding of the score is not mentioned | Rounds first, then picks the risk level, so 79.5 becomes 80 and "low" | Studied in `qa/03-black-box`; here we use whole scores |
-| G7 | Error format: s.4 says only `message`, s.5 says no stack trace "in production" | `stack` is added unless `NODE_ENV` is "production"; `.env.example` does not set it | `stack` should not be shown in either case (TC-LAB-07) |
+| G7 | Error format: s.4 says only `message`, s.5 says no stack trace "in production" | `stack` is added unless `NODE_ENV` is "production"; `.env.example` does not set it | In production: no `stack` (documented, TC-LAB-07a). Not in production: no `stack` is our reasonable expectation (TC-LAB-07b) |
 | G8 | Resolved date when a resolved incident is edited, and whether a resolution text is required | Date is set again each time status "resolved" is sent; text is optional | Date should stay (TC-INC-05). Text rule not tested |
 | G9 | Can a technician read templates? The README API table says any role; the UI hides the page | API returns 200, UI sends the technician back to `/` | 200 from the API is expected (matrix rows 11, 12) |
 | G10 | Scheduling for an inactive or closed lab | UI lists only active labs, API does not check | Not tested in these 45 cases |

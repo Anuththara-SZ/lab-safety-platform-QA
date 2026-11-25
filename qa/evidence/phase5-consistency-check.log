@@ -1,0 +1,10 @@
+$ node qa/consistency-check.js   2026-11-25T14:59:39+05:30
+A. JMeter tables: 14 checks, 0 mismatches
+B. Counts and metrics: 55 checks, 0 mismatches
+C. IDs exist in the logs: 51 checks, 0 mismatches
+D. Status of design rows: 197 checks, 0 mismatches
+E. Four corrections: 48 checks, 0 mismatches
+F. Links and paths: 354 checks, 0 mismatches
+G. Evidence index: 43 checks, 0 mismatches
+TOTAL: 762 checks, 0 mismatches
+exit code: 0

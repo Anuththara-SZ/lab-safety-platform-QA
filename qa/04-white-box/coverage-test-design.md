@@ -2,7 +2,7 @@
 
 Node numbers, path names (CR-P1, SI-P1, FE-P1 ...) and line numbers are the same as in
 `cyclomatic-complexity.md`.
-Status: filled on 2026-11-25. Source: `qa/evidence/phase2-rerun-main.log`, `phase2-rerun-known-defects.log` and `phase2-rerun-ui.log`, filled in by `qa/02-stlc-test-cases/fill-results.js`. "Recorded" means the README does not define the case and the test only records what the code does today.
+Status: filled on 2026-11-25. Source: `qa/evidence/phase5-rerun-main.log`, `phase5-rerun-known-defects.log` and `phase2-rerun-ui.log`, filled in by `qa/02-stlc-test-cases/fill-results.js`. "Recorded" means the README does not define the case and the test only records what the code does today.
 
 | Test group | Function | Jest file |
 |---|---|---|

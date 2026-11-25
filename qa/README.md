@@ -36,7 +36,7 @@
 
 | Item | Result | Evidence in `qa/evidence` |
 |---|---|---|
-| Test cases (3.2) | 32 pass, 13 fail, 45 in total | `phase4-fill-results.log` |
+| Test cases (3.2) | 32 pass, 13 fail, 45 in total | `phase5-fill-results.log` |
 | Main automated suite | 335 passed, 0 failed | `phase4-coverage.log` |
 | Known-defect checks | 29 failing, on purpose not hidden | `phase2-rerun-known-defects.log` |
 | BDD / UI | 2 scenarios passed / 3 cases passed | `phase2-rerun-bdd.log`, `phase2-rerun-ui.log` |
@@ -58,8 +58,9 @@ npm run test:coverage   # unit + API
 npm run test:bdd        # Cucumber
 npm run test:ui         # Selenium, headless Chrome
 npm run test:defects    # fails until the application is fixed
+cd .. && node qa/consistency-check.js   # report and documents against the logs
 ```
 
 Make the submission file, from the repo root: `bash qa/submission.sh`
 
-Local file paths and tokens in the evidence logs were masked (`<home>`, `<user>`, `<repo>`). Results were not changed.
+Local file paths and tokens in the evidence logs were masked (`<home>`, `<user>`, `<repo>`), and one wording about the load-test targets was corrected. Results were not changed.

@@ -10,7 +10,7 @@
 
 ## 2. Targets
 
-The README gives no performance target. **These targets are our own assumption (Reasonable expectation).** They were written into
+The README gives no performance target. **These targets were proposed by the AI assistant, to be confirmed by the group (reasonable expectation).** They were written into
 `load-test.jmx` and `qa/evidence/phase3-jmeter-environment.log` before the first run.
 
 | Target | Value |
@@ -141,7 +141,7 @@ Status codes: 200 = 100, 401 = 450, 429 = 450. Errors: 900 of 1000 = **90.00 %**
 | Login p95 < 2000 ms | 200 | 116 | 205 | 927 | **4230** | **4322** | Yes for arrival over 10 s, **no when 50 users log in within 1 s** |
 | 0 % errors inside the limits | 0 | 0 | 0 | does not apply | 0 | 0 | Yes |
 
-The targets are our assumption, so a missed target is an **observation**, not a defect. No bug report was made from this test.
+The targets were proposed by the AI assistant, to be confirmed by the group, so a missed target is an **observation**, not a defect. No bug report was made from this test.
 
 ## 8. What the limits hide
 

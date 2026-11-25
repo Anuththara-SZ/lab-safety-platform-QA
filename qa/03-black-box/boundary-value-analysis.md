@@ -1,7 +1,7 @@
 # Task 3.3 (b): Boundary Value Analysis
 
 System under test: Lab Safety Inspection Platform (backend REST API)
-Status: filled on 2026-11-25. Source: `qa/evidence/phase2-rerun-main.log`, `phase2-rerun-known-defects.log` and `phase2-rerun-ui.log`, filled in by `qa/02-stlc-test-cases/fill-results.js`. "Recorded" means the README does not define the case and the test only records what the code does today.
+Status: filled on 2026-11-25. Source: `qa/evidence/phase5-rerun-main.log`, `phase5-rerun-known-defects.log` and `phase2-rerun-ui.log`, filled in by `qa/02-stlc-test-cases/fill-results.js`. "Recorded" means the README does not define the case and the test only records what the code does today.
 
 ## 1. Method
 
@@ -110,7 +110,7 @@ current time when the value is missing or empty. The README has no rule about pa
 
 | ID | Boundary | scheduledDate | Expected Result | From code reading, not executed | Actual Result | Status |
 |---|---|---|---|---|---|---|
-| BVA-29 | Yesterday | D - 1 | Not specified. Scheduling in the past does not look sensible | 201, past date is saved. **Suspect**, needs a decision | 201, saved as yesterday (observation O-07) | Fail |
+| BVA-29 | Yesterday | D - 1 | 400 (**reasonable expectation**, same as TC-INS-03; README and code have no rule). See note 1 | 201, past date is saved | 201, saved as yesterday (observation O-07) | Fail |
 | BVA-30 | Today | D | 201 | | As expected (1 check) | Pass |
 | BVA-31 | Tomorrow | D + 1 | 201 | | As expected (1 check) | Pass |
 | BVA-32 | Not a date | `"not-a-date"` | 400 | Mongoose cannot cast it, ValidationError, 400 | As expected (1 check) | Pass |
@@ -122,6 +122,11 @@ current time when the value is missing or empty. The README has no rule about pa
 | BVA-38 | **Valid leap day** | `2028-02-29` | 201, saved as 2028-02-29 | | As expected (1 check) | Pass |
 | BVA-39 | Day after a valid leap day | `2028-02-30` | 400, this date does not exist | Probably 201 and saved as 2028-03-01. **Suspect**, must be run | 201, saved as 2028-03-01 (BUG-006) | Fail |
 | BVA-40 | Day above 31 | `2027-02-32` | 400 | Probably an invalid date in JavaScript, so 400. Must be run | As expected (1 check) | Pass |
+
+**Note 1 (BVA-29, corrected on 2026-11-25 after the run).** This cell said "Not specified", but the test and TC-INS-03 already expected 400.
+We read the README and the code again. README: no rule about past dates (lines 35, 72 and 126 only name the action and the field).
+Code: no rule in `inspectionRoutes.js`, `inspectionController.js:56` or `Inspection.js:17`. So 400 is a reasonable expectation and not a documented requirement.
+The test and its result were not changed. The owner may decide that past dates are allowed; then BVA-29 and TC-INS-03 are not defects.
 
 ### What JavaScript does with 2027-02-29
 

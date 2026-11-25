@@ -1,7 +1,7 @@
 # Task 3.3 (a): Equivalence Partitioning
 
 System under test: Lab Safety Inspection Platform (backend REST API)
-Status: filled on 2026-11-25. Source: `qa/evidence/phase2-rerun-main.log`, `phase2-rerun-known-defects.log` and `phase2-rerun-ui.log`, filled in by `qa/02-stlc-test-cases/fill-results.js`. "Recorded" means the README does not define the case and the test only records what the code does today.
+Status: filled on 2026-11-25. Source: `qa/evidence/phase5-rerun-main.log`, `phase5-rerun-known-defects.log` and `phase2-rerun-ui.log`, filled in by `qa/02-stlc-test-cases/fill-results.js`. "Recorded" means the README does not define the case and the test only records what the code does today.
 
 ## 1. Method
 
@@ -41,7 +41,7 @@ API answers 429, so keep the number of calls low or restart the app between grou
 | ID | Type | Class | Representative value | Expected Result | From code reading, not executed | Actual Result | Status |
 |---|---|---|---|---|---|---|---|
 | EP-01 | Valid | Correct format, new email | `new.user@example.com` | 201, token returned, role is `technician` | | As expected (1 check) | Pass |
-| EP-02 | Valid | Correct format with capital letters | `New.User2@Example.COM` | 201 | Stored and returned in lower case | Current behaviour recorded, as in the code (README silent) | Recorded |
+| EP-02 | Valid | Correct format with capital letters | `New.User2@Example.COM` | 201 | Stored and returned in lower case | As expected (1 check) | Pass |
 | EP-03 | Invalid | Already registered | an existing email | 409 "Email already registered" | | As expected (1 check) | Pass |
 | EP-04 | Invalid | Already registered, different letter case | existing email in capitals | 409 | Email is made lower case before the search | As expected (1 check) | Pass |
 | EP-05 | Invalid | No `@` sign | `newuser.example.com` | 400 "Valid email is required" | | As expected (1 check) | Pass |
