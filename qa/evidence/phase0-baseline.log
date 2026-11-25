@@ -1,0 +1,59 @@
+# Baseline before any QA tests - 2026-11-25T10:08:01+05:30
+## Test files in the original project (git HEAD)
+none found
+## test scripts in package.json
+no test script
+## Lines per file (non-blank, git-tracked)
+25 backend/app.js
+6 backend/config/db.js
+35 backend/controllers/authController.js
+48 backend/controllers/dashboardController.js
+45 backend/controllers/incidentController.js
+90 backend/controllers/inspectionController.js
+50 backend/controllers/labController.js
+29 backend/controllers/templateController.js
+55 backend/controllers/userController.js
+36 backend/middleware/auth.js
+22 backend/middleware/errorHandler.js
+9 backend/middleware/validate.js
+15 backend/models/Incident.js
+37 backend/models/Inspection.js
+17 backend/models/Lab.js
+20 backend/models/Template.js
+20 backend/models/User.js
+23 backend/routes/authRoutes.js
+5 backend/routes/dashboardRoutes.js
+27 backend/routes/incidentRoutes.js
+18 backend/routes/inspectionRoutes.js
+20 backend/routes/labRoutes.js
+17 backend/routes/templateRoutes.js
+23 backend/routes/userRoutes.js
+103 backend/seed.js
+14 backend/server.js
+2 backend/utils/asyncHandler.js
+6 backend/utils/sort.js
+60 frontend/src/App.jsx
+23 frontend/src/api.js
+32 frontend/src/components/AuthField.jsx
+235 frontend/src/components/AuthShell.jsx
+71 frontend/src/components/Layout.jsx
+21 frontend/src/components/icons.jsx
+75 frontend/src/components/ui.jsx
+27 frontend/src/context/AuthContext.jsx
+80 frontend/src/index.css
+15 frontend/src/main.jsx
+126 frontend/src/pages/Dashboard.jsx
+197 frontend/src/pages/Incidents.jsx
+153 frontend/src/pages/InspectionDetail.jsx
+172 frontend/src/pages/Inspections.jsx
+93 frontend/src/pages/LabDetail.jsx
+179 frontend/src/pages/Labs.jsx
+139 frontend/src/pages/Login.jsx
+141 frontend/src/pages/Register.jsx
+135 frontend/src/pages/Templates.jsx
+123 frontend/src/pages/Users.jsx
+## Totals (non-blank)
+frontend/src css 80
+backend 817
+frontend/src 2017
+total 2914

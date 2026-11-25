@@ -1,0 +1,7 @@
+{
+  "default": {
+    "paths": ["05-tdd-bdd/features/**/*.feature"],
+    "require": ["05-tdd-bdd/support/**/*.js", "05-tdd-bdd/step_definitions/**/*.js"],
+    "format": ["pretty"]
+  }
+}

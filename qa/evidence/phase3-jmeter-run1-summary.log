@@ -1,0 +1,24 @@
+File: phase3-jmeter-run1.jtl
+Started: 2026-11-25T05:37:24.811Z
+Most users active at the same moment (allThreads): 15
+Times in ms. Percentiles: nearest rank. Throughput = requests / (end of last - start of first), per row.
+
+Request                             count      avg   median      p95      min      max    req/s   errors  error %
+TOTAL                                 950     71.7       40      186        3      360     96.5        0     0.00
+POST /api/auth/login                   50    145.7      155      200       83      215      5.1        0     0.00
+  POST /api/auth/login -> 200          50    145.7      155      200       83      215      5.1        0     0.00
+GET /api/labs                         900     67.6       34      181        3      360     93.3        0     0.00
+  GET /api/labs -> 200                900     67.6       34      181        3      360     93.3        0     0.00
+
+Status codes: 200 = 950
+Reads slower than 1000 ms: 0, of these started before the last successful login finished: 0
+
+Cross-check with JMeter console:
+  summary =    950 in 00:00:10 =   94.9/s Avg:    71 Min:     3 Max:   360 Err:     0 (0.00%)
+  count   jtl=950 console=950 same
+  avg     jtl=71.7 console=71 same
+  min     jtl=3 console=3 same
+  max     jtl=360 console=360 same
+  errors  jtl=0 console=0 same
+  req/s   jtl=96.5 console=94.9 (JMeter measures a slightly different time window)
+  result: MATCH

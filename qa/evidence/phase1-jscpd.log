@@ -1,0 +1,74 @@
+$ npx jscpd backend frontend/src (jscpd measurement, NOT SonarQube)  2026-11-25T10:11:06+05:30
+Duplications detection: Found 14 exact clones with 214(4.89%) duplicated lines in 63 (2 formats) files.
+Clone found (javascript):
+ - frontend\src\pages\Login.jsx [43:34 - 72:50] (29 lines, 298 tokens)
+   frontend\src\pages\Register.jsx [57:31 - 78:48]
+
+Clone found (javascript):
+ - frontend\src\pages\Login.jsx [75:216 - 121:34] (46 lines, 450 tokens)
+   frontend\src\pages\Register.jsx [84:178 - 141:34]
+
+Clone found (jsx):
+ - frontend\src\pages\Login.jsx [4:81 - 13:6] (9 lines, 157 tokens)
+   frontend\src\pages\Register.jsx [4:84 - 13:65]
+
+Clone found (jsx):
+ - frontend\src\pages\Login.jsx [32:5 - 41:78] (9 lines, 81 tokens)
+   frontend\src\pages\Register.jsx [46:5 - 55:78]
+
+Clone found (jsx):
+ - frontend\src\pages\Login.jsx [62:15 - 72:43] (10 lines, 83 tokens)
+   frontend\src\pages\Register.jsx [68:250 - 78:42]
+
+Clone found (jsx):
+ - frontend\src\pages\Login.jsx [73:71 - 80:33] (7 lines, 120 tokens)
+   frontend\src\pages\Register.jsx [82:25 - 89:52]
+
+Clone found (jsx):
+ - frontend\src\pages\Login.jsx [92:17 - 107:96] (15 lines, 135 tokens)
+   frontend\src\pages\Register.jsx [112:17 - 127:97]
+
+Clone found (jsx):
+ - frontend\src\pages\Login.jsx [111:31 - 122:13] (11 lines, 94 tokens)
+   frontend\src\pages\Register.jsx [131:38 - 142:18]
+
+Clone found (javascript):
+ - frontend\src\pages\Incidents.jsx [115:41 - 150:66] (35 lines, 476 tokens)
+   frontend\src\pages\Inspections.jsx [124:92 - 151:70]
+
+Clone found (jsx):
+ - frontend\src\pages\Incidents.jsx [136:41 - 149:45] (13 lines, 209 tokens)
+   frontend\src\pages\Inspections.jsx [137:46 - 150:49]
+
+Clone found (jsx):
+ - frontend\src\pages\Incidents.jsx [147:18 - 154:24] (7 lines, 98 tokens)
+   frontend\src\pages\Templates.jsx [102:54 - 109:21]
+
+Clone found (jsx):
+ - frontend\src\pages\Incidents.jsx [158:127 - 163:15] (5 lines, 77 tokens)
+   frontend\src\pages\Incidents.jsx [85:50 - 90:10]
+
+Clone found (jsx):
+ - frontend\src\pages\Incidents.jsx [185:15 - 194:15] (9 lines, 150 tokens)
+   frontend\src\pages\Incidents.jsx [155:13 - 164:14]
+
+Clone found (jsx):
+ - frontend\src\pages\Incidents.jsx [199:51 - 208:2] (9 lines, 81 tokens)
+   frontend\src\pages\Labs.jsx [182:62 - 191:2]
+
+┌────────────┬────────────────┬─────────────┬──────────────┬──────────────┬──────────────────┬───────────────────┐
+│ Format     │ Files analyzed │ Total lines │ Total tokens │ Clones found │ Duplicated lines │ Duplicated tokens │
+├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
+│ javascript │ 45             │ 2238        │ 30686        │ 3            │ 110 (4.92%)      │ 1224 (3.99%)      │
+├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
+│ jsx        │ 18             │ 2139        │ 28637        │ 11           │ 104 (4.86%)      │ 1285 (4.49%)      │
+├────────────┼────────────────┼─────────────┼──────────────┼──────────────┼──────────────────┼───────────────────┤
+│ Total:     │ 63             │ 4377        │ 59323        │ 14           │ 214 (4.89%)      │ 2509 (4.23%)      │
+└────────────┴────────────────┴─────────────┴──────────────┴──────────────┴──────────────────┴───────────────────┘
+Found 14 clones.
+time: 704.448ms
+
+💡 Auto-refactor with AI: npx skills add kucherenko/jscpd
+🎩 New: Gangsta Agents — discipline your AI coding → gangsta.page
+💖 Support jscpd project → https://opencollective.com/jscpd
+exit 0

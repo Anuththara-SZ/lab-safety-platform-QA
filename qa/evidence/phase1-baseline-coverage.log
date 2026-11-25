@@ -1,0 +1,16 @@
+$ jest --coverage --passWithNoTests (temporary config, no test files exist) 2026-11-25T10:10:35+05:30
+No tests found, exiting with code 0
+----------|---------|----------|---------|---------|-------------------
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------|---------|----------|---------|---------|-------------------
+All files |       0 |        0 |       0 |       0 |                   
+----------|---------|----------|---------|---------|-------------------
+exit 0
+$ jest --coverage --passWithNoTests, transform {} (temporary config) 2026-11-25T10:47:53+05:30
+No tests found, exiting with code 0
+----------|---------|----------|---------|---------|-------------------
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------|---------|----------|---------|---------|-------------------
+All files |       0 |        0 |       0 |       0 |                   
+----------|---------|----------|---------|---------|-------------------
+exit 0

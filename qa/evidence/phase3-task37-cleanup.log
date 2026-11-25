@@ -1,0 +1,8 @@
+Clean-up check after Task 3.7: 2026-11-25T11:14:41+05:30
+database lab_safety_qa exists: false
+port 5055 listening: 0
+java.exe processes: 0
+$ git status --short
+?? .github/
+?? qa/
+$ git diff --stat (tracked files, empty = nothing changed)

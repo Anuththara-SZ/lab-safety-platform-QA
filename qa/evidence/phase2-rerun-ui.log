@@ -1,0 +1,48 @@
+
+> lab-safety-qa@1.0.0 test:ui
+> node 06-automation-cicd/ui/run-ui.js
+
+[run-ui] in-memory MongoDB: mongodb://127.0.0.1:55635/qa_memory
+[backend] MongoDB connected: 127.0.0.1/qa_memory
+[backend] API running on http://localhost:5000
+[build] [2m10:46:58 AM[22m [33m[1m[vite][22m[39m [33mwarning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.[39m
+[build] `optimizeDeps.rollupOptions` / `ssr.optimizeDeps.rollupOptions` is deprecated. Use `optimizeDeps.rolldownOptions` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.
+[build] [vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown
+[build] [36mvite v8.3.5 [32mbuilding client environment for production...[36m[39m
+[build] transforming...
+[build] ✓ 2569 modules transformed.
+[build] rendering chunks...
+[build] computing gzip size...
+[build] ../../../../../<home>/AppData/Local/Temp/qa-ui-LEh7L9/dist/index.html                   0.44 kB │ gzip:   0.30 kB
+[build] ../../../../../<home>/AppData/Local/Temp/qa-ui-LEh7L9/dist/assets/index-Dy65RfZO.css   32.01 kB │ gzip:   6.70 kB
+[build] ../../../../../<home>/AppData/Local/Temp/qa-ui-LEh7L9/dist/assets/index-BEQcjXyD.js   826.84 kB │ gzip: 239.59 kB
+[build] [33m[plugin builtin:vite-reporter] 
+[build] (!) Some chunks are larger than 500 kB after minification. Consider:
+[build] - Using dynamic import() to code-split the application
+[build] - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+[build] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[build] [32m✓ built in 10.37s[39m
+[build] [33m[33m[PLUGIN_TIMINGS] [0mJavaScript callbacks ran for 9.5s of this 10.3s build (92%).
+[build] The slowest callbacks, timed inside each callback (the wait before a callback starts is excluded, the time it awaits is included):
+[build]   - plugin vite:build-html transform (83%, 8.5s, 1 call)
+[build] Additional callback time came from callbacks under 1s.
+[build] See https://rolldown.rs/reference/InputOptions.checks#bundlertimings for more details.
+[build] [39m
+[preview] [2m10:47:09 AM[22m [33m[1m[vite][22m[39m [33mwarning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.[39m
+[preview] `optimizeDeps.rollupOptions` / `ssr.optimizeDeps.rollupOptions` is deprecated. Use `optimizeDeps.rolldownOptions` instead. Note that this option may be set by a plugin. Set VITE_DEPRECATION_TRACE=1 to see where it is called.
+[preview] [vite:react-babel] We recommend switching to `@vitejs/plugin-react-oxc` for improved performance. More information at https://vite.dev/rolldown
+[preview]   [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[preview] [2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[ui-test] ✔ TC-AUTH-01 [UI] valid admin login lands on the dashboard (6604.533ms)
+[ui-test] ✔ TC-AUTH-02 [UI] wrong password shows an error and stays on login (4700.3861ms)
+[ui-test] ✔ TC-PERM-02 [UI] technician does not see admin-only controls (12425.5165ms)
+[ui-test] ℹ tests 3
+[ui-test] ℹ suites 0
+[ui-test] ℹ pass 3
+[ui-test] ℹ fail 0
+[ui-test] ℹ cancelled 0
+[ui-test] ℹ skipped 0
+[ui-test] ℹ todo 0
+[ui-test] ℹ duration_ms 25651.5343
+[run-ui] all started processes are stopped
+[run-ui] exit code 0

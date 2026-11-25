@@ -1,0 +1,93 @@
+name: QA
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  qa:
+    # Fixed version instead of ubuntu-latest: mongodb-memory-server downloads a MongoDB binary
+    # for the Ubuntu version, and 24.04 is the newest one that MongoDB 8.2 is published for.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      # GitHub does not allow "secrets" inside "if", so the token is an environment variable.
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # Both npm ci and the tests use this folder for the MongoDB binary (cached below).
+      MONGOMS_DOWNLOAD_DIR: /home/runner/.cache/mongodb-binaries
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Sonar needs the full history
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            backend/package-lock.json
+            frontend/package-lock.json
+            qa/package-lock.json
+
+      - name: Cache the MongoDB binary
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.cache/mongodb-binaries
+          key: mongodb-binaries-ubuntu-24.04-${{ hashFiles('qa/package-lock.json') }}
+
+      - name: Install backend
+        working-directory: backend
+        run: npm ci
+
+      # BUG-001: vite 8.3.5 is outside the peer range of @vitejs/plugin-react 4.7.0 (Vite 4 to 7),
+      # so plain "npm ci" stops with ERESOLVE. The flag ignores the conflict, it does not fix it.
+      - name: Install frontend (workaround for BUG-001)
+        working-directory: frontend
+        run: npm ci --legacy-peer-deps
+
+      - name: Install QA tools
+        working-directory: qa
+        run: npm ci
+
+      - name: Unit and API tests with coverage
+        working-directory: qa
+        run: npm run test:coverage
+
+      # The next steps also run when the tests above failed, so one push shows all results.
+      - name: BDD tests (Cucumber)
+        if: ${{ !cancelled() }}
+        working-directory: qa
+        run: npm run test:bdd
+
+      - name: UI tests (Selenium, headless Chrome)
+        if: ${{ !cancelled() }}
+        working-directory: qa
+        run: npm run test:ui
+
+      - name: Known defects (expected to fail until the app is fixed)
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        working-directory: qa
+        run: npm run test:defects
+
+      # Skipped when the repository has no SONAR_TOKEN. See qa/09-quality-metrics/sonarcloud-steps.md
+      - name: SonarCloud scan
+        if: ${{ env.SONAR_TOKEN != '' }}
+        uses: SonarSource/sonarqube-scan-action@v5   # check the latest version
+        with:
+          args: >
+            -Dproject.settings=qa/09-quality-metrics/sonar-project.properties
+
+      - name: Upload coverage and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-reports
+          path: |
+            qa/coverage/
+            qa/evidence/ui-*.png
+          if-no-files-found: warn

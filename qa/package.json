@@ -1,0 +1,20 @@
+{
+  "name": "lab-safety-qa",
+  "private": true,
+  "version": "1.0.0",
+  "description": "QA tests for the Lab Safety Inspection Platform (EC4206)",
+  "scripts": {
+    "test": "jest --config jest.config.js",
+    "test:coverage": "jest --config jest.config.js --coverage",
+    "test:defects": "jest --config 06-automation-cicd/known-defects/jest.config.js",
+    "test:bdd": "cucumber-js --config 05-tdd-bdd/cucumber.json",
+    "test:ui": "node 06-automation-cicd/ui/run-ui.js"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^13.3.0",
+    "jest": "^30.5.2",
+    "mongodb-memory-server": "^11.4.0",
+    "selenium-webdriver": "^4.51.0",
+    "supertest": "^7.3.2"
+  }
+}

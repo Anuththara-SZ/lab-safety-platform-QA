@@ -1,0 +1,1489 @@
+A07:2021 Identification and Authentication Failures, manual curl checks
+Date: 2026-11-25T11:10:07+05:30   Target: http://127.0.0.1:5055 (local only)   Database: lab_safety_qa
+Tool: curl 8.23.0   Node: v24.14.0   NODE_ENV not set (README section 3 setup)
+Raw 'curl -i' output. Masked before saving: JWTs after 20 characters, local paths, computer name.
+'expected' and 'actual' are HTTP status codes. Verdicts are in qa/07-performance-security/security-checks.md.
+seed: MongoDB connected: 127.0.0.1/lab_safety_qa
+
+==================================================================
+GROUP 1: fresh server, default token lifetime
+==================================================================
+server: started on http://127.0.0.1:5055 (pid 26388)
+
+==================================================================
+A07-01 Weak passwords at registration (README has no password rule)
+==================================================================
+
+--- A07-01a | public, 5 characters | 11:10:11
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/register' -H 'Content-Type: application/json' -d '{"name":"Weak A","email":"weaka@lab.com","password":"12345"}'
+HTTP/1.1 400 Bad Request
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 997
+RateLimit-Reset: 900
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 47
+Date: Wed, 25 Nov 2026 05:40:10 GMT
+X-RateLimit-Reset: 1795586111
+Content-Type: application/json; charset=utf-8
+Content-Length: 949
+ETag: W/"3b5-ZVwWo3q+thZ0PctGuviIOaUj+fU"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Password must be at least 6 characters","stack":"Error: Password must be at least 6 characters\n    at module.exports (<repo>\\backend\\middleware\\validate.js:7:17)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at middleware (<repo>\\backend\\node_modules\\express-validator\\lib\\middlewares\\check.js:16:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A07-01a expected=400 actual=400 (as expected)
+
+--- A07-01b | public, 123456 | 11:10:11
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/register' -H 'Content-Type: application/json' -d '{"name":"Weak B","email":"weakb@lab.com","password":"123456"}'
+HTTP/1.1 201 Created
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 996
+RateLimit-Reset: 900
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 46
+Date: Wed, 25 Nov 2026 05:40:11 GMT
+X-RateLimit-Reset: 1795586111
+Content-Type: application/json; charset=utf-8
+Content-Length: 284
+ETag: W/"11c-Gllwmvff17/qplTPJ+aq0YMF+2A"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"token":"eyJhbGciOiJIUzI1NiIs...","user":{"id":"6b0674bb0171ce7d5bff81bd","name":"Weak B","email":"weakb@lab.com","role":"technician"}}
+>>> A07-01b expected=400 actual=201 (NOT as expected)
+
+--- A07-01c | public, password | 11:10:11
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/register' -H 'Content-Type: application/json' -d '{"name":"Weak C","email":"weakc@lab.com","password":"password"}'
+HTTP/1.1 201 Created
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 995
+RateLimit-Reset: 899
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 45
+Date: Wed, 25 Nov 2026 05:40:11 GMT
+X-RateLimit-Reset: 1795586111
+Content-Type: application/json; charset=utf-8
+Content-Length: 284
+ETag: W/"11c-vWFXkwXSJtgr6IkGrhqy7C5lFBg"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"token":"eyJhbGciOiJIUzI1NiIs...","user":{"id":"6b0674bb0171ce7d5bff81c0","name":"Weak C","email":"weakc@lab.com","role":"technician"}}
+>>> A07-01c expected=400 actual=201 (NOT as expected)
+
+==================================================================
+A07-02 Does login or register show which emails exist? (README silent)
+==================================================================
+
+--- A07-02a | login, known email, wrong password | 11:10:12
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/login' -H 'Content-Type: application/json' -d '{"email":"admin@lab.com","password":"Wrong@123"}'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 994
+RateLimit-Reset: 899
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 44
+Date: Wed, 25 Nov 2026 05:40:11 GMT
+X-RateLimit-Reset: 1795586111
+Content-Type: application/json; charset=utf-8
+Content-Length: 241
+ETag: W/"f1-Fztd4c2pFUa+5W0alA21n21ead4"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Invalid email or password","stack":"Error: Invalid email or password\n    at <repo>\\backend\\controllers\\authController.js:31:11"}
+>>> A07-02a expected=401 actual=401 (as expected)
+
+--- A07-02b | login, unknown email | 11:10:12
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/login' -H 'Content-Type: application/json' -d '{"email":"nobody@lab.com","password":"Wrong@123"}'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 993
+RateLimit-Reset: 898
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 43
+Date: Wed, 25 Nov 2026 05:40:12 GMT
+X-RateLimit-Reset: 1795586111
+Content-Type: application/json; charset=utf-8
+Content-Length: 325
+ETag: W/"145-ck6pBi9vq10a5iTPboocA5G396U"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Invalid email or password","stack":"Error: Invalid email or password\n    at <repo>\\backend\\controllers\\authController.js:31:11\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A07-02b expected=401 actual=401 (as expected)
+>>> A07-02 messages: known email='Invalid email or password' unknown email='Invalid email or password' same=yes
+
+--- A07-02c | register with a known email | 11:10:13
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/register' -H 'Content-Type: application/json' -d '{"name":"X","email":"admin@lab.com","password":"Whatever@123"}'
+HTTP/1.1 409 Conflict
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 992
+RateLimit-Reset: 898
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 42
+Date: Wed, 25 Nov 2026 05:40:13 GMT
+X-RateLimit-Reset: 1795586111
+Content-Type: application/json; charset=utf-8
+Content-Length: 323
+ETag: W/"143-xetsWsdeZITxRes80gRBY2FAvEo"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Email already registered","stack":"Error: Email already registered\n    at <repo>\\backend\\controllers\\authController.js:19:11\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A07-02c expected=409 actual=409 (as expected)
+>>> A07-02c message: Email already registered
+
+--- A07-02d | login, KNOWN email, password is a number | 11:10:13
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/login' -H 'Content-Type: application/json' -d '{"email":"admin@lab.com","password":123456}'
+HTTP/1.1 500 Internal Server Error
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 991
+RateLimit-Reset: 897
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 41
+Date: Wed, 25 Nov 2026 05:40:13 GMT
+X-RateLimit-Reset: 1795586111
+Content-Type: application/json; charset=utf-8
+Content-Length: 1087
+ETag: W/"43f-Xqj8tGSsvyrdChUvf1nMihf5/Bc"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Illegal arguments: number, string","stack":"Error: Illegal arguments: number, string\n    at _async (<repo>\\backend\\node_modules\\bcryptjs\\dist\\bcrypt.js:286:46)\n    at <repo>\\backend\\node_modules\\bcryptjs\\dist\\bcrypt.js:307:17\n    at new Promise (<anonymous>)\n    at bcrypt.compare (<repo>\\backend\\node_modules\\bcryptjs\\dist\\bcrypt.js:306:20)\n    at userSchema.methods.matchPassword (<repo>\\backend\\models\\User.js:21:17)\n    at <repo>\\backend\\controllers\\authController.js:29:29\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A07-02d expected=401 actual=500 (NOT as expected)
+
+--- A07-02e | login, UNKNOWN email, password is a number | 11:10:14
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/login' -H 'Content-Type: application/json' -d '{"email":"nobody@lab.com","password":123456}'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 990
+RateLimit-Reset: 897
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 40
+Date: Wed, 25 Nov 2026 05:40:13 GMT
+X-RateLimit-Reset: 1795586111
+Content-Type: application/json; charset=utf-8
+Content-Length: 325
+ETag: W/"145-ck6pBi9vq10a5iTPboocA5G396U"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Invalid email or password","stack":"Error: Invalid email or password\n    at <repo>\\backend\\controllers\\authController.js:31:11\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A07-02e expected=401 actual=401 (as expected)
+
+==================================================================
+A07-03 Login with MongoDB operators instead of text (README silent for login)
+==================================================================
+
+--- A07-03a | email as operator | 11:10:14
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/login' -H 'Content-Type: application/json' -d '{"email":{"$gt":""},"password":"x"}'
+HTTP/1.1 400 Bad Request
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 989
+RateLimit-Reset: 897
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 39
+Date: Wed, 25 Nov 2026 05:40:14 GMT
+X-RateLimit-Reset: 1795586111
+Content-Type: application/json; charset=utf-8
+Content-Length: 919
+ETag: W/"397-gGLU4Be+qWVPbnoeXxRqamEKTSw"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Valid email is required","stack":"Error: Valid email is required\n    at module.exports (<repo>\\backend\\middleware\\validate.js:7:17)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at middleware (<repo>\\backend\\node_modules\\express-validator\\lib\\middlewares\\check.js:16:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A07-03a expected=400 actual=400 (as expected)
+
+--- A07-03b | password as operator | 11:10:14
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/login' -H 'Content-Type: application/json' -d '{"email":"admin@lab.com","password":{"$ne":null}}'
+HTTP/1.1 500 Internal Server Error
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 988
+RateLimit-Reset: 896
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 38
+Date: Wed, 25 Nov 2026 05:40:14 GMT
+X-RateLimit-Reset: 1795586111
+Content-Type: application/json; charset=utf-8
+Content-Length: 1087
+ETag: W/"43f-i8kJWaXiEe9/y08T711Eze+RM5o"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Illegal arguments: object, string","stack":"Error: Illegal arguments: object, string\n    at _async (<repo>\\backend\\node_modules\\bcryptjs\\dist\\bcrypt.js:286:46)\n    at <repo>\\backend\\node_modules\\bcryptjs\\dist\\bcrypt.js:307:17\n    at new Promise (<anonymous>)\n    at bcrypt.compare (<repo>\\backend\\node_modules\\bcryptjs\\dist\\bcrypt.js:306:20)\n    at userSchema.methods.matchPassword (<repo>\\backend\\models\\User.js:21:17)\n    at <repo>\\backend\\controllers\\authController.js:29:29\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A07-03b expected=400 actual=500 (NOT as expected)
+>>> A07-03b message: Illegal arguments: object, string; token in the answer: false
+
+==================================================================
+A07-04 Missing, malformed and changed tokens (README s.5 line 152 'verified on every request', s.4 line 111)
+==================================================================
+
+--- A07-04a | valid token (positive control) | 11:10:15
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/labs' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 987
+RateLimit-Reset: 895
+Content-Type: application/json; charset=utf-8
+Content-Length: 2102
+ETag: W/"836-hKBmu6LKyNKjWERK1otLLAj4A+g"
+Date: Wed, 25 Nov 2026 05:40:15 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"_id":"6b0674b864503a50ac025a9b","name":"Chemistry Support Laboratory","code":"CH-05","building":"Science Block","department":"Electrical and Information Engineering","capacity":25,"hazardLevel":"high","status":"active","manager":{"_id":"6b0674b864503a50ac025a8f","name":"Dr. Admin"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.814Z"},{"_id":"6b0674b864503a50ac025a9a","name":"Computer Networks Laboratory","code":"CN-04","building":"EIE Block C","department":"Electrical and Information Engineering","capacity":40,"hazardLevel":"low","status":"active","manager":{"_id":"6b0674b864503a50ac025a8f","name":"Dr. Admin"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.843Z","lastInspectionDate":"2026-11-13T05:40:08.841Z","lastScore":88},{"_id":"6b0674b864503a50ac025a98","name":"Electronics Laboratory","code":"EL-02","building":"EIE Block A","department":"Electrical and Information Engineering","capacity":30,"hazardLevel":"medium","status":"active","manager":{"_id":"6b0674b864503a50ac025a93","name":"Nimal Perera"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.836Z","lastInspectionDate":"2026-10-21T05:40:08.834Z","lastScore":100},{"_id":"6b0674b864503a50ac025a97","name":"High Voltage Laboratory","code":"HV-01","building":"EIE Block A","department":"Electrical and Information Engineering","capacity":15,"hazardLevel":"high","status":"active","manager":{"_id":"6b0674b864503a50ac025a8f","name":"Dr. Admin"},"__v":0,"createdAt":"2026-11-25T05:40:08.813Z","updatedAt":"2026-11-25T05:40:08.830Z","lastInspectionDate":"2026-11-05T05:40:08.826Z","lastScore":88},{"_id":"6b0674b864503a50ac025a99","name":"Power Electronics Laboratory","code":"PE-03","building":"EIE Block B","department":"Electrical and Information Engineering","capacity":20,"hazardLevel":"high","status":"active","manager":{"_id":"6b0674b864503a50ac025a93","name":"Nimal Perera"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.840Z","lastInspectionDate":"2026-10-06T05:40:08.838Z","lastScore":63}]
+>>> A07-04a expected=200 actual=200 (as expected)
+
+--- A07-04b | no token | 11:10:15
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/labs'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 986
+RateLimit-Reset: 895
+Content-Type: application/json; charset=utf-8
+Content-Length: 1919
+ETag: W/"77f-qa71ttNzj+7V3RYsitfi7wshLxk"
+Date: Wed, 25 Nov 2026 05:40:15 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Not authenticated: token missing","stack":"Error: Not authenticated: token missing\n    at <repo>\\backend\\middleware\\auth.js:11:11\n    at <repo>\\backend\\utils\\asyncHandler.js:2:62\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at router.handle (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:47:12)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)"}
+>>> A07-04b expected=401 actual=401 (as expected)
+
+--- A07-04c | garbage token | 11:10:16
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/labs' -H 'Authorization: Bearer abc.def.ghi'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 985
+RateLimit-Reset: 895
+Content-Type: application/json; charset=utf-8
+Content-Length: 1941
+ETag: W/"795-eXtl1CwPk8WGhdkIi1Dl2dF/B98"
+Date: Wed, 25 Nov 2026 05:40:15 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Not authenticated: invalid or expired token","stack":"Error: Not authenticated: invalid or expired token\n    at <repo>\\backend\\middleware\\auth.js:18:11\n    at <repo>\\backend\\utils\\asyncHandler.js:2:62\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at router.handle (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:47:12)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)"}
+>>> A07-04c expected=401 actual=401 (as expected)
+
+--- A07-04d | middle character of the payload changed | 11:10:16
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/labs' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 984
+RateLimit-Reset: 895
+Content-Type: application/json; charset=utf-8
+Content-Length: 1941
+ETag: W/"795-eXtl1CwPk8WGhdkIi1Dl2dF/B98"
+Date: Wed, 25 Nov 2026 05:40:16 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Not authenticated: invalid or expired token","stack":"Error: Not authenticated: invalid or expired token\n    at <repo>\\backend\\middleware\\auth.js:18:11\n    at <repo>\\backend\\utils\\asyncHandler.js:2:62\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at router.handle (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:47:12)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)"}
+>>> A07-04d expected=401 actual=401 (as expected)
+
+--- A07-04e | payload = admin id, old signature | 11:10:17
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/users' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 982
+RateLimit-Reset: 894
+Content-Type: application/json; charset=utf-8
+Content-Length: 1941
+ETag: W/"795-eXtl1CwPk8WGhdkIi1Dl2dF/B98"
+Date: Wed, 25 Nov 2026 05:40:16 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Not authenticated: invalid or expired token","stack":"Error: Not authenticated: invalid or expired token\n    at <repo>\\backend\\middleware\\auth.js:18:11\n    at <repo>\\backend\\utils\\asyncHandler.js:2:62\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at router.handle (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:47:12)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)"}
+>>> A07-04e expected=401 actual=401 (as expected)
+
+--- A07-04f | alg=none token with the admin id | 11:10:17
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/users' -H 'Authorization: Bearer eyJhbGciOiJub25lIiwi...'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 981
+RateLimit-Reset: 893
+Content-Type: application/json; charset=utf-8
+Content-Length: 1941
+ETag: W/"795-eXtl1CwPk8WGhdkIi1Dl2dF/B98"
+Date: Wed, 25 Nov 2026 05:40:17 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Not authenticated: invalid or expired token","stack":"Error: Not authenticated: invalid or expired token\n    at <repo>\\backend\\middleware\\auth.js:18:11\n    at <repo>\\backend\\utils\\asyncHandler.js:2:62\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at router.handle (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:47:12)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)"}
+>>> A07-04f expected=401 actual=401 (as expected)
+
+--- A07-04g | admin id, signed with another secret | 11:10:18
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/users' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 980
+RateLimit-Reset: 893
+Content-Type: application/json; charset=utf-8
+Content-Length: 1941
+ETag: W/"795-eXtl1CwPk8WGhdkIi1Dl2dF/B98"
+Date: Wed, 25 Nov 2026 05:40:17 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Not authenticated: invalid or expired token","stack":"Error: Not authenticated: invalid or expired token\n    at <repo>\\backend\\middleware\\auth.js:18:11\n    at <repo>\\backend\\utils\\asyncHandler.js:2:62\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at router.handle (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:47:12)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)"}
+>>> A07-04g expected=401 actual=401 (as expected)
+
+--- A07-04h | same, right secret (shows e to g are valid tests) | 11:10:18
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/users' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 979
+RateLimit-Reset: 892
+Content-Type: application/json; charset=utf-8
+Content-Length: 917
+ETag: W/"395-TZa55LBgoEHbAkX7stV38lSZs/o"
+Date: Wed, 25 Nov 2026 05:40:18 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"_id":"6b0674b864503a50ac025a8f","name":"Dr. Admin","email":"admin@lab.com","role":"admin","createdAt":"2026-11-25T05:40:08.548Z","updatedAt":"2026-11-25T05:40:08.548Z","__v":0},{"_id":"6b0674b864503a50ac025a95","name":"Kamal Silva","email":"tech@lab.com","role":"technician","createdAt":"2026-11-25T05:40:08.728Z","updatedAt":"2026-11-25T05:40:08.728Z","__v":0},{"_id":"6b0674b864503a50ac025a93","name":"Nimal Perera","email":"inspector@lab.com","role":"inspector","createdAt":"2026-11-25T05:40:08.644Z","updatedAt":"2026-11-25T05:40:08.644Z","__v":0},{"_id":"6b0674bb0171ce7d5bff81bd","name":"Weak B","email":"weakb@lab.com","role":"technician","createdAt":"2026-11-25T05:40:11.123Z","updatedAt":"2026-11-25T05:40:11.123Z","__v":0},{"_id":"6b0674bb0171ce7d5bff81c0","name":"Weak C","email":"weakc@lab.com","role":"technician","createdAt":"2026-11-25T05:40:11.523Z","updatedAt":"2026-11-25T05:40:11.523Z","__v":0}]
+>>> A07-04h expected=200 actual=200 (as expected)
+
+==================================================================
+A07-05 Old token after a role change and after the user is deleted (README s.5 line 152)
+==================================================================
+
+--- A07-05a | public registers a throwaway user | 11:10:19
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/register' -H 'Content-Type: application/json' -d '{"name":"Throw Away","email":"throwaway@lab.com","password":"Throw@12345"}'
+HTTP/1.1 201 Created
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 978
+RateLimit-Reset: 892
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 37
+Date: Wed, 25 Nov 2026 05:40:18 GMT
+X-RateLimit-Reset: 1795586111
+Content-Type: application/json; charset=utf-8
+Content-Length: 292
+ETag: W/"124-7AfSik1eKJ45SV4ZoE4gFU9jr04"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"token":"eyJhbGciOiJIUzI1NiIs...","user":{"id":"6b0674c20171ce7d5bff81d0","name":"Throw Away","email":"throwaway@lab.com","role":"technician"}}
+>>> A07-05a expected=201 actual=201 (as expected)
+
+--- A07-05b | as technician | 11:10:19
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/users/staff' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 977
+RateLimit-Reset: 891
+Content-Type: application/json; charset=utf-8
+Content-Length: 1859
+ETag: W/"743-4rKOhmCVBr8CpBL5Xzqe0dcHn0Y"
+Date: Wed, 25 Nov 2026 05:40:19 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Role 'technician' is not allowed to perform this action","stack":"Error: Role 'technician' is not allowed to perform this action\n    at <repo>\\backend\\middleware\\auth.js:35:19\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:284:15\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at <repo>\\backend\\middleware\\auth.js:26:3\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A07-05b expected=403 actual=403 (as expected)
+
+--- A07-05c | admin promotes him to inspector | 11:10:20
+$ curl -s -i -g -X PUT 'http://127.0.0.1:5055/api/users/6b0674c20171ce7d5bff81d0/role' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"role":"inspector"}'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 976
+RateLimit-Reset: 891
+Content-Type: application/json; charset=utf-8
+Content-Length: 187
+ETag: W/"bb-ibY8Sqew22slTtl5wqqMd1UbOws"
+Date: Wed, 25 Nov 2026 05:40:20 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"_id":"6b0674c20171ce7d5bff81d0","name":"Throw Away","email":"throwaway@lab.com","role":"inspector","createdAt":"2026-11-25T05:40:18.781Z","updatedAt":"2026-11-25T05:40:20.101Z","__v":0}
+>>> A07-05c expected=200 actual=200 (as expected)
+
+--- A07-05d | same old token, now inspector | 11:10:20
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/users/staff' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 975
+RateLimit-Reset: 890
+Content-Type: application/json; charset=utf-8
+Content-Length: 220
+ETag: W/"dc-s4TICAIgewWxU42DOduSEdUJYjk"
+Date: Wed, 25 Nov 2026 05:40:20 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"_id":"6b0674b864503a50ac025a8f","name":"Dr. Admin","role":"admin"},{"_id":"6b0674b864503a50ac025a93","name":"Nimal Perera","role":"inspector"},{"_id":"6b0674c20171ce7d5bff81d0","name":"Throw Away","role":"inspector"}]
+>>> A07-05d expected=200 actual=200 (as expected)
+
+--- A07-05e | admin changes him back to technician | 11:10:21
+$ curl -s -i -g -X PUT 'http://127.0.0.1:5055/api/users/6b0674c20171ce7d5bff81d0/role' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"role":"technician"}'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 974
+RateLimit-Reset: 890
+Content-Type: application/json; charset=utf-8
+Content-Length: 188
+ETag: W/"bc-HsgR2eycA4MKQm2zPYcNhWqfLig"
+Date: Wed, 25 Nov 2026 05:40:21 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"_id":"6b0674c20171ce7d5bff81d0","name":"Throw Away","email":"throwaway@lab.com","role":"technician","createdAt":"2026-11-25T05:40:18.781Z","updatedAt":"2026-11-25T05:40:21.013Z","__v":0}
+>>> A07-05e expected=200 actual=200 (as expected)
+
+--- A07-05f | same old token, technician again | 11:10:21
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/users/staff' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 973
+RateLimit-Reset: 889
+Content-Type: application/json; charset=utf-8
+Content-Length: 1859
+ETag: W/"743-4rKOhmCVBr8CpBL5Xzqe0dcHn0Y"
+Date: Wed, 25 Nov 2026 05:40:21 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Role 'technician' is not allowed to perform this action","stack":"Error: Role 'technician' is not allowed to perform this action\n    at <repo>\\backend\\middleware\\auth.js:35:19\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:284:15\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at <repo>\\backend\\middleware\\auth.js:26:3\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A07-05f expected=403 actual=403 (as expected)
+
+--- A07-05g | admin deletes him | 11:10:21
+$ curl -s -i -g -X DELETE 'http://127.0.0.1:5055/api/users/6b0674c20171ce7d5bff81d0' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 972
+RateLimit-Reset: 889
+Content-Type: application/json; charset=utf-8
+Content-Length: 26
+ETag: W/"1a-+BFCXZBji7vrbkrwyE5s2YKViik"
+Date: Wed, 25 Nov 2026 05:40:21 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"User deleted"}
+>>> A07-05g expected=200 actual=200 (as expected)
+
+--- A07-05h | same old token, user deleted | 11:10:22
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/labs' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 971
+RateLimit-Reset: 889
+Content-Type: application/json; charset=utf-8
+Content-Length: 306
+ETag: W/"132-/2qZZVci6eAqbwCZVcQh6DfNB+8"
+Date: Wed, 25 Nov 2026 05:40:22 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"User no longer exists","stack":"Error: User no longer exists\n    at <repo>\\backend\\middleware\\auth.js:23:11\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A07-05h expected=401 actual=401 (as expected)
+
+==================================================================
+A07-06 Logout and token lifetime (README s.6 line 164 lists refresh tokens as a next step)
+==================================================================
+
+--- A07-06a | logout on the server | 11:10:22
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/logout' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 404 Not Found
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 970
+RateLimit-Reset: 888
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 36
+Date: Wed, 25 Nov 2026 05:40:22 GMT
+X-RateLimit-Reset: 1795586111
+Content-Type: application/json; charset=utf-8
+Content-Length: 1954
+ETag: W/"7a2-aaDq0XwWiK3+w/mczdvmfv3XOaQ"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Route not found: POST /api/auth/logout","stack":"Error: Route not found: POST /api/auth/logout\n    at exports.notFound (<repo>\\backend\\middleware\\errorHandler.js:3:8)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:646:15\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:265:14)\n    at router.handle (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:47:12)"}
+>>> A07-06a expected=404 actual=404 (as expected)
+
+--- A07-06b | same token after that | 11:10:23
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/labs' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 969
+RateLimit-Reset: 888
+Content-Type: application/json; charset=utf-8
+Content-Length: 2102
+ETag: W/"836-hKBmu6LKyNKjWERK1otLLAj4A+g"
+Date: Wed, 25 Nov 2026 05:40:22 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"_id":"6b0674b864503a50ac025a9b","name":"Chemistry Support Laboratory","code":"CH-05","building":"Science Block","department":"Electrical and Information Engineering","capacity":25,"hazardLevel":"high","status":"active","manager":{"_id":"6b0674b864503a50ac025a8f","name":"Dr. Admin"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.814Z"},{"_id":"6b0674b864503a50ac025a9a","name":"Computer Networks Laboratory","code":"CN-04","building":"EIE Block C","department":"Electrical and Information Engineering","capacity":40,"hazardLevel":"low","status":"active","manager":{"_id":"6b0674b864503a50ac025a8f","name":"Dr. Admin"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.843Z","lastInspectionDate":"2026-11-13T05:40:08.841Z","lastScore":88},{"_id":"6b0674b864503a50ac025a98","name":"Electronics Laboratory","code":"EL-02","building":"EIE Block A","department":"Electrical and Information Engineering","capacity":30,"hazardLevel":"medium","status":"active","manager":{"_id":"6b0674b864503a50ac025a93","name":"Nimal Perera"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.836Z","lastInspectionDate":"2026-10-21T05:40:08.834Z","lastScore":100},{"_id":"6b0674b864503a50ac025a97","name":"High Voltage Laboratory","code":"HV-01","building":"EIE Block A","department":"Electrical and Information Engineering","capacity":15,"hazardLevel":"high","status":"active","manager":{"_id":"6b0674b864503a50ac025a8f","name":"Dr. Admin"},"__v":0,"createdAt":"2026-11-25T05:40:08.813Z","updatedAt":"2026-11-25T05:40:08.830Z","lastInspectionDate":"2026-11-05T05:40:08.826Z","lastScore":88},{"_id":"6b0674b864503a50ac025a99","name":"Power Electronics Laboratory","code":"PE-03","building":"EIE Block B","department":"Electrical and Information Engineering","capacity":20,"hazardLevel":"high","status":"active","manager":{"_id":"6b0674b864503a50ac025a93","name":"Nimal Perera"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.840Z","lastInspectionDate":"2026-10-06T05:40:08.838Z","lastScore":63}]
+>>> A07-06b expected=200 actual=200 (as expected)
+>>> A07-06 lifetime in the token: 604800 seconds = 7 days; fields: id,iat,exp
+server: stopped, port 5055 is free
+
+==================================================================
+GROUP 2: fresh server. A07-07 Login rate limit (README s.5 line 155 'rate limiting (stricter on /auth)')
+==================================================================
+server: started on http://127.0.0.1:5055 (pid 8612)
+
+--- A07-07.1 | login 1, wrong password | 11:10:25
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/login' -H 'Content-Type: application/json' -d '{"email":"admin@lab.com","password":"Wrong@123"}'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 999
+RateLimit-Reset: 900
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 49
+Date: Wed, 25 Nov 2026 05:40:25 GMT
+X-RateLimit-Reset: 1795586126
+Content-Type: application/json; charset=utf-8
+Content-Length: 241
+ETag: W/"f1-Fztd4c2pFUa+5W0alA21n21ead4"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Invalid email or password","stack":"Error: Invalid email or password\n    at <repo>\\backend\\controllers\\authController.js:31:11"}
+>>> A07-07.1 expected=401 actual=401 (as expected)
+login request 1 -> 401
+login request 2 -> 401
+login request 3 -> 401
+login request 4 -> 401
+login request 5 -> 401
+login request 6 -> 401
+login request 7 -> 401
+login request 8 -> 401
+login request 9 -> 401
+login request 10 -> 401
+login request 11 -> 401
+login request 12 -> 401
+login request 13 -> 401
+login request 14 -> 401
+login request 15 -> 401
+login request 16 -> 401
+login request 17 -> 401
+login request 18 -> 401
+login request 19 -> 401
+login request 20 -> 401
+login request 21 -> 401
+login request 22 -> 401
+login request 23 -> 401
+login request 24 -> 401
+login request 25 -> 401
+login request 26 -> 401
+login request 27 -> 401
+login request 28 -> 401
+login request 29 -> 401
+login request 30 -> 401
+login request 31 -> 401
+login request 32 -> 401
+login request 33 -> 401
+login request 34 -> 401
+login request 35 -> 401
+login request 36 -> 401
+login request 37 -> 401
+login request 38 -> 401
+login request 39 -> 401
+login request 40 -> 401
+login request 41 -> 401
+login request 42 -> 401
+login request 43 -> 401
+login request 44 -> 401
+login request 45 -> 401
+login request 46 -> 401
+login request 47 -> 401
+login request 48 -> 401
+login request 49 -> 401
+
+--- A07-07.50 | login 50, wrong password | 11:10:36
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/login' -H 'Content-Type: application/json' -d '{"email":"admin@lab.com","password":"Wrong@123"}'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 950
+RateLimit-Reset: 890
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 0
+Date: Wed, 25 Nov 2026 05:40:35 GMT
+X-RateLimit-Reset: 1795586126
+Content-Type: application/json; charset=utf-8
+Content-Length: 241
+ETag: W/"f1-Fztd4c2pFUa+5W0alA21n21ead4"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Invalid email or password","stack":"Error: Invalid email or password\n    at <repo>\\backend\\controllers\\authController.js:31:11"}
+>>> A07-07.50 expected=401 actual=401 (as expected)
+login request 50 -> 401
+
+--- A07-07.51 | login 51, wrong password | 11:10:36
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/login' -H 'Content-Type: application/json' -d '{"email":"admin@lab.com","password":"Wrong@123"}'
+HTTP/1.1 429 Too Many Requests
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 949
+RateLimit-Reset: 889
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 0
+Date: Wed, 25 Nov 2026 05:40:36 GMT
+X-RateLimit-Reset: 1795586126
+Retry-After: 889
+Content-Type: application/json; charset=utf-8
+Content-Length: 48
+ETag: W/"30-K2RDqxFmpqwVyroBScr+A+J1tRE"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Too many attempts, try again later"}
+>>> A07-07.51 expected=429 actual=429 (as expected)
+login request 51 -> 429
+>>> A07-07 51 logins: 50 x 401, 1 x 429; first 429 at request 51
+
+--- A07-07b | CORRECT password while blocked | 11:10:37
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/login' -H 'Content-Type: application/json' -d '{"email":"admin@lab.com","password":"Admin@123"}'
+HTTP/1.1 429 Too Many Requests
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 948
+RateLimit-Reset: 888
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 0
+Date: Wed, 25 Nov 2026 05:40:37 GMT
+X-RateLimit-Reset: 1795586126
+Retry-After: 888
+Content-Type: application/json; charset=utf-8
+Content-Length: 48
+ETag: W/"30-K2RDqxFmpqwVyroBScr+A+J1tRE"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Too many attempts, try again later"}
+>>> A07-07b expected=429 actual=429 (as expected)
+
+--- A07-07c | other account, same address | 11:10:37
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/login' -H 'Content-Type: application/json' -d '{"email":"tech@lab.com","password":"Tech@123"}'
+HTTP/1.1 429 Too Many Requests
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 947
+RateLimit-Reset: 888
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 0
+Date: Wed, 25 Nov 2026 05:40:37 GMT
+X-RateLimit-Reset: 1795586126
+Retry-After: 888
+Content-Type: application/json; charset=utf-8
+Content-Length: 48
+ETag: W/"30-K2RDqxFmpqwVyroBScr+A+J1tRE"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Too many attempts, try again later"}
+>>> A07-07c expected=429 actual=429 (as expected)
+
+--- A07-07d | token from group 1 on another route | 11:10:38
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/labs' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 946
+RateLimit-Reset: 888
+Content-Type: application/json; charset=utf-8
+Content-Length: 2102
+ETag: W/"836-hKBmu6LKyNKjWERK1otLLAj4A+g"
+Date: Wed, 25 Nov 2026 05:40:37 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"_id":"6b0674b864503a50ac025a9b","name":"Chemistry Support Laboratory","code":"CH-05","building":"Science Block","department":"Electrical and Information Engineering","capacity":25,"hazardLevel":"high","status":"active","manager":{"_id":"6b0674b864503a50ac025a8f","name":"Dr. Admin"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.814Z"},{"_id":"6b0674b864503a50ac025a9a","name":"Computer Networks Laboratory","code":"CN-04","building":"EIE Block C","department":"Electrical and Information Engineering","capacity":40,"hazardLevel":"low","status":"active","manager":{"_id":"6b0674b864503a50ac025a8f","name":"Dr. Admin"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.843Z","lastInspectionDate":"2026-11-13T05:40:08.841Z","lastScore":88},{"_id":"6b0674b864503a50ac025a98","name":"Electronics Laboratory","code":"EL-02","building":"EIE Block A","department":"Electrical and Information Engineering","capacity":30,"hazardLevel":"medium","status":"active","manager":{"_id":"6b0674b864503a50ac025a93","name":"Nimal Perera"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.836Z","lastInspectionDate":"2026-10-21T05:40:08.834Z","lastScore":100},{"_id":"6b0674b864503a50ac025a97","name":"High Voltage Laboratory","code":"HV-01","building":"EIE Block A","department":"Electrical and Information Engineering","capacity":15,"hazardLevel":"high","status":"active","manager":{"_id":"6b0674b864503a50ac025a8f","name":"Dr. Admin"},"__v":0,"createdAt":"2026-11-25T05:40:08.813Z","updatedAt":"2026-11-25T05:40:08.830Z","lastInspectionDate":"2026-11-05T05:40:08.826Z","lastScore":88},{"_id":"6b0674b864503a50ac025a99","name":"Power Electronics Laboratory","code":"PE-03","building":"EIE Block B","department":"Electrical and Information Engineering","capacity":20,"hazardLevel":"high","status":"active","manager":{"_id":"6b0674b864503a50ac025a93","name":"Nimal Perera"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.840Z","lastInspectionDate":"2026-10-06T05:40:08.838Z","lastScore":63}]
+>>> A07-07d expected=200 actual=200 (as expected)
+server: stopped, port 5055 is free
+
+==================================================================
+GROUP 3: fresh server. A07-08 Does GET /api/auth/me use the same counter?
+==================================================================
+server: started on http://127.0.0.1:5055 (pid 23208)
+>>> A07-08 50 x GET /api/auth/me with a valid token: 50 x 200
+
+--- A07-08a | first login of this server, correct password | 11:10:45
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/login' -H 'Content-Type: application/json' -d '{"email":"tech@lab.com","password":"Tech@123"}'
+HTTP/1.1 429 Too Many Requests
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 949
+RateLimit-Reset: 895
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 0
+Date: Wed, 25 Nov 2026 05:40:45 GMT
+X-RateLimit-Reset: 1795586140
+Retry-After: 895
+Content-Type: application/json; charset=utf-8
+Content-Length: 48
+ETag: W/"30-K2RDqxFmpqwVyroBScr+A+J1tRE"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Too many attempts, try again later"}
+>>> A07-08a expected=200 actual=429 (NOT as expected)
+server: stopped, port 5055 is free
+
+==================================================================
+GROUP 4: fresh server. A07-09 Avoid the limit with a false X-Forwarded-For header
+==================================================================
+server: started on http://127.0.0.1:5055 (pid 24332)
+>>> A07-09 50 logins, each with another X-Forwarded-For: 50 x 401
+
+--- A07-09a | login 51, again a new address | 11:10:59
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/login' -H 'Content-Type: application/json' -d '{"email":"admin@lab.com","password":"Wrong@123"}' '-H' 'X-Forwarded-For: 10.0.0.51'
+HTTP/1.1 429 Too Many Requests
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 949
+RateLimit-Reset: 889
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 0
+Date: Wed, 25 Nov 2026 05:40:58 GMT
+X-RateLimit-Reset: 1795586148
+Retry-After: 889
+Content-Type: application/json; charset=utf-8
+Content-Length: 48
+ETag: W/"30-K2RDqxFmpqwVyroBScr+A+J1tRE"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Too many attempts, try again later"}
+>>> A07-09a expected=429 actual=429 (as expected)
+
+--- A07-09b | login 52, without the header | 11:10:59
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/login' -H 'Content-Type: application/json' -d '{"email":"admin@lab.com","password":"Wrong@123"}'
+HTTP/1.1 429 Too Many Requests
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 948
+RateLimit-Reset: 889
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 0
+Date: Wed, 25 Nov 2026 05:40:59 GMT
+X-RateLimit-Reset: 1795586148
+Retry-After: 889
+Content-Type: application/json; charset=utf-8
+Content-Length: 48
+ETag: W/"30-K2RDqxFmpqwVyroBScr+A+J1tRE"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Too many attempts, try again later"}
+>>> A07-09b expected=429 actual=429 (as expected)
+
+server log, first lines about X-Forwarded-For:
+ValidationError: The 'X-Forwarded-For' header is set but the Express 'trust proxy' setting is false (default). This could indicate a misconfiguration which would prevent express-rate-limit from accurately identifying users. See https://express-rate-limit.github.io/ERR_ERL_UNEXPECTED_X_FORWARDED_FOR/ for more information.
+ValidationError: The 'X-Forwarded-For' header is set but the Express 'trust proxy' setting is false (default). This could indicate a misconfiguration which would prevent express-rate-limit from accurately identifying users. See https://express-rate-limit.github.io/ERR_ERL_UNEXPECTED_X_FORWARDED_FOR/ for more information.
+server: stopped, port 5055 is free
+
+==================================================================
+GROUP 5: server started with JWT_EXPIRES_IN=2s. A07-10 Token expiry (README s.1 line 15, s.5 line 152)
+==================================================================
+server: started on http://127.0.0.1:5055 (pid 26916), with JWT_EXPIRES_IN=2s
+
+--- A07-10a | login | 11:11:01
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/login' -H 'Content-Type: application/json' -d '{"email":"tech@lab.com","password":"Tech@123"}'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 999
+RateLimit-Reset: 900
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 49
+Date: Wed, 25 Nov 2026 05:41:01 GMT
+X-RateLimit-Reset: 1795586162
+Content-Type: application/json; charset=utf-8
+Content-Length: 288
+ETag: W/"120-i1Qmvgmqx7CjSVktZQ+b1eF13nE"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"token":"eyJhbGciOiJIUzI1NiIs...","user":{"id":"6b0674b864503a50ac025a95","name":"Kamal Silva","email":"tech@lab.com","role":"technician"}}
+>>> A07-10a expected=200 actual=200 (as expected)
+
+--- A07-10b | at once | 11:11:02
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/labs' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 998
+RateLimit-Reset: 900
+Content-Type: application/json; charset=utf-8
+Content-Length: 2102
+ETag: W/"836-hKBmu6LKyNKjWERK1otLLAj4A+g"
+Date: Wed, 25 Nov 2026 05:41:01 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"_id":"6b0674b864503a50ac025a9b","name":"Chemistry Support Laboratory","code":"CH-05","building":"Science Block","department":"Electrical and Information Engineering","capacity":25,"hazardLevel":"high","status":"active","manager":{"_id":"6b0674b864503a50ac025a8f","name":"Dr. Admin"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.814Z"},{"_id":"6b0674b864503a50ac025a9a","name":"Computer Networks Laboratory","code":"CN-04","building":"EIE Block C","department":"Electrical and Information Engineering","capacity":40,"hazardLevel":"low","status":"active","manager":{"_id":"6b0674b864503a50ac025a8f","name":"Dr. Admin"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.843Z","lastInspectionDate":"2026-11-13T05:40:08.841Z","lastScore":88},{"_id":"6b0674b864503a50ac025a98","name":"Electronics Laboratory","code":"EL-02","building":"EIE Block A","department":"Electrical and Information Engineering","capacity":30,"hazardLevel":"medium","status":"active","manager":{"_id":"6b0674b864503a50ac025a93","name":"Nimal Perera"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.836Z","lastInspectionDate":"2026-10-21T05:40:08.834Z","lastScore":100},{"_id":"6b0674b864503a50ac025a97","name":"High Voltage Laboratory","code":"HV-01","building":"EIE Block A","department":"Electrical and Information Engineering","capacity":15,"hazardLevel":"high","status":"active","manager":{"_id":"6b0674b864503a50ac025a8f","name":"Dr. Admin"},"__v":0,"createdAt":"2026-11-25T05:40:08.813Z","updatedAt":"2026-11-25T05:40:08.830Z","lastInspectionDate":"2026-11-05T05:40:08.826Z","lastScore":88},{"_id":"6b0674b864503a50ac025a99","name":"Power Electronics Laboratory","code":"PE-03","building":"EIE Block B","department":"Electrical and Information Engineering","capacity":20,"hazardLevel":"high","status":"active","manager":{"_id":"6b0674b864503a50ac025a93","name":"Nimal Perera"},"__v":0,"createdAt":"2026-11-25T05:40:08.814Z","updatedAt":"2026-11-25T05:40:08.840Z","lastInspectionDate":"2026-10-06T05:40:08.838Z","lastScore":63}]
+>>> A07-10b expected=200 actual=200 (as expected)
+
+(waited 4 seconds)
+
+--- A07-10c | after 4 seconds | 11:11:06
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/labs' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 997
+RateLimit-Reset: 895
+Content-Type: application/json; charset=utf-8
+Content-Length: 1941
+ETag: W/"795-eXtl1CwPk8WGhdkIi1Dl2dF/B98"
+Date: Wed, 25 Nov 2026 05:41:06 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Not authenticated: invalid or expired token","stack":"Error: Not authenticated: invalid or expired token\n    at <repo>\\backend\\middleware\\auth.js:18:11\n    at <repo>\\backend\\utils\\asyncHandler.js:2:62\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at router.handle (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:47:12)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)"}
+>>> A07-10c expected=401 actual=401 (as expected)
+>>> A07-10c message: Not authenticated: invalid or expired token
+server: stopped, port 5055 is free
+
+==================================================================
+GROUP 6: fresh server. A07-11 General limit of 1000 requests (README s.5 line 155, number and answer format not in the README)
+==================================================================
+server: started on http://127.0.0.1:5055 (pid 16284)
+>>> A07-11 requests 1 to 1000 on /api/health: 1000 x 200
+
+--- A07-11a | request 1001 | 11:11:09
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/health'
+HTTP/1.1 429 Too Many Requests
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 0
+RateLimit-Reset: 900
+Retry-After: 900
+Content-Type: text/html; charset=utf-8
+Content-Length: 42
+ETag: W/"2a-UpTsLJ74nYuiLgNgEwlQMxGqwrE"
+Date: Wed, 25 Nov 2026 05:41:09 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+Too many requests, please try again later.
+>>> A07-11a expected=429 actual=429 (as expected)
+>>> A07-11a body: Too many requests, please try again later.
+>>> A07-11a content type: Content-Type: text/html; charset=utf-8
+server: stopped, port 5055 is free
+
+=== SUMMARY (written by the script) ===
+A07-01a   public, 5 characters                         POST   /api/auth/register                             expected=400 actual=400 as expected
+A07-01b   public, 123456                               POST   /api/auth/register                             expected=400 actual=201 NOT as expected
+A07-01c   public, password                             POST   /api/auth/register                             expected=400 actual=201 NOT as expected
+A07-02a   login, known email, wrong password           POST   /api/auth/login                                expected=401 actual=401 as expected
+A07-02b   login, unknown email                         POST   /api/auth/login                                expected=401 actual=401 as expected
+A07-02    messages: known email='Invalid email or password' unknown email='Invalid email or password' same=yes
+A07-02c   register with a known email                  POST   /api/auth/register                             expected=409 actual=409 as expected
+A07-02c   message: Email already registered
+A07-02d   login, KNOWN email, password is a number     POST   /api/auth/login                                expected=401 actual=500 NOT as expected
+A07-02e   login, UNKNOWN email, password is a number   POST   /api/auth/login                                expected=401 actual=401 as expected
+A07-03a   email as operator                            POST   /api/auth/login                                expected=400 actual=400 as expected
+A07-03b   password as operator                         POST   /api/auth/login                                expected=400 actual=500 NOT as expected
+A07-03b   message: Illegal arguments: object, string; token in the answer: false
+A07-04a   valid token (positive control)               GET    /api/labs                                      expected=200 actual=200 as expected
+A07-04b   no token                                     GET    /api/labs                                      expected=401 actual=401 as expected
+A07-04c   garbage token                                GET    /api/labs                                      expected=401 actual=401 as expected
+A07-04d   middle character of the payload changed      GET    /api/labs                                      expected=401 actual=401 as expected
+A07-04e   payload = admin id, old signature            GET    /api/users                                     expected=401 actual=401 as expected
+A07-04f   alg=none token with the admin id             GET    /api/users                                     expected=401 actual=401 as expected
+A07-04g   admin id, signed with another secret         GET    /api/users                                     expected=401 actual=401 as expected
+A07-04h   same, right secret (shows e to g are valid tests) GET    /api/users                                     expected=200 actual=200 as expected
+A07-05a   public registers a throwaway user            POST   /api/auth/register                             expected=201 actual=201 as expected
+A07-05b   as technician                                GET    /api/users/staff                               expected=403 actual=403 as expected
+A07-05c   admin promotes him to inspector              PUT    /api/users/6b0674c20171ce7d5bff81d0/role       expected=200 actual=200 as expected
+A07-05d   same old token, now inspector                GET    /api/users/staff                               expected=200 actual=200 as expected
+A07-05e   admin changes him back to technician         PUT    /api/users/6b0674c20171ce7d5bff81d0/role       expected=200 actual=200 as expected
+A07-05f   same old token, technician again             GET    /api/users/staff                               expected=403 actual=403 as expected
+A07-05g   admin deletes him                            DELETE /api/users/6b0674c20171ce7d5bff81d0            expected=200 actual=200 as expected
+A07-05h   same old token, user deleted                 GET    /api/labs                                      expected=401 actual=401 as expected
+A07-06a   logout on the server                         POST   /api/auth/logout                               expected=404 actual=404 as expected
+A07-06b   same token after that                        GET    /api/labs                                      expected=200 actual=200 as expected
+A07-06    lifetime in the token: 604800 seconds = 7 days; fields: id,iat,exp
+A07-07.1  login 1, wrong password                      POST   /api/auth/login                                expected=401 actual=401 as expected
+A07-07.50 login 50, wrong password                     POST   /api/auth/login                                expected=401 actual=401 as expected
+A07-07.51 login 51, wrong password                     POST   /api/auth/login                                expected=429 actual=429 as expected
+A07-07    51 logins: 50 x 401, 1 x 429; first 429 at request 51
+A07-07b   CORRECT password while blocked               POST   /api/auth/login                                expected=429 actual=429 as expected
+A07-07c   other account, same address                  POST   /api/auth/login                                expected=429 actual=429 as expected
+A07-07d   token from group 1 on another route          GET    /api/labs                                      expected=200 actual=200 as expected
+A07-08    50 x GET /api/auth/me with a valid token: 50 x 200
+A07-08a   first login of this server, correct password POST   /api/auth/login                                expected=200 actual=429 NOT as expected
+A07-09    50 logins, each with another X-Forwarded-For: 50 x 401
+A07-09a   login 51, again a new address                POST   /api/auth/login                                expected=429 actual=429 as expected
+A07-09b   login 52, without the header                 POST   /api/auth/login                                expected=429 actual=429 as expected
+A07-10a   login                                        POST   /api/auth/login                                expected=200 actual=200 as expected
+A07-10b   at once                                      GET    /api/labs                                      expected=200 actual=200 as expected
+A07-10c   after 4 seconds                              GET    /api/labs                                      expected=401 actual=401 as expected
+A07-10c   message: Not authenticated: invalid or expired token
+A07-11    requests 1 to 1000 on /api/health: 1000 x 200
+A07-11a   request 1001                                 GET    /api/health                                    expected=429 actual=429 as expected
+A07-11a   body: Too many requests, please try again later.
+A07-11a   content type: Content-Type: text/html; charset=utf-8
+

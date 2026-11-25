@@ -1,0 +1,14 @@
+$ cd frontend && npm audit   2026-11-25T10:11:02+05:30
+# npm audit report
+
+follow-redirects  1.16.0 - 1.16.1
+Severity: high
+follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects - https://github.com/advisories/GHSA-mrwp-f3q8-3g9p
+fix available via `npm audit fix`
+node_modules/follow-redirects
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+exit 1

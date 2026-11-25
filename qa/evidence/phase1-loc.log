@@ -1,0 +1,58 @@
+$ node qa/09-quality-metrics/count-loc.js  2026-11-25T10:12:09+05:30
+   25    24  backend/app.js
+    6     6  backend/config/db.js
+   35    32  backend/controllers/authController.js
+   48    48  backend/controllers/dashboardController.js
+   45    45  backend/controllers/incidentController.js
+   90    85  backend/controllers/inspectionController.js
+   50    49  backend/controllers/labController.js
+   29    29  backend/controllers/templateController.js
+   55    53  backend/controllers/userController.js
+   36    34  backend/middleware/auth.js
+   22    22  backend/middleware/errorHandler.js
+    9     9  backend/middleware/validate.js
+   15    15  backend/models/Incident.js
+   37    36  backend/models/Inspection.js
+   17    17  backend/models/Lab.js
+   20    20  backend/models/Template.js
+   20    20  backend/models/User.js
+   23    23  backend/routes/authRoutes.js
+    5     5  backend/routes/dashboardRoutes.js
+   27    27  backend/routes/incidentRoutes.js
+   18    18  backend/routes/inspectionRoutes.js
+   20    20  backend/routes/labRoutes.js
+   17    17  backend/routes/templateRoutes.js
+   23    23  backend/routes/userRoutes.js
+  103   100  backend/seed.js
+   14    14  backend/server.js
+    2     1  backend/utils/asyncHandler.js
+    6     5  backend/utils/sort.js
+   23    21  frontend/src/api.js
+   60    59  frontend/src/App.jsx
+   32    31  frontend/src/components/AuthField.jsx
+  235   218  frontend/src/components/AuthShell.jsx
+   21    20  frontend/src/components/icons.jsx
+   71    69  frontend/src/components/Layout.jsx
+   75    75  frontend/src/components/ui.jsx
+   27    27  frontend/src/context/AuthContext.jsx
+   15    15  frontend/src/main.jsx
+  126   126  frontend/src/pages/Dashboard.jsx
+  197   197  frontend/src/pages/Incidents.jsx
+  153   153  frontend/src/pages/InspectionDetail.jsx
+  172   172  frontend/src/pages/Inspections.jsx
+   93    93  frontend/src/pages/LabDetail.jsx
+  179   179  frontend/src/pages/Labs.jsx
+  139   139  frontend/src/pages/Login.jsx
+  141   140  frontend/src/pages/Register.jsx
+  135   135  frontend/src/pages/Templates.jsx
+  123   123  frontend/src/pages/Users.jsx
+
+(columns above: non-blank lines, code lines without comments)
+┌───────────────────────────┬───────┬──────────┬──────┐
+│ (index)                   │ files │ nonBlank │ code │
+├───────────────────────────┼───────┼──────────┼──────┤
+│ backend (without seed.js) │ 27    │ 714      │ 697  │
+│ seed.js                   │ 1     │ 103      │ 100  │
+│ frontend/src              │ 19    │ 2017     │ 1992 │
+└───────────────────────────┴───────┴──────────┴──────┘
+KLOC for defect density (backend + frontend/src, no seed.js, no blanks/comments): 2689 lines = 2.689 KLOC

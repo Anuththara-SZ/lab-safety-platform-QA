@@ -1,0 +1,22 @@
+Run: run1   Date: 2026-11-25T11:07:20+05:30
+seed: MongoDB connected: 127.0.0.1/lab_safety_qa
+server: started on http://127.0.0.1:5055 (pid 21532)
+$ jmeter -n -t load-test.jmx -Jhost=127.0.0.1 -Jport=5055 -Jusers=50 -Jramp=10 -Jloops=1 -Jgets=18 -Jjmeter.save.saveservice.output_format=csv -Jjmeter.save.saveservice.response_data=false -Jjmeter.save.saveservice.url=false -l phase3-jmeter-run1.jtl -j phase3-jmeter-run1-jmeter.log
+WARN StatusConsoleListener The use of package scanning to locate plugins is deprecated and will be removed in a future release
+WARN StatusConsoleListener The use of package scanning to locate plugins is deprecated and will be removed in a future release
+WARN StatusConsoleListener The use of package scanning to locate plugins is deprecated and will be removed in a future release
+WARN StatusConsoleListener The use of package scanning to locate plugins is deprecated and will be removed in a future release
+Creating summariser <summary>
+Created the tree successfully using load-test.jmx
+Starting standalone test @ 2026 Nov 25 11:07:24 IST (1795585044540)
+Waiting for possible Shutdown/StopTestNow/HeapDump/ThreadDump message on port 4445
+summary +    440 in 00:00:05 =   82.2/s Avg:   116 Min:    19 Max:   360 Err:     0 (0.00%) Active: 9 Started: 27 Finished: 18
+summary +    510 in 00:00:05 =  109.7/s Avg:    32 Min:     3 Max:   200 Err:     0 (0.00%) Active: 0 Started: 50 Finished: 50
+summary =    950 in 00:00:10 =   94.9/s Avg:    71 Min:     3 Max:   360 Err:     0 (0.00%)
+Tidying up ...    @ 2026 Nov 25 11:07:34 IST (1795585054653)
+... end of run
+JMeter exit code: 0
+Server log (morgan), requests per route and status:
+  GET /api/labs -> 200 = 900
+  POST /api/auth/login -> 200 = 50
+server: stopped, port 5055 is free

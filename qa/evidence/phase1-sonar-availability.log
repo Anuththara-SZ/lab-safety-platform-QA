@@ -1,0 +1,5 @@
+2026-11-25T10:10:30+05:30
+$ command -v docker
+not found
+$ command -v sonar-scanner
+not found

@@ -1,0 +1,6 @@
+$ npm view / lock check (2026-11-25T10:10:16+05:30)
+vite 8.3.5 peer undefined
+@vitejs/plugin-react 4.7.0 peer "^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0"
+7:    "dev": "vite",
+21:    "@vitejs/plugin-react": "^4.3.1",
+25:    "vite": "^8.3.5"

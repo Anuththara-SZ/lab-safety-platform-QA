@@ -1,0 +1,54 @@
+
+> lab-safety-qa@1.0.0 test:bdd
+> cucumber-js --config 05-tdd-bdd/cucumber.json
+
+
+Feature: Inspection scoring and risk level
+
+  Scenario: One failed critical item gives critical risk even when the score is 80 # 05-tdd-bdd\features\inspection-scoring.feature:10
+    ✔ Given the admin has created a checklist with these items:                    # 05-tdd-bdd\step_definitions\inspection-scoring.steps.js:6
+        | item                           | category    | critical |
+        | Fire extinguishers are charged | Fire Safety | yes      |
+        | Emergency exits are clear      | Emergency   | yes      |
+        | First aid kit is stocked       | Emergency   | no       |
+        | Power cables are not damaged   | Electrical  | no       |
+        | PPE is available               | PPE         | no       |
+        | Hazardous waste is segregated  | Waste       | no       |
+    ✔ And the inspector has scheduled an inspection with this checklist            # 05-tdd-bdd\step_definitions\inspection-scoring.steps.js:16
+    ✔ When the inspector submits these answers:                                    # 05-tdd-bdd\step_definitions\inspection-scoring.steps.js:25
+        | item                           | result | remarks                     |
+        | Fire extinguishers are charged | fail   | Two extinguishers are empty |
+        | Emergency exits are clear      | pass   |                             |
+        | First aid kit is stocked       | pass   |                             |
+        | Power cables are not damaged   | pass   |                             |
+        | PPE is available               | pass   |                             |
+        | Hazardous waste is segregated  | na     |                             |
+    ✔ Then the saved inspection is "completed"                                     # 05-tdd-bdd\step_definitions\inspection-scoring.steps.js:44
+    ✔ And the saved score is 80                                                    # 05-tdd-bdd\step_definitions\inspection-scoring.steps.js:48
+    ✔ And the saved risk level is "critical"                                       # 05-tdd-bdd\step_definitions\inspection-scoring.steps.js:52
+    ✔ And the laboratory shows 80 as its last score                                # 05-tdd-bdd\step_definitions\inspection-scoring.steps.js:56
+
+Feature: Login with role-based access
+
+  Scenario: Every role can log in, but only the admin can add a laboratory        # 05-tdd-bdd\features\login-role-access.feature:8
+    ✔ Given these accounts exist:                                                 # 05-tdd-bdd\step_definitions\login-role-access.steps.js:16
+        | who        | email             | password      |
+        | admin      | admin@lab.com     | Admin@123     |
+        | inspector  | inspector@lab.com | Inspector@123 |
+        | technician | tech@lab.com      | Tech@123      |
+    ✔ When each account logs in with its email and password                       # 05-tdd-bdd\step_definitions\login-role-access.steps.js:25
+    ✔ And each account and an unauthenticated visitor ask for the laboratory list # 05-tdd-bdd\step_definitions\login-role-access.steps.js:35
+    ✔ And each account and an unauthenticated visitor try to add a laboratory     # 05-tdd-bdd\step_definitions\login-role-access.steps.js:43
+    ✔ Then every account is logged in with its own role                           # 05-tdd-bdd\step_definitions\login-role-access.steps.js:52
+    ✔ And the results are:                                                        # 05-tdd-bdd\step_definitions\login-role-access.steps.js:66
+        | who             | laboratory list  | add a laboratory |
+        | admin           | allowed          | allowed          |
+        | inspector       | allowed          | refused with 403 |
+        | technician      | allowed          | refused with 403 |
+        | unauthenticated | refused with 401 | refused with 401 |
+    ✔ And only the laboratory added by the admin is saved                         # 05-tdd-bdd\step_definitions\login-role-access.steps.js:76
+
+2 hooks (2 passed)
+2 scenarios (2 passed)
+16 steps (16 passed)
+0m 1.886s (0m 1.851s executing your code)

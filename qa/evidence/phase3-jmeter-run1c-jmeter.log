@@ -1,0 +1,214 @@
+2026-11-25 11:09:30,213 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2026-11-25 11:09:30,238 INFO o.a.j.JMeter: Loading user properties from: <home>\qa-tools\jmeter\apache-jmeter-5.6.3\bin\user.properties
+2026-11-25 11:09:30,240 INFO o.a.j.JMeter: Loading system properties from: <home>\qa-tools\jmeter\apache-jmeter-5.6.3\bin\system.properties
+2026-11-25 11:09:30,240 INFO o.a.j.JMeter: Setting JMeter property: host=127.0.0.1
+2026-11-25 11:09:30,240 INFO o.a.j.JMeter: Setting JMeter property: port=5055
+2026-11-25 11:09:30,240 INFO o.a.j.JMeter: Setting JMeter property: users=50
+2026-11-25 11:09:30,240 INFO o.a.j.JMeter: Setting JMeter property: ramp=10
+2026-11-25 11:09:30,241 INFO o.a.j.JMeter: Setting JMeter property: loops=1
+2026-11-25 11:09:30,241 INFO o.a.j.JMeter: Setting JMeter property: gets=18
+2026-11-25 11:09:30,241 INFO o.a.j.JMeter: Setting JMeter property: jmeter.save.saveservice.output_format=csv
+2026-11-25 11:09:30,241 INFO o.a.j.JMeter: Setting JMeter property: jmeter.save.saveservice.response_data=false
+2026-11-25 11:09:30,241 INFO o.a.j.JMeter: Setting JMeter property: jmeter.save.saveservice.url=false
+2026-11-25 11:09:30,251 INFO o.a.j.JMeter: Copyright (c) 1998-2024 The Apache Software Foundation
+2026-11-25 11:09:30,251 INFO o.a.j.JMeter: Version 5.6.3
+2026-11-25 11:09:30,251 INFO o.a.j.JMeter: java.version=21.0.12.1
+2026-11-25 11:09:30,251 INFO o.a.j.JMeter: java.vm.name=OpenJDK 64-Bit Server VM
+2026-11-25 11:09:30,251 INFO o.a.j.JMeter: os.name=Windows 11
+2026-11-25 11:09:30,251 INFO o.a.j.JMeter: os.arch=amd64
+2026-11-25 11:09:30,251 INFO o.a.j.JMeter: os.version=10.0
+2026-11-25 11:09:30,251 INFO o.a.j.JMeter: file.encoding=UTF-8
+2026-11-25 11:09:30,252 INFO o.a.j.JMeter: java.awt.headless=true
+2026-11-25 11:09:30,252 INFO o.a.j.JMeter: Max memory     =1073741824
+2026-11-25 11:09:30,252 INFO o.a.j.JMeter: Available Processors =12
+2026-11-25 11:09:30,265 INFO o.a.j.JMeter: Default Locale=English (EN)
+2026-11-25 11:09:30,266 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2026-11-25 11:09:30,266 INFO o.a.j.JMeter: JMeterHome=<home>\qa-tools\jmeter\apache-jmeter-5.6.3
+2026-11-25 11:09:30,266 INFO o.a.j.JMeter: user.dir  =<repo>\qa\07-performance-security
+2026-11-25 11:09:30,266 INFO o.a.j.JMeter: PWD       =<repo>\qa\07-performance-security
+2026-11-25 11:09:30,267 INFO o.a.j.JMeter: IP: <lan-ip> Name: <computer> FullName: <computer>
+2026-11-25 11:09:30,280 INFO o.a.j.s.FileServer: Default base='<repo>\qa\07-performance-security'
+2026-11-25 11:09:30,281 INFO o.a.j.s.FileServer: Set new base='<repo>\qa\07-performance-security'
+2026-11-25 11:09:30,472 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
+2026-11-25 11:09:30,500 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
+2026-11-25 11:09:30,502 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
+2026-11-25 11:09:30,505 INFO o.a.j.s.SaveService: Loading file: load-test.jmx
+2026-11-25 11:09:30,553 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-11-25 11:09:30,554 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-11-25 11:09:30,554 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-11-25 11:09:30,554 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-11-25 11:09:30,554 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2026-11-25 11:09:30,554 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2026-11-25 11:09:30,571 INFO o.a.j.JMeter: Creating summariser <summary>
+2026-11-25 11:09:30,591 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2026-11-25 11:09:30,591 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2026-11-25 11:09:30,591 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2026-11-25 11:09:30,596 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2026-11-25 11:09:30,596 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2026-11-25 11:09:30,671 INFO o.a.j.JMeter: Running test (1795585170671)
+2026-11-25 11:09:30,686 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : Lab users
+2026-11-25 11:09:30,686 INFO o.a.j.e.StandardJMeterEngine: Starting 50 threads for group Lab users.
+2026-11-25 11:09:30,686 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2026-11-25 11:09:30,687 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=50 ramp-up=10 delayedStart=false
+2026-11-25 11:09:30,698 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-1
+2026-11-25 11:09:30,719 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2026-11-25 11:09:30,719 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2026-11-25 11:09:30,721 INFO o.a.j.p.h.s.HTTPHCAbstractImpl: Local host = <computer>
+2026-11-25 11:09:30,727 INFO o.a.j.p.h.s.HTTPHC4Impl: HTTP request retry count = 0
+2026-11-25 11:09:30,728 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2026-11-25 11:09:30,729 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to UTF-8
+2026-11-25 11:09:30,729 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2026-11-25 11:09:30,729 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
+2026-11-25 11:09:30,896 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-2
+2026-11-25 11:09:30,982 INFO o.a.j.r.Summariser: summary +      1 in 00:00:00 =    3.2/s Avg:   156 Min:   156 Max:   156 Err:     0 (0.00%) Active: 2 Started: 2 Finished: 0
+2026-11-25 11:09:31,096 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-3
+2026-11-25 11:09:31,296 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-4
+2026-11-25 11:09:31,496 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-5
+2026-11-25 11:09:31,694 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-6
+2026-11-25 11:09:31,891 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-2
+2026-11-25 11:09:31,891 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-2
+2026-11-25 11:09:31,892 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-7
+2026-11-25 11:09:31,893 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-1
+2026-11-25 11:09:31,893 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-1
+2026-11-25 11:09:32,091 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-8
+2026-11-25 11:09:32,282 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-3
+2026-11-25 11:09:32,282 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-3
+2026-11-25 11:09:32,291 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-9
+2026-11-25 11:09:32,490 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-10
+2026-11-25 11:09:32,620 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-4
+2026-11-25 11:09:32,620 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-4
+2026-11-25 11:09:32,689 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-11
+2026-11-25 11:09:32,888 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-5
+2026-11-25 11:09:32,888 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-5
+2026-11-25 11:09:32,890 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-12
+2026-11-25 11:09:33,089 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-13
+2026-11-25 11:09:33,115 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-6
+2026-11-25 11:09:33,115 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-6
+2026-11-25 11:09:33,287 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-7
+2026-11-25 11:09:33,287 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-7
+2026-11-25 11:09:33,288 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-14
+2026-11-25 11:09:33,490 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-15
+2026-11-25 11:09:33,630 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-8
+2026-11-25 11:09:33,630 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-8
+2026-11-25 11:09:33,689 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-16
+2026-11-25 11:09:33,706 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-9
+2026-11-25 11:09:33,706 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-9
+2026-11-25 11:09:33,888 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-17
+2026-11-25 11:09:34,059 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-10
+2026-11-25 11:09:34,060 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-10
+2026-11-25 11:09:34,088 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-18
+2026-11-25 11:09:34,289 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-19
+2026-11-25 11:09:34,456 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-11
+2026-11-25 11:09:34,456 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-11
+2026-11-25 11:09:34,489 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-20
+2026-11-25 11:09:34,688 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-21
+2026-11-25 11:09:34,715 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-12
+2026-11-25 11:09:34,715 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-12
+2026-11-25 11:09:34,889 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-22
+2026-11-25 11:09:35,076 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-13
+2026-11-25 11:09:35,077 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-13
+2026-11-25 11:09:35,088 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-23
+2026-11-25 11:09:35,274 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-14
+2026-11-25 11:09:35,274 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-14
+2026-11-25 11:09:35,288 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-24
+2026-11-25 11:09:35,489 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-25
+2026-11-25 11:09:35,503 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-15
+2026-11-25 11:09:35,503 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-15
+2026-11-25 11:09:35,687 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-26
+2026-11-25 11:09:35,721 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-16
+2026-11-25 11:09:35,721 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-16
+2026-11-25 11:09:35,889 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-27
+2026-11-25 11:09:35,916 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-17
+2026-11-25 11:09:35,916 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-17
+2026-11-25 11:09:36,088 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-28
+2026-11-25 11:09:36,106 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-18
+2026-11-25 11:09:36,106 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-18
+2026-11-25 11:09:36,271 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-19
+2026-11-25 11:09:36,273 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-19
+2026-11-25 11:09:36,288 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-29
+2026-11-25 11:09:36,488 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-30
+2026-11-25 11:09:36,688 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-31
+2026-11-25 11:09:36,688 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-20
+2026-11-25 11:09:36,689 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-20
+2026-11-25 11:09:36,873 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-21
+2026-11-25 11:09:36,873 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-21
+2026-11-25 11:09:36,888 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-22
+2026-11-25 11:09:36,888 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-22
+2026-11-25 11:09:36,889 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-32
+2026-11-25 11:09:37,085 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-23
+2026-11-25 11:09:37,086 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-23
+2026-11-25 11:09:37,088 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-33
+2026-11-25 11:09:37,288 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-34
+2026-11-25 11:09:37,293 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-24
+2026-11-25 11:09:37,293 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-24
+2026-11-25 11:09:37,488 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-35
+2026-11-25 11:09:37,493 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-25
+2026-11-25 11:09:37,493 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-25
+2026-11-25 11:09:37,689 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-36
+2026-11-25 11:09:37,825 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-26
+2026-11-25 11:09:37,825 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-26
+2026-11-25 11:09:37,889 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-37
+2026-11-25 11:09:37,890 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-27
+2026-11-25 11:09:37,890 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-27
+2026-11-25 11:09:38,073 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-28
+2026-11-25 11:09:38,073 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-28
+2026-11-25 11:09:38,088 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-38
+2026-11-25 11:09:38,257 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-29
+2026-11-25 11:09:38,257 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-29
+2026-11-25 11:09:38,277 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-30
+2026-11-25 11:09:38,277 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-30
+2026-11-25 11:09:38,289 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-39
+2026-11-25 11:09:38,427 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-31
+2026-11-25 11:09:38,428 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-31
+2026-11-25 11:09:38,481 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-32
+2026-11-25 11:09:38,482 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-32
+2026-11-25 11:09:38,490 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-40
+2026-11-25 11:09:38,653 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-33
+2026-11-25 11:09:38,653 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-33
+2026-11-25 11:09:38,688 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-41
+2026-11-25 11:09:38,813 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-34
+2026-11-25 11:09:38,813 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-34
+2026-11-25 11:09:38,884 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-35
+2026-11-25 11:09:38,885 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-35
+2026-11-25 11:09:38,888 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-42
+2026-11-25 11:09:39,079 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-36
+2026-11-25 11:09:39,079 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-36
+2026-11-25 11:09:39,088 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-43
+2026-11-25 11:09:39,259 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-37
+2026-11-25 11:09:39,259 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-37
+2026-11-25 11:09:39,289 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-44
+2026-11-25 11:09:39,306 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-38
+2026-11-25 11:09:39,306 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-38
+2026-11-25 11:09:39,469 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-39
+2026-11-25 11:09:39,470 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-39
+2026-11-25 11:09:39,487 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-45
+2026-11-25 11:09:39,641 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-40
+2026-11-25 11:09:39,641 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-40
+2026-11-25 11:09:39,689 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-46
+2026-11-25 11:09:39,703 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-41
+2026-11-25 11:09:39,704 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-41
+2026-11-25 11:09:39,861 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-42
+2026-11-25 11:09:39,861 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-42
+2026-11-25 11:09:39,890 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-47
+2026-11-25 11:09:39,898 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-43
+2026-11-25 11:09:39,899 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-43
+2026-11-25 11:09:40,088 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-44
+2026-11-25 11:09:40,088 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-44
+2026-11-25 11:09:40,090 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-48
+2026-11-25 11:09:40,262 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-45
+2026-11-25 11:09:40,262 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-45
+2026-11-25 11:09:40,289 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-49
+2026-11-25 11:09:40,463 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-46
+2026-11-25 11:09:40,463 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-46
+2026-11-25 11:09:40,489 INFO o.a.j.t.JMeterThread: Thread started: Lab users 1-50
+2026-11-25 11:09:40,656 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-47
+2026-11-25 11:09:40,657 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-47
+2026-11-25 11:09:40,728 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-48
+2026-11-25 11:09:40,728 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-48
+2026-11-25 11:09:40,774 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-49
+2026-11-25 11:09:40,775 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-49
+2026-11-25 11:09:40,806 INFO o.a.j.t.JMeterThread: Thread is done: Lab users 1-50
+2026-11-25 11:09:40,806 INFO o.a.j.t.JMeterThread: Thread finished: Lab users 1-50
+2026-11-25 11:09:40,807 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2026-11-25 11:09:40,808 INFO o.a.j.r.Summariser: summary +    949 in 00:00:10 =   96.6/s Avg:    78 Min:     5 Max:   350 Err:     0 (0.00%) Active: 0 Started: 50 Finished: 50
+2026-11-25 11:09:40,809 INFO o.a.j.r.Summariser: summary =    950 in 00:00:10 =   93.7/s Avg:    78 Min:     5 Max:   350 Err:     0 (0.00%)

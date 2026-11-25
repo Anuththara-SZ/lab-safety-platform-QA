@@ -1,0 +1,14 @@
+Load test environment, recorded before the first run: 2026-11-25T11:07:10+05:30
+Targets set by the group BEFORE the first run (README has none, so these are our assumption):
+  GET /api/labs p95 < 1000 ms; POST /api/auth/login p95 < 2000 ms; 0 % errors while inside the rate limits
+$ Get-CimInstance (PowerShell)
+Microsoft Windows 11 Home Single Language 10.0.26200
+13th Gen Intel(R) Core(TM) i7-1355U, 10 cores, 12 logical processors, CPU load now 23 %
+RAM GB 15.7, free GB 4
+node v24.14.0
+openjdk version "21.0.12.1" 2026-08-18 LTS
+JMeter 5.6.3
+mongod 8.3.4
+express 4.22.3, bcryptjs 2.4.3 (pure JavaScript), express-rate-limit 7.5.1
+Other programs open: chrome.exe processes 27, node.exe processes 1
+Backend: node server.js, one process, NODE_ENV not set, morgan log written to a file. JMeter, backend and MongoDB on the same laptop.

@@ -1,0 +1,1651 @@
+A01:2021 Broken Access Control, manual curl checks
+Date: 2026-11-25T11:03:45+05:30   Target: http://127.0.0.1:5055 (local only)   Database: lab_safety_qa
+Tool: curl 8.23.0   Node: v24.14.0   NODE_ENV not set (README section 3 setup)
+Raw 'curl -i' output. Masked before saving: JWTs after 20 characters, local paths, computer name.
+'expected' and 'actual' are HTTP status codes. Verdicts are in qa/07-performance-security/security-checks.md.
+seed: MongoDB connected: 127.0.0.1/lab_safety_qa
+server: started on http://127.0.0.1:5055 (pid 9180)
+
+==================================================================
+SETUP: logins and extra users (created with the admin API)
+==================================================================
+
+--- S-1 | admin | 11:03:50
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/users' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"name":"Second Inspector","email":"inspector2@lab.com","password":"Inspector2@123","role":"inspector"}'
+HTTP/1.1 201 Created
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 996
+RateLimit-Reset: 900
+Content-Type: application/json; charset=utf-8
+Content-Length: 108
+ETag: W/"6c-uod55bDaCvDLNdgJ8KqBVYHk3ZQ"
+Date: Wed, 25 Nov 2026 05:33:50 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"_id":"6b06733e2a62d31564c8d508","name":"Second Inspector","email":"inspector2@lab.com","role":"inspector"}
+>>> S-1 expected=201 actual=201 (as expected)
+
+--- S-2 | admin | 11:03:51
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/users' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"name":"Second Admin","email":"admin2@lab.com","password":"Admin2@123","role":"admin"}'
+HTTP/1.1 201 Created
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 995
+RateLimit-Reset: 899
+Content-Type: application/json; charset=utf-8
+Content-Length: 96
+ETag: W/"60-6cYSrCvmRE5++SiKVZGS1kwHKNk"
+Date: Wed, 25 Nov 2026 05:33:51 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"_id":"6b06733e2a62d31564c8d50b","name":"Second Admin","email":"admin2@lab.com","role":"admin"}
+>>> S-2 expected=201 actual=201 (as expected)
+
+--- S-3 | admin | 11:03:51
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/users' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"name":"Third Admin","email":"admin3@lab.com","password":"Admin3@123","role":"admin"}'
+HTTP/1.1 201 Created
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 994
+RateLimit-Reset: 899
+Content-Type: application/json; charset=utf-8
+Content-Length: 95
+ETag: W/"5f-KLNCgdDJt46pvGYXoJXJ/7CsvGU"
+Date: Wed, 25 Nov 2026 05:33:51 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"_id":"6b06733f2a62d31564c8d50e","name":"Third Admin","email":"admin3@lab.com","role":"admin"}
+>>> S-3 expected=201 actual=201 (as expected)
+
+ids: CH-05 inspection (scheduled, inspector Nimal Perera)=6b06733b59755580c39914ea  HV-01 inspection (completed, Nimal Perera)=6b06733b59755580c39914be
+ids: lamp incident (reported by technician)=6b06733b59755580c39914f5  burn incident (reported by inspector)=6b06733b59755580c39914f6
+
+==================================================================
+A01-01 Only admin may create a lab (README s.1 line 33, s.4 line 121, s.8 line 181)
+==================================================================
+
+--- A01-01a | technician | 11:03:54
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/labs' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"name":"QA Sec Lab","code":"QS-01","building":"Block Q"}'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 986
+RateLimit-Reset: 896
+Content-Type: application/json; charset=utf-8
+Content-Length: 1859
+ETag: W/"743-4rKOhmCVBr8CpBL5Xzqe0dcHn0Y"
+Date: Wed, 25 Nov 2026 05:33:54 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Role 'technician' is not allowed to perform this action","stack":"Error: Role 'technician' is not allowed to perform this action\n    at <repo>\\backend\\middleware\\auth.js:35:19\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:284:15\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at <repo>\\backend\\middleware\\auth.js:26:3\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A01-01a expected=403 actual=403 (as expected)
+
+--- A01-01b | inspector | 11:03:55
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/labs' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"name":"QA Sec Lab","code":"QS-01","building":"Block Q"}'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 985
+RateLimit-Reset: 895
+Content-Type: application/json; charset=utf-8
+Content-Length: 1857
+ETag: W/"741-u4kpM+JEOXItKk3eIMn9Ih1s6vo"
+Date: Wed, 25 Nov 2026 05:33:54 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Role 'inspector' is not allowed to perform this action","stack":"Error: Role 'inspector' is not allowed to perform this action\n    at <repo>\\backend\\middleware\\auth.js:35:19\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:284:15\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at <repo>\\backend\\middleware\\auth.js:26:3\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A01-01b expected=403 actual=403 (as expected)
+
+--- A01-01c | no token | 11:03:55
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/labs' -H 'Content-Type: application/json' -d '{"name":"QA Sec Lab","code":"QS-01","building":"Block Q"}'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 984
+RateLimit-Reset: 895
+Content-Type: application/json; charset=utf-8
+Content-Length: 1919
+ETag: W/"77f-qa71ttNzj+7V3RYsitfi7wshLxk"
+Date: Wed, 25 Nov 2026 05:33:55 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Not authenticated: token missing","stack":"Error: Not authenticated: token missing\n    at <repo>\\backend\\middleware\\auth.js:11:11\n    at <repo>\\backend\\utils\\asyncHandler.js:2:62\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at router.handle (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:47:12)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)"}
+>>> A01-01c expected=401 actual=401 (as expected)
+
+--- A01-01d | admin: was anything saved? (QS-01) | 11:03:56
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/labs?search=QS-01' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 983
+RateLimit-Reset: 894
+Content-Type: application/json; charset=utf-8
+Content-Length: 2
+ETag: W/"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w"
+Date: Wed, 25 Nov 2026 05:33:55 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[]
+>>> A01-01d expected=200 actual=200 (as expected)
+>>> A01-01d labs found with code QS-01 after the three refused requests: 0
+
+--- A01-01e | admin (positive control) | 11:03:56
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/labs' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"name":"QA Sec Lab","code":"QS-01","building":"Block Q"}'
+HTTP/1.1 201 Created
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 982
+RateLimit-Reset: 893
+Content-Type: application/json; charset=utf-8
+Content-Length: 285
+ETag: W/"11d-/XZdmrAe1SZf1XZdop3TJgtQBxQ"
+Date: Wed, 25 Nov 2026 05:33:56 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"name":"QA Sec Lab","code":"QS-01","building":"Block Q","department":"Electrical and Information Engineering","capacity":20,"hazardLevel":"medium","status":"active","_id":"6b0673442a62d31564c8d533","createdAt":"2026-11-25T05:33:56.608Z","updatedAt":"2026-11-25T05:33:56.608Z","__v":0}
+>>> A01-01e expected=201 actual=201 (as expected)
+
+==================================================================
+A01-02 IDOR read: inspection of another inspector (README s.1 line 37 'own', but s.4 line 125 'any')
+==================================================================
+
+--- A01-02a | owner inspector (positive control) | 11:03:57
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/inspections/6b06733b59755580c39914ea' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 981
+RateLimit-Reset: 893
+Content-Type: application/json; charset=utf-8
+Content-Length: 1883
+ETag: W/"75b-1jjr2R60sG4qXhgJXQPspusAT3g"
+Date: Wed, 25 Nov 2026 05:33:57 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"_id":"6b06733b59755580c39914ea","lab":{"_id":"6b06733b59755580c39914aa","name":"Chemistry Support Laboratory","code":"CH-05","building":"Science Block","hazardLevel":"high"},"template":"6b06733b59755580c39914ac","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-11-25T05:33:47.639Z","status":"scheduled","responses":[{"text":"Fire extinguishers are present, charged and within service date","category":"Fire Safety","critical":true,"result":"pending","remarks":"","_id":"6b06733b59755580c39914eb"},{"text":"Emergency exits are clear and signs are illuminated","category":"Emergency","critical":true,"result":"pending","remarks":"","_id":"6b06733b59755580c39914ec"},{"text":"First aid kit is stocked and accessible","category":"Emergency","critical":false,"result":"pending","remarks":"","_id":"6b06733b59755580c39914ed"},{"text":"Emergency stop / main power cut-off is accessible and labelled","category":"Electrical","critical":true,"result":"pending","remarks":"","_id":"6b06733b59755580c39914ee"},{"text":"Power cables are free from damage and not overloaded","category":"Electrical","critical":false,"result":"pending","remarks":"","_id":"6b06733b59755580c39914ef"},{"text":"PPE (gloves, goggles, lab coats) is available and in good condition","category":"PPE","critical":false,"result":"pending","remarks":"","_id":"6b06733b59755580c39914f0"},{"text":"Safety rules and emergency contacts are displayed","category":"General","critical":false,"result":"pending","remarks":"","_id":"6b06733b59755580c39914f1"},{"text":"Work benches are clean and free from clutter","category":"General","critical":false,"result":"pending","remarks":"","_id":"6b06733b59755580c39914f2"}],"createdAt":"2026-11-25T05:33:47.640Z","updatedAt":"2026-11-25T05:33:47.640Z","__v":0}
+>>> A01-02a expected=200 actual=200 (as expected)
+
+--- A01-02b | inspector2, scheduled, not own | 11:03:57
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/inspections/6b06733b59755580c39914ea' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 980
+RateLimit-Reset: 893
+Content-Type: application/json; charset=utf-8
+Content-Length: 1883
+ETag: W/"75b-1jjr2R60sG4qXhgJXQPspusAT3g"
+Date: Wed, 25 Nov 2026 05:33:57 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"_id":"6b06733b59755580c39914ea","lab":{"_id":"6b06733b59755580c39914aa","name":"Chemistry Support Laboratory","code":"CH-05","building":"Science Block","hazardLevel":"high"},"template":"6b06733b59755580c39914ac","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-11-25T05:33:47.639Z","status":"scheduled","responses":[{"text":"Fire extinguishers are present, charged and within service date","category":"Fire Safety","critical":true,"result":"pending","remarks":"","_id":"6b06733b59755580c39914eb"},{"text":"Emergency exits are clear and signs are illuminated","category":"Emergency","critical":true,"result":"pending","remarks":"","_id":"6b06733b59755580c39914ec"},{"text":"First aid kit is stocked and accessible","category":"Emergency","critical":false,"result":"pending","remarks":"","_id":"6b06733b59755580c39914ed"},{"text":"Emergency stop / main power cut-off is accessible and labelled","category":"Electrical","critical":true,"result":"pending","remarks":"","_id":"6b06733b59755580c39914ee"},{"text":"Power cables are free from damage and not overloaded","category":"Electrical","critical":false,"result":"pending","remarks":"","_id":"6b06733b59755580c39914ef"},{"text":"PPE (gloves, goggles, lab coats) is available and in good condition","category":"PPE","critical":false,"result":"pending","remarks":"","_id":"6b06733b59755580c39914f0"},{"text":"Safety rules and emergency contacts are displayed","category":"General","critical":false,"result":"pending","remarks":"","_id":"6b06733b59755580c39914f1"},{"text":"Work benches are clean and free from clutter","category":"General","critical":false,"result":"pending","remarks":"","_id":"6b06733b59755580c39914f2"}],"createdAt":"2026-11-25T05:33:47.640Z","updatedAt":"2026-11-25T05:33:47.640Z","__v":0}
+>>> A01-02b expected=403 actual=200 (NOT as expected)
+
+--- A01-02c | inspector2, completed, not own | 11:03:58
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/inspections/6b06733b59755580c39914be' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 979
+RateLimit-Reset: 892
+Content-Type: application/json; charset=utf-8
+Content-Length: 2005
+ETag: W/"7d5-UYawCcfXrK+aLEa5AMlHLegORjw"
+Date: Wed, 25 Nov 2026 05:33:57 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"_id":"6b06733b59755580c39914be","lab":{"_id":"6b06733b59755580c39914a6","name":"High Voltage Laboratory","code":"HV-01","building":"EIE Block A","hazardLevel":"high"},"template":"6b06733b59755580c39914ac","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-11-05T05:33:47.620Z","completedDate":"2026-11-05T05:33:47.620Z","status":"completed","responses":[{"text":"Fire extinguishers are present, charged and within service date","category":"Fire Safety","critical":true,"result":"pass","remarks":"","_id":"6b06733b59755580c39914bf"},{"text":"Emergency exits are clear and signs are illuminated","category":"Emergency","critical":true,"result":"pass","remarks":"","_id":"6b06733b59755580c39914c0"},{"text":"First aid kit is stocked and accessible","category":"Emergency","critical":false,"result":"pass","remarks":"","_id":"6b06733b59755580c39914c1"},{"text":"Emergency stop / main power cut-off is accessible and labelled","category":"Electrical","critical":true,"result":"pass","remarks":"","_id":"6b06733b59755580c39914c2"},{"text":"Power cables are free from damage and not overloaded","category":"Electrical","critical":false,"result":"fail","remarks":"Needs corrective action","_id":"6b06733b59755580c39914c3"},{"text":"PPE (gloves, goggles, lab coats) is available and in good condition","category":"PPE","critical":false,"result":"pass","remarks":"","_id":"6b06733b59755580c39914c4"},{"text":"Safety rules and emergency contacts are displayed","category":"General","critical":false,"result":"pass","remarks":"","_id":"6b06733b59755580c39914c5"},{"text":"Work benches are clean and free from clutter","category":"General","critical":false,"result":"pass","remarks":"","_id":"6b06733b59755580c39914c6"}],"summary":"Corrective actions required for failed items.","score":88,"riskLevel":"low","createdAt":"2026-11-25T05:33:47.622Z","updatedAt":"2026-11-25T05:33:47.622Z","__v":0}
+>>> A01-02c expected=403 actual=200 (NOT as expected)
+
+--- A01-02d | inspector2, list | 11:03:58
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/inspections' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 978
+RateLimit-Reset: 892
+Content-Type: application/json; charset=utf-8
+Content-Length: 2
+ETag: W/"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w"
+Date: Wed, 25 Nov 2026 05:33:58 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[]
+>>> A01-02d expected=200 actual=200 (as expected)
+>>> A01-02d inspections in the list of inspector2 (has none of his own): 0
+
+--- A01-02e | no token | 11:03:59
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/inspections/6b06733b59755580c39914ea'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 977
+RateLimit-Reset: 891
+Content-Type: application/json; charset=utf-8
+Content-Length: 1919
+ETag: W/"77f-qa71ttNzj+7V3RYsitfi7wshLxk"
+Date: Wed, 25 Nov 2026 05:33:59 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Not authenticated: token missing","stack":"Error: Not authenticated: token missing\n    at <repo>\\backend\\middleware\\auth.js:11:11\n    at <repo>\\backend\\utils\\asyncHandler.js:2:62\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at router.handle (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:47:12)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)"}
+>>> A01-02e expected=401 actual=401 (as expected)
+
+==================================================================
+A01-03 IDOR write: submit the inspection of another inspector (README s.1 line 36, s.4 line 127, s.5 line 153)
+==================================================================
+
+--- A01-03a | inspector2 (not assigned) | 11:03:59
+$ curl -s -i -g -X PUT 'http://127.0.0.1:5055/api/inspections/6b06733b59755580c39914ea/submit' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"summary":"QA run","responses":[{"_id":"6b06733b59755580c39914eb","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ec","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ed","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ee","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ef","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914f0","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914f1","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914f2","result":"pass","remarks":""}]}'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 975
+RateLimit-Reset: 890
+Content-Type: application/json; charset=utf-8
+Content-Length: 559
+ETag: W/"22f-jDsNGZtXTBd2g+V0JeSvFNCKfI4"
+Date: Wed, 25 Nov 2026 05:33:59 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Only the assigned inspector can submit this inspection","stack":"Error: Only the assigned inspector can submit this inspection\n    at fail (<repo>\\backend\\controllers\\inspectionController.js:13:9)\n    at <repo>\\backend\\controllers\\inspectionController.js:68:5\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A01-03a expected=403 actual=403 (as expected)
+
+--- A01-03b | technician | 11:04:00
+$ curl -s -i -g -X PUT 'http://127.0.0.1:5055/api/inspections/6b06733b59755580c39914ea/submit' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"summary":"QA run","responses":[{"_id":"6b06733b59755580c39914eb","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ec","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ed","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ee","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ef","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914f0","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914f1","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914f2","result":"pass","remarks":""}]}'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 974
+RateLimit-Reset: 890
+Content-Type: application/json; charset=utf-8
+Content-Length: 1991
+ETag: W/"7c7-EXndG954qx5HnuwEjfrPQFV9jxw"
+Date: Wed, 25 Nov 2026 05:34:00 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Role 'technician' is not allowed to perform this action","stack":"Error: Role 'technician' is not allowed to perform this action\n    at <repo>\\backend\\middleware\\auth.js:35:19\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:284:15\n    at param (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:421:3)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)"}
+>>> A01-03b expected=403 actual=403 (as expected)
+
+--- A01-03c | no token | 11:04:00
+$ curl -s -i -g -X PUT 'http://127.0.0.1:5055/api/inspections/6b06733b59755580c39914ea/submit' -H 'Content-Type: application/json' -d '{"summary":"QA run","responses":[{"_id":"6b06733b59755580c39914eb","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ec","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ed","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ee","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ef","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914f0","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914f1","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914f2","result":"pass","remarks":""}]}'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 973
+RateLimit-Reset: 890
+Content-Type: application/json; charset=utf-8
+Content-Length: 1919
+ETag: W/"77f-qa71ttNzj+7V3RYsitfi7wshLxk"
+Date: Wed, 25 Nov 2026 05:34:00 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Not authenticated: token missing","stack":"Error: Not authenticated: token missing\n    at <repo>\\backend\\middleware\\auth.js:11:11\n    at <repo>\\backend\\utils\\asyncHandler.js:2:62\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at router.handle (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:47:12)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)"}
+>>> A01-03c expected=401 actual=401 (as expected)
+
+--- A01-03d | admin: is it unchanged? | 11:04:01
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/inspections/6b06733b59755580c39914ea' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 972
+RateLimit-Reset: 889
+Content-Type: application/json; charset=utf-8
+Content-Length: 1883
+ETag: W/"75b-1jjr2R60sG4qXhgJXQPspusAT3g"
+Date: Wed, 25 Nov 2026 05:34:01 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"_id":"6b06733b59755580c39914ea","lab":{"_id":"6b06733b59755580c39914aa","name":"Chemistry Support Laboratory","code":"CH-05","building":"Science Block","hazardLevel":"high"},"template":"6b06733b59755580c39914ac","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-11-25T05:33:47.639Z","status":"scheduled","responses":[{"text":"Fire extinguishers are present, charged and within service date","category":"Fire Safety","critical":true,"result":"pending","remarks":"","_id":"6b06733b59755580c39914eb"},{"text":"Emergency exits are clear and signs are illuminated","category":"Emergency","critical":true,"result":"pending","remarks":"","_id":"6b06733b59755580c39914ec"},{"text":"First aid kit is stocked and accessible","category":"Emergency","critical":false,"result":"pending","remarks":"","_id":"6b06733b59755580c39914ed"},{"text":"Emergency stop / main power cut-off is accessible and labelled","category":"Electrical","critical":true,"result":"pending","remarks":"","_id":"6b06733b59755580c39914ee"},{"text":"Power cables are free from damage and not overloaded","category":"Electrical","critical":false,"result":"pending","remarks":"","_id":"6b06733b59755580c39914ef"},{"text":"PPE (gloves, goggles, lab coats) is available and in good condition","category":"PPE","critical":false,"result":"pending","remarks":"","_id":"6b06733b59755580c39914f0"},{"text":"Safety rules and emergency contacts are displayed","category":"General","critical":false,"result":"pending","remarks":"","_id":"6b06733b59755580c39914f1"},{"text":"Work benches are clean and free from clutter","category":"General","critical":false,"result":"pending","remarks":"","_id":"6b06733b59755580c39914f2"}],"createdAt":"2026-11-25T05:33:47.640Z","updatedAt":"2026-11-25T05:33:47.640Z","__v":0}
+>>> A01-03d expected=200 actual=200 (as expected)
+>>> A01-03d status after the three refused requests: scheduled
+
+==================================================================
+A01-04 Technician sees completed reports only (README s.1 line 37)
+==================================================================
+
+--- A01-04a | technician, scheduled inspection | 11:04:01
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/inspections/6b06733b59755580c39914ea' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 971
+RateLimit-Reset: 888
+Content-Type: application/json; charset=utf-8
+Content-Length: 500
+ETag: W/"1f4-Mp8r3juypF8dcoWZrsuUghOYP5g"
+Date: Wed, 25 Nov 2026 05:34:01 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Report not available yet","stack":"Error: Report not available yet\n    at fail (<repo>\\backend\\controllers\\inspectionController.js:13:9)\n    at <repo>\\backend\\controllers\\inspectionController.js:32:70\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A01-04a expected=403 actual=403 (as expected)
+
+--- A01-04b | technician, completed inspection | 11:04:02
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/inspections/6b06733b59755580c39914be' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 970
+RateLimit-Reset: 888
+Content-Type: application/json; charset=utf-8
+Content-Length: 2005
+ETag: W/"7d5-UYawCcfXrK+aLEa5AMlHLegORjw"
+Date: Wed, 25 Nov 2026 05:34:02 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"_id":"6b06733b59755580c39914be","lab":{"_id":"6b06733b59755580c39914a6","name":"High Voltage Laboratory","code":"HV-01","building":"EIE Block A","hazardLevel":"high"},"template":"6b06733b59755580c39914ac","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-11-05T05:33:47.620Z","completedDate":"2026-11-05T05:33:47.620Z","status":"completed","responses":[{"text":"Fire extinguishers are present, charged and within service date","category":"Fire Safety","critical":true,"result":"pass","remarks":"","_id":"6b06733b59755580c39914bf"},{"text":"Emergency exits are clear and signs are illuminated","category":"Emergency","critical":true,"result":"pass","remarks":"","_id":"6b06733b59755580c39914c0"},{"text":"First aid kit is stocked and accessible","category":"Emergency","critical":false,"result":"pass","remarks":"","_id":"6b06733b59755580c39914c1"},{"text":"Emergency stop / main power cut-off is accessible and labelled","category":"Electrical","critical":true,"result":"pass","remarks":"","_id":"6b06733b59755580c39914c2"},{"text":"Power cables are free from damage and not overloaded","category":"Electrical","critical":false,"result":"fail","remarks":"Needs corrective action","_id":"6b06733b59755580c39914c3"},{"text":"PPE (gloves, goggles, lab coats) is available and in good condition","category":"PPE","critical":false,"result":"pass","remarks":"","_id":"6b06733b59755580c39914c4"},{"text":"Safety rules and emergency contacts are displayed","category":"General","critical":false,"result":"pass","remarks":"","_id":"6b06733b59755580c39914c5"},{"text":"Work benches are clean and free from clutter","category":"General","critical":false,"result":"pass","remarks":"","_id":"6b06733b59755580c39914c6"}],"summary":"Corrective actions required for failed items.","score":88,"riskLevel":"low","createdAt":"2026-11-25T05:33:47.622Z","updatedAt":"2026-11-25T05:33:47.622Z","__v":0}
+>>> A01-04b expected=200 actual=200 (as expected)
+
+--- A01-04c | technician, list with ?status=scheduled | 11:04:02
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/inspections?status=scheduled' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 969
+RateLimit-Reset: 888
+Content-Type: application/json; charset=utf-8
+Content-Length: 2560
+ETag: W/"a00-wWnf2l0r2GUIkh0rJZewLKQKdes"
+Date: Wed, 25 Nov 2026 05:34:02 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"_id":"6b06733b59755580c39914df","lab":{"_id":"6b06733b59755580c39914a9","name":"Computer Networks Laboratory","code":"CN-04","building":"EIE Block C","hazardLevel":"low"},"template":"6b06733b59755580c39914ac","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-11-13T05:33:47.635Z","completedDate":"2026-11-13T05:33:47.635Z","status":"completed","summary":"Corrective actions required for failed items.","score":88,"riskLevel":"low","createdAt":"2026-11-25T05:33:47.637Z","updatedAt":"2026-11-25T05:33:47.637Z","__v":0},{"_id":"6b06733b59755580c39914be","lab":{"_id":"6b06733b59755580c39914a6","name":"High Voltage Laboratory","code":"HV-01","building":"EIE Block A","hazardLevel":"high"},"template":"6b06733b59755580c39914ac","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-11-05T05:33:47.620Z","completedDate":"2026-11-05T05:33:47.620Z","status":"completed","summary":"Corrective actions required for failed items.","score":88,"riskLevel":"low","createdAt":"2026-11-25T05:33:47.622Z","updatedAt":"2026-11-25T05:33:47.622Z","__v":0},{"_id":"6b06733b59755580c39914c9","lab":{"_id":"6b06733b59755580c39914a7","name":"Electronics Laboratory","code":"EL-02","building":"EIE Block A","hazardLevel":"medium"},"template":"6b06733b59755580c39914ac","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-10-21T05:33:47.628Z","completedDate":"2026-10-21T05:33:47.628Z","status":"completed","summary":"Laboratory is in good condition.","score":100,"riskLevel":"low","createdAt":"2026-11-25T05:33:47.629Z","updatedAt":"2026-11-25T05:33:47.629Z","__v":0},{"_id":"6b06733b59755580c39914d4","lab":{"_id":"6b06733b59755580c39914a8","name":"Power Electronics Laboratory","code":"PE-03","building":"EIE Block B","hazardLevel":"high"},"template":"6b06733b59755580c39914ac","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-10-06T05:33:47.632Z","completedDate":"2026-10-06T05:33:47.632Z","status":"completed","summary":"Corrective actions required for failed items.","score":63,"riskLevel":"critical","createdAt":"2026-11-25T05:33:47.633Z","updatedAt":"2026-11-25T05:33:47.633Z","__v":0}]
+>>> A01-04c expected=200 actual=200 (as expected)
+>>> A01-04c statuses in the list: completed (4 rows)
+
+--- A01-04d | technician, list with operator filter | 11:04:03
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/inspections?status[$ne]=completed' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 968
+RateLimit-Reset: 887
+Content-Type: application/json; charset=utf-8
+Content-Length: 2560
+ETag: W/"a00-wWnf2l0r2GUIkh0rJZewLKQKdes"
+Date: Wed, 25 Nov 2026 05:34:03 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"_id":"6b06733b59755580c39914df","lab":{"_id":"6b06733b59755580c39914a9","name":"Computer Networks Laboratory","code":"CN-04","building":"EIE Block C","hazardLevel":"low"},"template":"6b06733b59755580c39914ac","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-11-13T05:33:47.635Z","completedDate":"2026-11-13T05:33:47.635Z","status":"completed","summary":"Corrective actions required for failed items.","score":88,"riskLevel":"low","createdAt":"2026-11-25T05:33:47.637Z","updatedAt":"2026-11-25T05:33:47.637Z","__v":0},{"_id":"6b06733b59755580c39914be","lab":{"_id":"6b06733b59755580c39914a6","name":"High Voltage Laboratory","code":"HV-01","building":"EIE Block A","hazardLevel":"high"},"template":"6b06733b59755580c39914ac","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-11-05T05:33:47.620Z","completedDate":"2026-11-05T05:33:47.620Z","status":"completed","summary":"Corrective actions required for failed items.","score":88,"riskLevel":"low","createdAt":"2026-11-25T05:33:47.622Z","updatedAt":"2026-11-25T05:33:47.622Z","__v":0},{"_id":"6b06733b59755580c39914c9","lab":{"_id":"6b06733b59755580c39914a7","name":"Electronics Laboratory","code":"EL-02","building":"EIE Block A","hazardLevel":"medium"},"template":"6b06733b59755580c39914ac","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-10-21T05:33:47.628Z","completedDate":"2026-10-21T05:33:47.628Z","status":"completed","summary":"Laboratory is in good condition.","score":100,"riskLevel":"low","createdAt":"2026-11-25T05:33:47.629Z","updatedAt":"2026-11-25T05:33:47.629Z","__v":0},{"_id":"6b06733b59755580c39914d4","lab":{"_id":"6b06733b59755580c39914a8","name":"Power Electronics Laboratory","code":"PE-03","building":"EIE Block B","hazardLevel":"high"},"template":"6b06733b59755580c39914ac","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-10-06T05:33:47.632Z","completedDate":"2026-10-06T05:33:47.632Z","status":"completed","summary":"Corrective actions required for failed items.","score":63,"riskLevel":"critical","createdAt":"2026-11-25T05:33:47.633Z","updatedAt":"2026-11-25T05:33:47.633Z","__v":0}]
+>>> A01-04d expected=200 actual=200 (as expected)
+>>> A01-04d statuses in the list: completed (4 rows)
+
+==================================================================
+A01-05 Technician sees own incidents only (README s.4 line 129)
+==================================================================
+
+--- A01-05a | inspector reports an open incident | 11:04:04
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/incidents' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"lab":"6b06733b59755580c39914aa","title":"QA private incident","description":"Reported by the inspector","severity":"high"}'
+HTTP/1.1 201 Created
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 967
+RateLimit-Reset: 886
+Content-Type: application/json; charset=utf-8
+Content-Length: 409
+ETag: W/"199-AnkArp11E8anvbX1xsJh2R/WgR8"
+Date: Wed, 25 Nov 2026 05:34:04 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"_id":"6b06734c2a62d31564c8d5a0","lab":{"_id":"6b06733b59755580c39914aa","name":"Chemistry Support Laboratory","code":"CH-05"},"reportedBy":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","role":"inspector"},"title":"QA private incident","description":"Reported by the inspector","severity":"high","status":"open","createdAt":"2026-11-25T05:34:04.157Z","updatedAt":"2026-11-25T05:34:04.157Z","__v":0}
+>>> A01-05a expected=201 actual=201 (as expected)
+
+--- A01-05b | technician, list | 11:04:04
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/incidents' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 966
+RateLimit-Reset: 886
+Content-Type: application/json; charset=utf-8
+Content-Length: 912
+ETag: W/"390-6hLElMpZTVeIpElRe9h1KRPxHAk"
+Date: Wed, 25 Nov 2026 05:34:04 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"_id":"6b06733b59755580c39914f4","lab":{"_id":"6b06733b59755580c39914a8","name":"Power Electronics Laboratory","code":"PE-03"},"reportedBy":{"_id":"6b06733b59755580c39914a4","name":"Kamal Silva","role":"technician"},"title":"Capacitor bank discharge spark","description":"Small spark observed while discharging the DC-link capacitor bank.","severity":"high","status":"investigating","__v":0,"createdAt":"2026-11-25T05:33:47.642Z","updatedAt":"2026-11-25T05:33:47.642Z"},{"_id":"6b06733b59755580c39914f5","lab":{"_id":"6b06733b59755580c39914a6","name":"High Voltage Laboratory","code":"HV-01"},"reportedBy":{"_id":"6b06733b59755580c39914a4","name":"Kamal Silva","role":"technician"},"title":"Damaged earth-leakage warning lamp","description":"Warning lamp on test panel is not lighting.","severity":"medium","status":"open","__v":0,"createdAt":"2026-11-25T05:33:47.642Z","updatedAt":"2026-11-25T05:33:47.642Z"}]
+>>> A01-05b expected=200 actual=200 (as expected)
+>>> A01-05b reporters in the list: Kamal Silva (2 rows)
+
+--- A01-05c | technician, tries ?reportedBy=<inspector> | 11:04:05
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/incidents?reportedBy=6b06733b59755580c39914a2' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 965
+RateLimit-Reset: 885
+Content-Type: application/json; charset=utf-8
+Content-Length: 912
+ETag: W/"390-6hLElMpZTVeIpElRe9h1KRPxHAk"
+Date: Wed, 25 Nov 2026 05:34:05 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"_id":"6b06733b59755580c39914f4","lab":{"_id":"6b06733b59755580c39914a8","name":"Power Electronics Laboratory","code":"PE-03"},"reportedBy":{"_id":"6b06733b59755580c39914a4","name":"Kamal Silva","role":"technician"},"title":"Capacitor bank discharge spark","description":"Small spark observed while discharging the DC-link capacitor bank.","severity":"high","status":"investigating","__v":0,"createdAt":"2026-11-25T05:33:47.642Z","updatedAt":"2026-11-25T05:33:47.642Z"},{"_id":"6b06733b59755580c39914f5","lab":{"_id":"6b06733b59755580c39914a6","name":"High Voltage Laboratory","code":"HV-01"},"reportedBy":{"_id":"6b06733b59755580c39914a4","name":"Kamal Silva","role":"technician"},"title":"Damaged earth-leakage warning lamp","description":"Warning lamp on test panel is not lighting.","severity":"medium","status":"open","__v":0,"createdAt":"2026-11-25T05:33:47.642Z","updatedAt":"2026-11-25T05:33:47.642Z"}]
+>>> A01-05c expected=200 actual=200 (as expected)
+>>> A01-05c reporters in the list: Kamal Silva (2 rows)
+
+--- A01-05d | technician, by id of the burn incident | 11:04:06
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/incidents/6b06733b59755580c39914f6' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 404 Not Found
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 964
+RateLimit-Reset: 884
+Content-Type: application/json; charset=utf-8
+Content-Length: 1858
+ETag: W/"742-B32Bp6132lKqCxZoml/Ypp+wiyk"
+Date: Wed, 25 Nov 2026 05:34:06 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Route not found: GET /api/incidents/6b06733b59755580c39914f6","stack":"Error: Route not found: GET /api/incidents/6b06733b59755580c39914f6\n    at exports.notFound (<repo>\\backend\\middleware\\errorHandler.js:3:8)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:646:15\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:265:14)\n    at <repo>\\backend\\middleware\\auth.js:26:3\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A01-05d expected=404 actual=404 (as expected)
+
+--- A01-05e | technician, dashboard | 11:04:06
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/dashboard' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 963
+RateLimit-Reset: 883
+Content-Type: application/json; charset=utf-8
+Content-Length: 1788
+ETag: W/"6fc-27jPfOmWfPMAI/vsJ9IRvKgecFc"
+Date: Wed, 25 Nov 2026 05:34:06 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"totals":{"activeLabs":6,"scheduledInspections":1,"completedInspections":4,"openIncidents":3,"averageScore":85},"inspectionsByRisk":{"low":3,"critical":1},"incidentsBySeverity":{"medium":1,"high":2,"low":1},"scoreTrend":[{"date":"2026-10-06T05:33:47.632Z","lab":"PE-03","score":63},{"date":"2026-10-21T05:33:47.628Z","lab":"EL-02","score":100},{"date":"2026-11-05T05:33:47.620Z","lab":"HV-01","score":88},{"date":"2026-11-13T05:33:47.635Z","lab":"CN-04","score":88}],"overdueLabs":[{"_id":"6b06733b59755580c39914aa","name":"Chemistry Support Laboratory","code":"CH-05","hazardLevel":"high"},{"_id":"6b0673442a62d31564c8d533","name":"QA Sec Lab","code":"QS-01","hazardLevel":"medium"}],"overdueDays":90,"recentIncidents":[{"_id":"6b06734c2a62d31564c8d5a0","lab":{"_id":"6b06733b59755580c39914aa","code":"CH-05"},"reportedBy":"6b06733b59755580c39914a2","title":"QA private incident","description":"Reported by the inspector","severity":"high","status":"open","createdAt":"2026-11-25T05:34:04.157Z","updatedAt":"2026-11-25T05:34:04.157Z","__v":0},{"_id":"6b06733b59755580c39914f4","lab":{"_id":"6b06733b59755580c39914a8","code":"PE-03"},"reportedBy":"6b06733b59755580c39914a4","title":"Capacitor bank discharge spark","description":"Small spark observed while discharging the DC-link capacitor bank.","severity":"high","status":"investigating","__v":0,"createdAt":"2026-11-25T05:33:47.642Z","updatedAt":"2026-11-25T05:33:47.642Z"},{"_id":"6b06733b59755580c39914f5","lab":{"_id":"6b06733b59755580c39914a6","code":"HV-01"},"reportedBy":"6b06733b59755580c39914a4","title":"Damaged earth-leakage warning lamp","description":"Warning lamp on test panel is not lighting.","severity":"medium","status":"open","__v":0,"createdAt":"2026-11-25T05:33:47.642Z","updatedAt":"2026-11-25T05:33:47.642Z"}]}
+>>> A01-05e expected=200 actual=200 (as expected)
+>>> A01-05e recentIncidents on the technician dashboard: ["QA private incident","Capacitor bank discharge spark","Damaged earth-leakage warning lamp"]
+>>> A01-05e of these, not reported by this technician: ["QA private incident / Reported by the inspector"]
+
+--- A01-05f | no token, list | 11:04:07
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/incidents'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 962
+RateLimit-Reset: 883
+Content-Type: application/json; charset=utf-8
+Content-Length: 1919
+ETag: W/"77f-qa71ttNzj+7V3RYsitfi7wshLxk"
+Date: Wed, 25 Nov 2026 05:34:07 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Not authenticated: token missing","stack":"Error: Not authenticated: token missing\n    at <repo>\\backend\\middleware\\auth.js:11:11\n    at <repo>\\backend\\utils\\asyncHandler.js:2:62\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at router.handle (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:47:12)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)"}
+>>> A01-05f expected=401 actual=401 (as expected)
+
+==================================================================
+A01-06 Technician may not change or delete an incident (README s.1 line 39, s.4 lines 131-132)
+==================================================================
+
+--- A01-06a | technician, incident of somebody else | 11:04:08
+$ curl -s -i -g -X PUT 'http://127.0.0.1:5055/api/incidents/6b06733b59755580c39914f6' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"status":"open"}'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 961
+RateLimit-Reset: 882
+Content-Type: application/json; charset=utf-8
+Content-Length: 1991
+ETag: W/"7c7-EXndG954qx5HnuwEjfrPQFV9jxw"
+Date: Wed, 25 Nov 2026 05:34:08 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Role 'technician' is not allowed to perform this action","stack":"Error: Role 'technician' is not allowed to perform this action\n    at <repo>\\backend\\middleware\\auth.js:35:19\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:284:15\n    at param (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:421:3)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)"}
+>>> A01-06a expected=403 actual=403 (as expected)
+
+--- A01-06b | technician, own incident | 11:04:08
+$ curl -s -i -g -X PUT 'http://127.0.0.1:5055/api/incidents/6b06733b59755580c39914f5' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"status":"resolved"}'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 960
+RateLimit-Reset: 882
+Content-Type: application/json; charset=utf-8
+Content-Length: 1991
+ETag: W/"7c7-EXndG954qx5HnuwEjfrPQFV9jxw"
+Date: Wed, 25 Nov 2026 05:34:08 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Role 'technician' is not allowed to perform this action","stack":"Error: Role 'technician' is not allowed to perform this action\n    at <repo>\\backend\\middleware\\auth.js:35:19\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:284:15\n    at param (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:421:3)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)"}
+>>> A01-06b expected=403 actual=403 (as expected)
+
+--- A01-06c | no token | 11:04:09
+$ curl -s -i -g -X PUT 'http://127.0.0.1:5055/api/incidents/6b06733b59755580c39914f5' -H 'Content-Type: application/json' -d '{"status":"resolved"}'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 959
+RateLimit-Reset: 881
+Content-Type: application/json; charset=utf-8
+Content-Length: 1919
+ETag: W/"77f-qa71ttNzj+7V3RYsitfi7wshLxk"
+Date: Wed, 25 Nov 2026 05:34:08 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Not authenticated: token missing","stack":"Error: Not authenticated: token missing\n    at <repo>\\backend\\middleware\\auth.js:11:11\n    at <repo>\\backend\\utils\\asyncHandler.js:2:62\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at router.handle (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:47:12)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)"}
+>>> A01-06c expected=401 actual=401 (as expected)
+
+--- A01-06d | technician, delete own | 11:04:09
+$ curl -s -i -g -X DELETE 'http://127.0.0.1:5055/api/incidents/6b06733b59755580c39914f5' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 958
+RateLimit-Reset: 881
+Content-Type: application/json; charset=utf-8
+Content-Length: 1991
+ETag: W/"7c7-EXndG954qx5HnuwEjfrPQFV9jxw"
+Date: Wed, 25 Nov 2026 05:34:09 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Role 'technician' is not allowed to perform this action","stack":"Error: Role 'technician' is not allowed to perform this action\n    at <repo>\\backend\\middleware\\auth.js:35:19\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:284:15\n    at param (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:421:3)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)"}
+>>> A01-06d expected=403 actual=403 (as expected)
+
+--- A01-06e | admin: is it unchanged? | 11:04:09
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/incidents' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 957
+RateLimit-Reset: 881
+Content-Type: application/json; charset=utf-8
+Content-Length: 1856
+ETag: W/"740-zE92kaIKs1mev7l88jfB3C/KCIg"
+Date: Wed, 25 Nov 2026 05:34:09 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"_id":"6b06734c2a62d31564c8d5a0","lab":{"_id":"6b06733b59755580c39914aa","name":"Chemistry Support Laboratory","code":"CH-05"},"reportedBy":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","role":"inspector"},"title":"QA private incident","description":"Reported by the inspector","severity":"high","status":"open","createdAt":"2026-11-25T05:34:04.157Z","updatedAt":"2026-11-25T05:34:04.157Z","__v":0},{"_id":"6b06733b59755580c39914f4","lab":{"_id":"6b06733b59755580c39914a8","name":"Power Electronics Laboratory","code":"PE-03"},"reportedBy":{"_id":"6b06733b59755580c39914a4","name":"Kamal Silva","role":"technician"},"title":"Capacitor bank discharge spark","description":"Small spark observed while discharging the DC-link capacitor bank.","severity":"high","status":"investigating","__v":0,"createdAt":"2026-11-25T05:33:47.642Z","updatedAt":"2026-11-25T05:33:47.642Z"},{"_id":"6b06733b59755580c39914f5","lab":{"_id":"6b06733b59755580c39914a6","name":"High Voltage Laboratory","code":"HV-01"},"reportedBy":{"_id":"6b06733b59755580c39914a4","name":"Kamal Silva","role":"technician"},"title":"Damaged earth-leakage warning lamp","description":"Warning lamp on test panel is not lighting.","severity":"medium","status":"open","__v":0,"createdAt":"2026-11-25T05:33:47.642Z","updatedAt":"2026-11-25T05:33:47.642Z"},{"_id":"6b06733b59755580c39914f6","lab":{"_id":"6b06733b59755580c39914a7","name":"Electronics Laboratory","code":"EL-02"},"reportedBy":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","role":"inspector"},"title":"Minor soldering burn","description":"Student received a minor burn. First aid administered.","severity":"low","status":"resolved","resolution":"Reminded students to use soldering stand.","resolvedAt":"2026-11-22T05:33:47.641Z","__v":0,"createdAt":"2026-11-25T05:33:47.642Z","updatedAt":"2026-11-25T05:33:47.642Z"}]
+>>> A01-06e expected=200 actual=200 (as expected)
+>>> A01-06e lamp=open burn=resolved (seed: lamp=open burn=resolved)
+
+--- A01-06f | inspector (positive control) | 11:04:10
+$ curl -s -i -g -X PUT 'http://127.0.0.1:5055/api/incidents/6b06733b59755580c39914f5' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"status":"investigating"}'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 956
+RateLimit-Reset: 880
+Content-Type: application/json; charset=utf-8
+Content-Length: 448
+ETag: W/"1c0-gaybN6IIZ/AoiARImNK9Q/6eqvU"
+Date: Wed, 25 Nov 2026 05:34:10 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"_id":"6b06733b59755580c39914f5","lab":{"_id":"6b06733b59755580c39914a6","name":"High Voltage Laboratory","code":"HV-01"},"reportedBy":{"_id":"6b06733b59755580c39914a4","name":"Kamal Silva","role":"technician"},"title":"Damaged earth-leakage warning lamp","description":"Warning lamp on test panel is not lighting.","severity":"medium","status":"investigating","__v":0,"createdAt":"2026-11-25T05:33:47.642Z","updatedAt":"2026-11-25T05:34:10.148Z"}
+>>> A01-06f expected=200 actual=200 (as expected)
+
+==================================================================
+A01-07 Only admin may manage users (README s.1 line 40, s.4 lines 134-136)
+==================================================================
+
+--- A01-07a | inspector makes himself admin | 11:04:10
+$ curl -s -i -g -X PUT 'http://127.0.0.1:5055/api/users/6b06733b59755580c39914a2/role' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"role":"admin"}'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 955
+RateLimit-Reset: 879
+Content-Type: application/json; charset=utf-8
+Content-Length: 1466
+ETag: W/"5ba-gZ7e2K9qT/khcfuns1ckteKOOG0"
+Date: Wed, 25 Nov 2026 05:34:10 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Role 'inspector' is not allowed to perform this action","stack":"Error: Role 'inspector' is not allowed to perform this action\n    at <repo>\\backend\\middleware\\auth.js:35:19\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at <repo>\\backend\\middleware\\auth.js:26:3\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A01-07a expected=403 actual=403 (as expected)
+
+--- A01-07b | technician makes himself admin | 11:04:11
+$ curl -s -i -g -X PUT 'http://127.0.0.1:5055/api/users/6b06733b59755580c39914a4/role' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"role":"admin"}'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 954
+RateLimit-Reset: 879
+Content-Type: application/json; charset=utf-8
+Content-Length: 1468
+ETag: W/"5bc-U0FZec44uFOjHI96Pqf9VOYYJC0"
+Date: Wed, 25 Nov 2026 05:34:11 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Role 'technician' is not allowed to perform this action","stack":"Error: Role 'technician' is not allowed to perform this action\n    at <repo>\\backend\\middleware\\auth.js:35:19\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at <repo>\\backend\\middleware\\auth.js:26:3\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A01-07b expected=403 actual=403 (as expected)
+
+--- A01-07c | no token | 11:04:12
+$ curl -s -i -g -X PUT 'http://127.0.0.1:5055/api/users/6b06733b59755580c39914a4/role' -H 'Content-Type: application/json' -d '{"role":"admin"}'
+HTTP/1.1 401 Unauthorized
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 953
+RateLimit-Reset: 878
+Content-Type: application/json; charset=utf-8
+Content-Length: 1919
+ETag: W/"77f-qa71ttNzj+7V3RYsitfi7wshLxk"
+Date: Wed, 25 Nov 2026 05:34:11 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Not authenticated: token missing","stack":"Error: Not authenticated: token missing\n    at <repo>\\backend\\middleware\\auth.js:11:11\n    at <repo>\\backend\\utils\\asyncHandler.js:2:62\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at router.handle (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:47:12)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)"}
+>>> A01-07c expected=401 actual=401 (as expected)
+
+--- A01-07d | inspector, list users | 11:04:12
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/users' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 952
+RateLimit-Reset: 878
+Content-Type: application/json; charset=utf-8
+Content-Length: 1466
+ETag: W/"5ba-gZ7e2K9qT/khcfuns1ckteKOOG0"
+Date: Wed, 25 Nov 2026 05:34:12 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Role 'inspector' is not allowed to perform this action","stack":"Error: Role 'inspector' is not allowed to perform this action\n    at <repo>\\backend\\middleware\\auth.js:35:19\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at <repo>\\backend\\middleware\\auth.js:26:3\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A01-07d expected=403 actual=403 (as expected)
+
+--- A01-07e | technician, list users | 11:04:12
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/users' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 951
+RateLimit-Reset: 877
+Content-Type: application/json; charset=utf-8
+Content-Length: 1468
+ETag: W/"5bc-U0FZec44uFOjHI96Pqf9VOYYJC0"
+Date: Wed, 25 Nov 2026 05:34:12 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Role 'technician' is not allowed to perform this action","stack":"Error: Role 'technician' is not allowed to perform this action\n    at <repo>\\backend\\middleware\\auth.js:35:19\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at <repo>\\backend\\middleware\\auth.js:26:3\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A01-07e expected=403 actual=403 (as expected)
+
+--- A01-07f | admin, list users (positive control) | 11:04:13
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/users' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 950
+RateLimit-Reset: 877
+Content-Type: application/json; charset=utf-8
+Content-Length: 1115
+ETag: W/"45b-hEMVxISt0s3/ONRGR+dy0mB6ik8"
+Date: Wed, 25 Nov 2026 05:34:12 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"_id":"6b06733b59755580c399149e","name":"Dr. Admin","email":"admin@lab.com","role":"admin","createdAt":"2026-11-25T05:33:47.329Z","updatedAt":"2026-11-25T05:33:47.329Z","__v":0},{"_id":"6b06733b59755580c39914a4","name":"Kamal Silva","email":"tech@lab.com","role":"technician","createdAt":"2026-11-25T05:33:47.514Z","updatedAt":"2026-11-25T05:33:47.514Z","__v":0},{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com","role":"inspector","createdAt":"2026-11-25T05:33:47.434Z","updatedAt":"2026-11-25T05:33:47.434Z","__v":0},{"_id":"6b06733e2a62d31564c8d50b","name":"Second Admin","email":"admin2@lab.com","role":"admin","createdAt":"2026-11-25T05:33:50.990Z","updatedAt":"2026-11-25T05:33:50.990Z","__v":0},{"_id":"6b06733e2a62d31564c8d508","name":"Second Inspector","email":"inspector2@lab.com","role":"inspector","createdAt":"2026-11-25T05:33:50.370Z","updatedAt":"2026-11-25T05:33:50.370Z","__v":0},{"_id":"6b06733f2a62d31564c8d50e","name":"Third Admin","email":"admin3@lab.com","role":"admin","createdAt":"2026-11-25T05:33:51.567Z","updatedAt":"2026-11-25T05:33:51.567Z","__v":0}]
+>>> A01-07f expected=200 actual=200 (as expected)
+>>> A01-07f inspector role=inspector technician role=technician any password field=false
+
+==================================================================
+A01-08 Mass assignment: choose a role at registration (README s.4 line 115, s.5 line 154)
+==================================================================
+
+--- A01-08a | public, role=admin in the body | 11:04:14
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/auth/register' -H 'Content-Type: application/json' -d '{"name":"Mass Assign","email":"mass@lab.com","password":"Mass@12345","role":"admin","isAdmin":true}'
+HTTP/1.1 201 Created
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 949
+RateLimit-Reset: 876
+X-RateLimit-Limit: 50
+X-RateLimit-Remaining: 43
+Date: Wed, 25 Nov 2026 05:34:13 GMT
+X-RateLimit-Reset: 1795585730
+Content-Type: application/json; charset=utf-8
+Content-Length: 288
+ETag: W/"120-IHryDxqmtLv5+Z5XRhHT33TqVeI"
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"token":"eyJhbGciOiJIUzI1NiIs...","user":{"id":"6b0673552a62d31564c8d5cf","name":"Mass Assign","email":"mass@lab.com","role":"technician"}}
+>>> A01-08a expected=201 actual=201 (as expected)
+>>> A01-08a role in the answer: technician
+
+--- A01-08b | the new account calls an admin route | 11:04:15
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/users' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 948
+RateLimit-Reset: 875
+Content-Type: application/json; charset=utf-8
+Content-Length: 1468
+ETag: W/"5bc-U0FZec44uFOjHI96Pqf9VOYYJC0"
+Date: Wed, 25 Nov 2026 05:34:14 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Role 'technician' is not allowed to perform this action","stack":"Error: Role 'technician' is not allowed to perform this action\n    at <repo>\\backend\\middleware\\auth.js:35:19\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at trim_prefix (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:328:13)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:286:9\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at <repo>\\backend\\middleware\\auth.js:26:3\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A01-08b expected=403 actual=403 (as expected)
+
+==================================================================
+A01-09 'Not on yourself' rule with the own id in capital letters (README silent, rule is in userController.js lines 24 and 37)
+==================================================================
+
+--- A01-09a | admin2, own id, normal (positive control) | 11:04:15
+$ curl -s -i -g -X PUT 'http://127.0.0.1:5055/api/users/6b06733e2a62d31564c8d50b/role' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"role":"technician"}'
+HTTP/1.1 400 Bad Request
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 947
+RateLimit-Reset: 875
+Content-Type: application/json; charset=utf-8
+Content-Length: 1631
+ETag: W/"65f-nyJuKERkjDXcD5AHI4MqyYG5im8"
+Date: Wed, 25 Nov 2026 05:34:15 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"You cannot change your own role","stack":"Error: You cannot change your own role\n    at <repo>\\backend\\controllers\\userController.js:26:11\n    at <repo>\\backend\\utils\\asyncHandler.js:2:62\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at module.exports (<repo>\\backend\\middleware\\validate.js:9:3)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at middleware (<repo>\\backend\\node_modules\\express-validator\\lib\\middlewares\\check.js:16:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A01-09a expected=400 actual=400 (as expected)
+
+--- A01-09b | admin2, own id, capitals | 11:04:15
+$ curl -s -i -g -X PUT 'http://127.0.0.1:5055/api/users/6B06733E2A62D31564C8D50B/role' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"role":"technician"}'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 946
+RateLimit-Reset: 875
+Content-Type: application/json; charset=utf-8
+Content-Length: 187
+ETag: W/"bb-R7RFJlLCn/BnqSfhryV3xoPwGyM"
+Date: Wed, 25 Nov 2026 05:34:15 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"_id":"6b06733e2a62d31564c8d50b","name":"Second Admin","email":"admin2@lab.com","role":"technician","createdAt":"2026-11-25T05:33:50.990Z","updatedAt":"2026-11-25T05:34:15.451Z","__v":0}
+>>> A01-09b expected=400 actual=200 (NOT as expected)
+
+--- A01-09c | admin3, own id, normal (positive control) | 11:04:16
+$ curl -s -i -g -X DELETE 'http://127.0.0.1:5055/api/users/6b06733f2a62d31564c8d50e' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 400 Bad Request
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 945
+RateLimit-Reset: 874
+Content-Type: application/json; charset=utf-8
+Content-Length: 1929
+ETag: W/"789-S9sdc87by3u7ivGKw/KpPKKEtF4"
+Date: Wed, 25 Nov 2026 05:34:15 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"You cannot delete your own account","stack":"Error: You cannot delete your own account\n    at <repo>\\backend\\controllers\\userController.js:39:11\n    at <repo>\\backend\\utils\\asyncHandler.js:2:62\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:284:15\n    at param (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:421:3)"}
+>>> A01-09c expected=400 actual=400 (as expected)
+
+--- A01-09d | admin3, own id, capitals | 11:04:16
+$ curl -s -i -g -X DELETE 'http://127.0.0.1:5055/api/users/6B06733F2A62D31564C8D50E' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 944
+RateLimit-Reset: 874
+Content-Type: application/json; charset=utf-8
+Content-Length: 26
+ETag: W/"1a-+BFCXZBji7vrbkrwyE5s2YKViik"
+Date: Wed, 25 Nov 2026 05:34:16 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"User deleted"}
+>>> A01-09d expected=400 actual=200 (NOT as expected)
+
+--- A01-09e | admin: users after that | 11:04:17
+$ curl -s -i -g -X GET 'http://127.0.0.1:5055/api/users' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 943
+RateLimit-Reset: 873
+Content-Type: application/json; charset=utf-8
+Content-Length: 1123
+ETag: W/"463-DATvNbpgkC0kjNrCNheT4JEY9DQ"
+Date: Wed, 25 Nov 2026 05:34:16 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"_id":"6b06733b59755580c399149e","name":"Dr. Admin","email":"admin@lab.com","role":"admin","createdAt":"2026-11-25T05:33:47.329Z","updatedAt":"2026-11-25T05:33:47.329Z","__v":0},{"_id":"6b06733b59755580c39914a4","name":"Kamal Silva","email":"tech@lab.com","role":"technician","createdAt":"2026-11-25T05:33:47.514Z","updatedAt":"2026-11-25T05:33:47.514Z","__v":0},{"_id":"6b0673552a62d31564c8d5cf","name":"Mass Assign","email":"mass@lab.com","role":"technician","createdAt":"2026-11-25T05:34:13.840Z","updatedAt":"2026-11-25T05:34:13.840Z","__v":0},{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com","role":"inspector","createdAt":"2026-11-25T05:33:47.434Z","updatedAt":"2026-11-25T05:33:47.434Z","__v":0},{"_id":"6b06733e2a62d31564c8d50b","name":"Second Admin","email":"admin2@lab.com","role":"technician","createdAt":"2026-11-25T05:33:50.990Z","updatedAt":"2026-11-25T05:34:15.451Z","__v":0},{"_id":"6b06733e2a62d31564c8d508","name":"Second Inspector","email":"inspector2@lab.com","role":"inspector","createdAt":"2026-11-25T05:33:50.370Z","updatedAt":"2026-11-25T05:33:50.370Z","__v":0}]
+>>> A01-09e expected=200 actual=200 (as expected)
+>>> A01-09e admin2 role now: technician   admin3 still exists: false
+
+==================================================================
+A01-10 Inspector may only schedule for himself (README s.1 line 35)
+==================================================================
+
+--- A01-10a | inspector2 sends inspector=<inspector 1> | 11:04:18
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/inspections' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"lab":"6b06733b59755580c39914aa","template":"6b06733b59755580c39914ac","inspector":"6b06733b59755580c39914a2"}'
+HTTP/1.1 201 Created
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 942
+RateLimit-Reset: 872
+Content-Type: application/json; charset=utf-8
+Content-Length: 1888
+ETag: W/"760-vHkHz5KS9OLOw8ilv8Og4vbGr0I"
+Date: Wed, 25 Nov 2026 05:34:17 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"_id":"6b0673592a62d31564c8d5ea","lab":{"_id":"6b06733b59755580c39914aa","name":"Chemistry Support Laboratory","code":"CH-05","building":"Science Block","hazardLevel":"high"},"template":"6b06733b59755580c39914ac","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06733e2a62d31564c8d508","name":"Second Inspector","email":"inspector2@lab.com"},"scheduledDate":"2026-11-25T05:34:17.701Z","status":"scheduled","responses":[{"text":"Fire extinguishers are present, charged and within service date","category":"Fire Safety","critical":true,"result":"pending","remarks":"","_id":"6b0673592a62d31564c8d5eb"},{"text":"Emergency exits are clear and signs are illuminated","category":"Emergency","critical":true,"result":"pending","remarks":"","_id":"6b0673592a62d31564c8d5ec"},{"text":"First aid kit is stocked and accessible","category":"Emergency","critical":false,"result":"pending","remarks":"","_id":"6b0673592a62d31564c8d5ed"},{"text":"Emergency stop / main power cut-off is accessible and labelled","category":"Electrical","critical":true,"result":"pending","remarks":"","_id":"6b0673592a62d31564c8d5ee"},{"text":"Power cables are free from damage and not overloaded","category":"Electrical","critical":false,"result":"pending","remarks":"","_id":"6b0673592a62d31564c8d5ef"},{"text":"PPE (gloves, goggles, lab coats) is available and in good condition","category":"PPE","critical":false,"result":"pending","remarks":"","_id":"6b0673592a62d31564c8d5f0"},{"text":"Safety rules and emergency contacts are displayed","category":"General","critical":false,"result":"pending","remarks":"","_id":"6b0673592a62d31564c8d5f1"},{"text":"Work benches are clean and free from clutter","category":"General","critical":false,"result":"pending","remarks":"","_id":"6b0673592a62d31564c8d5f2"}],"createdAt":"2026-11-25T05:34:17.703Z","updatedAt":"2026-11-25T05:34:17.703Z","__v":0}
+>>> A01-10a expected=201 actual=201 (as expected)
+>>> A01-10a assigned to: Second Inspector
+
+--- A01-10b | technician schedules | 11:04:18
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/inspections' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"lab":"6b06733b59755580c39914aa","template":"6b06733b59755580c39914ac"}'
+HTTP/1.1 403 Forbidden
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 941
+RateLimit-Reset: 872
+Content-Type: application/json; charset=utf-8
+Content-Length: 1859
+ETag: W/"743-4rKOhmCVBr8CpBL5Xzqe0dcHn0Y"
+Date: Wed, 25 Nov 2026 05:34:18 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Role 'technician' is not allowed to perform this action","stack":"Error: Role 'technician' is not allowed to perform this action\n    at <repo>\\backend\\middleware\\auth.js:35:19\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (<repo>\\backend\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (<repo>\\backend\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at <repo>\\backend\\node_modules\\express\\lib\\router\\index.js:284:15\n    at router.process_params (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (<repo>\\backend\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at <repo>\\backend\\middleware\\auth.js:26:3\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+>>> A01-10b expected=403 actual=403 (as expected)
+
+==================================================================
+A01-11 Extra: admin sends calculated fields when creating a lab (README silent; s.1 line 17 'last inspection date and score')
+==================================================================
+
+--- A01-11a | admin, lastScore in the body | 11:04:19
+$ curl -s -i -g -X POST 'http://127.0.0.1:5055/api/labs' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"name":"Never inspected lab","code":"QS-02","building":"Block Q","lastScore":100,"lastInspectionDate":"2026-11-01"}'
+HTTP/1.1 201 Created
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 940
+RateLimit-Reset: 871
+Content-Type: application/json; charset=utf-8
+Content-Length: 358
+ETag: W/"166-d33rDy0hPjJTb3k24/E/POtX1S4"
+Date: Wed, 25 Nov 2026 05:34:18 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"name":"Never inspected lab","code":"QS-02","building":"Block Q","department":"Electrical and Information Engineering","capacity":20,"hazardLevel":"medium","status":"active","lastInspectionDate":"2026-11-01T00:00:00.000Z","lastScore":100,"_id":"6b06735a2a62d31564c8d601","createdAt":"2026-11-25T05:34:18.725Z","updatedAt":"2026-11-25T05:34:18.725Z","__v":0}
+>>> A01-11a expected=400 actual=201 (NOT as expected)
+>>> A01-11a stored lastScore=100 lastInspectionDate=2026-11-01T00:00:00.000Z (no inspection exists for this lab)
+
+==================================================================
+A01-12 Positive control at the end: the assigned inspector can submit
+==================================================================
+
+--- A01-12a | assigned inspector | 11:04:20
+$ curl -s -i -g -X PUT 'http://127.0.0.1:5055/api/inspections/6b06733b59755580c39914ea/submit' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIs...' -H 'Content-Type: application/json' -d '{"summary":"QA run","responses":[{"_id":"6b06733b59755580c39914eb","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ec","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ed","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ee","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914ef","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914f0","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914f1","result":"pass","remarks":""},{"_id":"6b06733b59755580c39914f2","result":"pass","remarks":""}]}'
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Vary: Origin
+RateLimit-Policy: 1000;w=900
+RateLimit-Limit: 1000
+RateLimit-Remaining: 939
+RateLimit-Reset: 870
+Content-Type: application/json; charset=utf-8
+Content-Length: 1951
+ETag: W/"79f-d41Pgeoq7HaS++b7MoR3ZxtzN40"
+Date: Wed, 25 Nov 2026 05:34:19 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"_id":"6b06733b59755580c39914ea","lab":{"_id":"6b06733b59755580c39914aa","name":"Chemistry Support Laboratory","code":"CH-05","building":"Science Block","hazardLevel":"high"},"template":"6b06733b59755580c39914ac","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b06733b59755580c39914a2","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-11-25T05:33:47.639Z","status":"completed","responses":[{"text":"Fire extinguishers are present, charged and within service date","category":"Fire Safety","critical":true,"result":"pass","remarks":"","_id":"6b06733b59755580c39914eb"},{"text":"Emergency exits are clear and signs are illuminated","category":"Emergency","critical":true,"result":"pass","remarks":"","_id":"6b06733b59755580c39914ec"},{"text":"First aid kit is stocked and accessible","category":"Emergency","critical":false,"result":"pass","remarks":"","_id":"6b06733b59755580c39914ed"},{"text":"Emergency stop / main power cut-off is accessible and labelled","category":"Electrical","critical":true,"result":"pass","remarks":"","_id":"6b06733b59755580c39914ee"},{"text":"Power cables are free from damage and not overloaded","category":"Electrical","critical":false,"result":"pass","remarks":"","_id":"6b06733b59755580c39914ef"},{"text":"PPE (gloves, goggles, lab coats) is available and in good condition","category":"PPE","critical":false,"result":"pass","remarks":"","_id":"6b06733b59755580c39914f0"},{"text":"Safety rules and emergency contacts are displayed","category":"General","critical":false,"result":"pass","remarks":"","_id":"6b06733b59755580c39914f1"},{"text":"Work benches are clean and free from clutter","category":"General","critical":false,"result":"pass","remarks":"","_id":"6b06733b59755580c39914f2"}],"createdAt":"2026-11-25T05:33:47.640Z","updatedAt":"2026-11-25T05:34:19.776Z","__v":0,"completedDate":"2026-11-25T05:34:19.774Z","riskLevel":"low","score":100,"summary":"QA run"}
+>>> A01-12a expected=200 actual=200 (as expected)
+>>> A01-12a status=completed score=100
+server: stopped, port 5055 is free
+
+=== SUMMARY (written by the script) ===
+S-1       admin                                        POST   /api/users                                     expected=201 actual=201 as expected
+S-2       admin                                        POST   /api/users                                     expected=201 actual=201 as expected
+S-3       admin                                        POST   /api/users                                     expected=201 actual=201 as expected
+A01-01a   technician                                   POST   /api/labs                                      expected=403 actual=403 as expected
+A01-01b   inspector                                    POST   /api/labs                                      expected=403 actual=403 as expected
+A01-01c   no token                                     POST   /api/labs                                      expected=401 actual=401 as expected
+A01-01d   admin: was anything saved? (QS-01)           GET    /api/labs?search=QS-01                         expected=200 actual=200 as expected
+A01-01d   labs found with code QS-01 after the three refused requests: 0
+A01-01e   admin (positive control)                     POST   /api/labs                                      expected=201 actual=201 as expected
+A01-02a   owner inspector (positive control)           GET    /api/inspections/6b06733b59755580c39914ea      expected=200 actual=200 as expected
+A01-02b   inspector2, scheduled, not own               GET    /api/inspections/6b06733b59755580c39914ea      expected=403 actual=200 NOT as expected
+A01-02c   inspector2, completed, not own               GET    /api/inspections/6b06733b59755580c39914be      expected=403 actual=200 NOT as expected
+A01-02d   inspector2, list                             GET    /api/inspections                               expected=200 actual=200 as expected
+A01-02d   inspections in the list of inspector2 (has none of his own): 0
+A01-02e   no token                                     GET    /api/inspections/6b06733b59755580c39914ea      expected=401 actual=401 as expected
+A01-03a   inspector2 (not assigned)                    PUT    /api/inspections/6b06733b59755580c39914ea/subm expected=403 actual=403 as expected
+A01-03b   technician                                   PUT    /api/inspections/6b06733b59755580c39914ea/subm expected=403 actual=403 as expected
+A01-03c   no token                                     PUT    /api/inspections/6b06733b59755580c39914ea/subm expected=401 actual=401 as expected
+A01-03d   admin: is it unchanged?                      GET    /api/inspections/6b06733b59755580c39914ea      expected=200 actual=200 as expected
+A01-03d   status after the three refused requests: scheduled
+A01-04a   technician, scheduled inspection             GET    /api/inspections/6b06733b59755580c39914ea      expected=403 actual=403 as expected
+A01-04b   technician, completed inspection             GET    /api/inspections/6b06733b59755580c39914be      expected=200 actual=200 as expected
+A01-04c   technician, list with ?status=scheduled      GET    /api/inspections?status=scheduled              expected=200 actual=200 as expected
+A01-04c   statuses in the list: completed (4 rows)
+A01-04d   technician, list with operator filter        GET    /api/inspections?status[$ne]=completed         expected=200 actual=200 as expected
+A01-04d   statuses in the list: completed (4 rows)
+A01-05a   inspector reports an open incident           POST   /api/incidents                                 expected=201 actual=201 as expected
+A01-05b   technician, list                             GET    /api/incidents                                 expected=200 actual=200 as expected
+A01-05b   reporters in the list: Kamal Silva (2 rows)
+A01-05c   technician, tries ?reportedBy=<inspector>    GET    /api/incidents?reportedBy=6b06733b59755580c399 expected=200 actual=200 as expected
+A01-05c   reporters in the list: Kamal Silva (2 rows)
+A01-05d   technician, by id of the burn incident       GET    /api/incidents/6b06733b59755580c39914f6        expected=404 actual=404 as expected
+A01-05e   technician, dashboard                        GET    /api/dashboard                                 expected=200 actual=200 as expected
+A01-05e   recentIncidents on the technician dashboard: ["QA private incident","Capacitor bank discharge spark","Damaged earth-leakage warning lamp"]
+A01-05e   of these, not reported by this technician: ["QA private incident / Reported by the inspector"]
+A01-05f   no token, list                               GET    /api/incidents                                 expected=401 actual=401 as expected
+A01-06a   technician, incident of somebody else        PUT    /api/incidents/6b06733b59755580c39914f6        expected=403 actual=403 as expected
+A01-06b   technician, own incident                     PUT    /api/incidents/6b06733b59755580c39914f5        expected=403 actual=403 as expected
+A01-06c   no token                                     PUT    /api/incidents/6b06733b59755580c39914f5        expected=401 actual=401 as expected
+A01-06d   technician, delete own                       DELETE /api/incidents/6b06733b59755580c39914f5        expected=403 actual=403 as expected
+A01-06e   admin: is it unchanged?                      GET    /api/incidents                                 expected=200 actual=200 as expected
+A01-06e   lamp=open burn=resolved (seed: lamp=open burn=resolved)
+A01-06f   inspector (positive control)                 PUT    /api/incidents/6b06733b59755580c39914f5        expected=200 actual=200 as expected
+A01-07a   inspector makes himself admin                PUT    /api/users/6b06733b59755580c39914a2/role       expected=403 actual=403 as expected
+A01-07b   technician makes himself admin               PUT    /api/users/6b06733b59755580c39914a4/role       expected=403 actual=403 as expected
+A01-07c   no token                                     PUT    /api/users/6b06733b59755580c39914a4/role       expected=401 actual=401 as expected
+A01-07d   inspector, list users                        GET    /api/users                                     expected=403 actual=403 as expected
+A01-07e   technician, list users                       GET    /api/users                                     expected=403 actual=403 as expected
+A01-07f   admin, list users (positive control)         GET    /api/users                                     expected=200 actual=200 as expected
+A01-07f   inspector role=inspector technician role=technician any password field=false
+A01-08a   public, role=admin in the body               POST   /api/auth/register                             expected=201 actual=201 as expected
+A01-08a   role in the answer: technician
+A01-08b   the new account calls an admin route         GET    /api/users                                     expected=403 actual=403 as expected
+A01-09a   admin2, own id, normal (positive control)    PUT    /api/users/6b06733e2a62d31564c8d50b/role       expected=400 actual=400 as expected
+A01-09b   admin2, own id, capitals                     PUT    /api/users/6B06733E2A62D31564C8D50B/role       expected=400 actual=200 NOT as expected
+A01-09c   admin3, own id, normal (positive control)    DELETE /api/users/6b06733f2a62d31564c8d50e            expected=400 actual=400 as expected
+A01-09d   admin3, own id, capitals                     DELETE /api/users/6B06733F2A62D31564C8D50E            expected=400 actual=200 NOT as expected
+A01-09e   admin: users after that                      GET    /api/users                                     expected=200 actual=200 as expected
+A01-09e   admin2 role now: technician   admin3 still exists: false
+A01-10a   inspector2 sends inspector=<inspector 1>     POST   /api/inspections                               expected=201 actual=201 as expected
+A01-10a   assigned to: Second Inspector
+A01-10b   technician schedules                         POST   /api/inspections                               expected=403 actual=403 as expected
+A01-11a   admin, lastScore in the body                 POST   /api/labs                                      expected=400 actual=201 NOT as expected
+A01-11a   stored lastScore=100 lastInspectionDate=2026-11-01T00:00:00.000Z (no inspection exists for this lab)
+A01-12a   assigned inspector                           PUT    /api/inspections/6b06733b59755580c39914ea/subm expected=200 actual=200 as expected
+A01-12a   status=completed score=100
+

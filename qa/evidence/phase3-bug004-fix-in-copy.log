@@ -1,0 +1,33 @@
+# BUG-004 fix tried in a throwaway copy OUTSIDE the repository. The repository source is not changed.
+2026-11-25T10:59:50+05:30
+
+## 1. Before the fix
+  × TC-USR-03.6 [reasonable expectation] an admin cannot change the own role with the id in capital letters (1222 ms)
+  × TC-USR-04.5 variation [reasonable expectation] an admin cannot delete the own account with the id in capital letters (31 ms)
+    Expected status: 400
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+    Expected status: 400
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+Tests:       2 failed, 2 skipped, 4 total
+
+## 2. Change made in the copy
+24c24
+<   if (String(req.user._id) === req.params.id) {
+---
+>   if (String(req.user._id) === req.params.id.toLowerCase()) {
+37c37
+<   if (String(req.user._id) === req.params.id) {
+---
+>   if (String(req.user._id) === req.params.id.toLowerCase()) {
+
+## 3. Re-test after the fix
+  √ TC-USR-03.6 [reasonable expectation] an admin cannot change the own role with the id in capital letters (1150 ms)
+  √ TC-USR-04.5 variation [reasonable expectation] an admin cannot delete the own account with the id in capital letters (35 ms)
+Tests:       2 skipped, 2 passed, 4 total
+
+## 4. Regression: main suite in the copy
+Test Suites: 10 passed, 10 total
+Tests:       335 passed, 335 total
+
+## 5. Repository source unchanged
+git diff lines: 0

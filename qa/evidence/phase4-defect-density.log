@@ -1,0 +1,5 @@
+2026-11-25T11:20:09+05:30
+Reported defects, all code: 6 / 2.689 = 2.23 per KLOC
+Without BUG-001 (configuration file, not in the counted lines): 5 / 2.689 = 1.86 per KLOC
+Backend only, BUG-002 to BUG-006 (0.697 KLOC): 5 / 0.697 = 7.17 per KLOC
+All observed issues (15 test issues + BUG-001): 16 / 2.689 = 5.95 per KLOC

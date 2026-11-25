@@ -1,0 +1,470 @@
+$ npm run test:coverage (in qa/) 2026-11-25T10:41:36+05:30, node v24.14.0
+
+> lab-safety-qa@1.0.0 test:coverage
+> jest --config jest.config.js --coverage
+
+PASS 05-tdd-bdd/unit/calculateResult.test.js
+  White-box cases (WB-CR)
+    √ WB-CR-01 all N/A (= BVA-11, DT2-01) (characterisation, README silent) (28 ms)
+    √ WB-CR-02 critical item fails (= DT2-03) (4 ms)
+    √ WB-CR-03 score below 60 (= DT2-05) (2 ms)
+    √ WB-CR-04 score 60 to 79 (= DT2-06) (11 ms)
+    √ WB-CR-05 score 80 or more (= DT2-07) (5 ms)
+    √ WB-CR-06 critical item passes (5 ms)
+    √ WB-CR-07 score 59 (= BVA-03) (23 ms)
+    √ WB-CR-08 score 60 (= BVA-04) (2 ms)
+    √ WB-CR-09 score 79 (= BVA-06) (22 ms)
+    √ WB-CR-10 na and pending ignored (3 ms)
+    √ WB-CR-11 empty responses (characterisation, README silent) (1 ms)
+    √ WB-CR-12 critical wins over high score (= DT2-04) (3 ms)
+  Boundary values of the score (BVA-01 to BVA-13, the others are WB-CR cases above)
+    √ BVA-01 minimum score 0 (4 ms)
+    √ BVA-02 just above 0 (20 ms)
+    √ BVA-05 just above 60 (24 ms)
+    √ BVA-07 on 80 (2 ms)
+    √ BVA-08 just above 80 (20 ms)
+    √ BVA-09 just below 100 (17 ms)
+    √ BVA-10 maximum score 100 (1 ms)
+    √ BVA-12 smallest total, passed (2 ms)
+    √ BVA-13 smallest total, failed (2 ms)
+  Rounding near the limits (BVA-14, 16, 20, 21, 22)
+    √ BVA-14 raw 59.49 (17 ms)
+    √ BVA-16 raw 79.49 (6 ms)
+    √ BVA-20 raw 99.5 (39 ms)
+    √ BVA-21 raw 0.5 (32 ms)
+    √ BVA-22 raw 0.4975 (36 ms)
+  Decision table DT2 (the other rules are WB-CR cases above)
+    √ DT2-02 rule R2, 1 pass and 1 critical fail (1 ms)
+    √ DT2-08 rule R7, a critical item marked N/A (characterisation, README silent) (1 ms)
+
+PASS 06-automation-cicd/api/templates.test.js (8.489 s)
+  √ TC-TPL-01 admin creates a template with a critical item (2146 ms)
+  √ TC-TPL-03 editing a template does not change existing inspections (173 ms)
+  √ TC-TPL-04.3 the scheduled inspection still shows its 8 items after a delete request for its template (75 ms)
+  TC-TPL-02 invalid templates are rejected
+    √ TC-TPL-02a empty title (62 ms)
+    √ TC-TPL-02b no items (53 ms)
+    √ TC-TPL-02c item text has only spaces (65 ms)
+    √ TC-TPL-02d unknown category (77 ms)
+  TC-TPL-05 invalid id, unknown id and delete of an unused template
+    √ TC-TPL-05.1 GET abc (56 ms)
+    √ TC-TPL-05.2 GET unknown id (42 ms)
+    √ TC-TPL-05.3, 05.4 an unused template is deleted (51 ms)
+
+PASS 06-automation-cicd/api/dashboard.test.js (8.44 s)
+  √ DASH-01 totals are the same as the demo data (2174 ms)
+  √ DASH-02 inspections by risk and incidents by severity (92 ms)
+  √ DASH-03 score trend is ordered from old to new (57 ms)
+  √ DASH-04 overdue: never inspected or more than 90 days ago, only active labs (272 ms)
+  √ DASH-05 empty database gives zeros and no error (55 ms)
+
+PASS 06-automation-cicd/api/incidents.test.js (8.743 s)
+  √ TC-INC-01 technician reports an incident but cannot set its status (2316 ms)
+  TC-INC-02 invalid incident data is rejected
+    √ TC-INC-02a no description (87 ms)
+    √ TC-INC-02b unknown severity (109 ms)
+    √ TC-INC-02c invalid lab id (54 ms)
+    √ TC-INC-02d unknown lab id (107 ms)
+  TC-INC-03 technician sees only own incidents
+    √ TC-INC-03.1 technician sees 2 own incidents (49 ms)
+    √ TC-INC-03.2 filter does not show incidents of others (42 ms)
+    √ TC-INC-03.3 inspector sees all 3 (41 ms)
+    √ TC-INC-03.4 admin sees all 3 (66 ms)
+  TC-INC-04 inspector triages an incident
+    √ TC-INC-04a investigating (49 ms)
+    √ TC-INC-04b resolved with a resolution (49 ms)
+    √ TC-INC-04c unknown status is rejected and the record does not change (36 ms)
+
+PASS 06-automation-cicd/api/labs.test.js (9.393 s)
+  √ TC-LAB-01 admin creates, reads and updates a lab (2932 ms)
+  √ TC-LAB-07a error body has no stack trace with NODE_ENV=production (32 ms)
+  TC-LAB-02 invalid or duplicate lab data is rejected
+    √ TC-LAB-02a no name (88 ms)
+    √ TC-LAB-02b / BVA-26 capacity 0 (163 ms)
+    √ TC-LAB-02c unknown hazard level (44 ms)
+    √ TC-LAB-02d duplicate code (54 ms)
+    √ TC-LAB-02e duplicate code in lower case (48 ms)
+  TC-LAB-03 search and hazard filter
+    √ TC-LAB-03.1 search=electronics (78 ms)
+    √ TC-LAB-03.2 hazardLevel=high (40 ms)
+    √ TC-LAB-03.3 search=.* is plain text, not a pattern (42 ms)
+  TC-LAB-05 invalid and unknown lab ids
+    √ TC-LAB-05.1 GET abc (41 ms)
+    √ TC-LAB-05.2 PUT abc (41 ms)
+    √ TC-LAB-05.3 DELETE abc (41 ms)
+    √ TC-LAB-05.4 GET unknown id (42 ms)
+  TC-LAB-06 deleting a lab with linked records leaves no orphans
+    √ TC-LAB-06.1 to 06.3 lab with linked records is kept (80 ms)
+    √ TC-LAB-06.4, 06.5 lab without linked records is deleted (56 ms)
+  Lab capacity: equivalence classes and boundary values
+    √ EP-17 whole number is accepted (38 ms)
+    √ EP-18 whole number sent as text is accepted (41 ms)
+    √ EP-19 field missing, default is used is accepted (37 ms)
+    √ EP-26 very large number (characterisation, README silent) is accepted (50 ms)
+    √ BVA-27 on the limit is accepted (30 ms)
+    √ BVA-28 just above is accepted (39 ms)
+    √ EP-20 negative number is rejected (34 ms)
+    √ EP-21 decimal number is rejected (38 ms)
+    √ EP-22 text is rejected (32 ms)
+    √ EP-23 empty text is rejected (35 ms)
+    √ EP-24 null is rejected (26 ms)
+    √ EP-25 boolean is rejected (30 ms)
+
+PASS 06-automation-cicd/api/users.test.js (9.42 s)
+  √ TC-USR-01 admin creates a user and the password is never returned (3443 ms)
+  TC-USR-02 invalid or duplicate user data is rejected
+    √ TC-USR-02a unknown role (78 ms)
+    √ TC-USR-02b password with 5 characters (79 ms)
+    √ TC-USR-02c invalid email (42 ms)
+    √ TC-USR-02d duplicate email (179 ms)
+  TC-USR-03 changing roles works at once, and not on yourself
+    √ TC-USR-03.1 to 03.3 the new role works with the old token (66 ms)
+    √ TC-USR-03.4 unknown role (38 ms)
+    √ TC-USR-03.5 an admin cannot change the own role (42 ms)
+  TC-USR-04 deleting a user with linked records leaves no orphans
+    √ TC-USR-04.1 inspector with linked records (31 ms)
+    √ TC-USR-04.2 technician with linked records (39 ms)
+    √ TC-USR-04.3 the inspector name is still shown in the inspection (78 ms)
+    √ TC-USR-04.4 user without linked records is deleted (47 ms)
+    √ TC-USR-04.5 an admin cannot delete the own account (35 ms)
+  TC-USR-05 invalid and unknown user ids
+    √ TC-USR-05.1 PUT abc (43 ms)
+    √ TC-USR-05.2 DELETE abc (30 ms)
+    √ TC-USR-05.3 DELETE unknown id (33 ms)
+
+PASS 06-automation-cicd/api/auth.test.js (11.061 s)
+  TC-AUTH-03 login API works for the three demo accounts
+    √ TC-AUTH-03.1 admin (2583 ms)
+    √ TC-AUTH-03.2 inspector (183 ms)
+    √ TC-AUTH-03.3 technician (263 ms)
+  TC-AUTH-04 login API rejects bad credentials safely
+    √ TC-AUTH-04a, 04b wrong password and unknown email give the same 401 (209 ms)
+  TC-AUTH-05 self-registration cannot choose a role
+    √ TC-AUTH-05.1 the new user is a technician (232 ms)
+    √ TC-AUTH-05.2 the new user cannot list users (179 ms)
+  TC-AUTH-06 registration validation and duplicate email
+    √ TC-AUTH-06a empty name (44 ms)
+    √ TC-AUTH-06b / EP-05 email without @ (44 ms)
+    √ TC-AUTH-06c / BVA-23 password with 5 characters (37 ms)
+    √ TC-AUTH-06d / BVA-24 password with 6 characters (272 ms)
+    √ TC-AUTH-06e / EP-03 email already registered (163 ms)
+    √ BVA-25 password with 7 characters (144 ms)
+  Equivalence classes: email (EP-01 to EP-09)
+    √ EP-01 correct new email (138 ms)
+    √ EP-02 capital letters (lower case in the answer: characterisation) (144 ms)
+    √ EP-04 existing email in capital letters (35 ms)
+    √ EP-06 no domain part (27 ms)
+    √ EP-07 empty email (26 ms)
+    √ EP-08 email missing (28 ms)
+    √ EP-09 Gmail alias of a registered address (characterisation, README silent) (185 ms)
+  Equivalence classes: password (EP-10 to EP-16)
+    √ EP-10 six or more characters, password is not returned and is stored as a hash (159 ms)
+    √ EP-11 shorter than 6 (34 ms)
+    √ EP-12 empty password (30 ms)
+    √ EP-13 password missing (35 ms)
+    √ EP-14 only spaces (characterisation, README silent) (147 ms)
+    √ EP-15 number instead of text (characterisation, README silent) (139 ms)
+    √ EP-16 100 characters, only the first 72 matter (characterisation, README silent) (365 ms)
+
+PASS 06-automation-cicd/api/inspections.test.js (11.327 s)
+  Test cases TC-INS (demo data)
+    TC-INS-01 scheduling follows the assignment rules
+      √ TC-INS-01.1 admin assigns an inspector (2915 ms)
+      √ TC-INS-01.2 inspector cannot assign another inspector (178 ms)
+      √ TC-INS-01.3 a technician cannot be assigned (48 ms)
+    TC-INS-02 invalid scheduled date is rejected
+      √ TC-INS-02a / BVA-32 not a date (77 ms)
+      √ BVA-40 2027-02-32 does not exist (58 ms)
+    Valid scheduled dates
+      √ BVA-30 today (59 ms)
+      √ BVA-31 tomorrow (61 ms)
+      √ BVA-35 last day of February, normal year (56 ms)
+      √ BVA-37 first day of March (59 ms)
+      √ BVA-38 valid leap day (57 ms)
+      √ BVA-33 missing, time of the request is used (56 ms)
+      √ BVA-34 empty text, time of the request is used (characterisation, README silent) (53 ms)
+    TC-INS-04 score and risk level are calculated correctly
+      √ TC-INS-04.1, 04.2 4 of 5 passed, N/A ignored, lab is updated (79 ms)
+      √ TC-INS-04.3, 04.4 a failed critical item gives critical risk (84 ms)
+    TC-INS-06 incomplete or repeated submit is rejected
+      √ TC-INS-06a item 8 left out (36 ms)
+      √ TC-INS-06b failed item without remarks (38 ms)
+      √ TC-INS-06c already completed (43 ms)
+    TC-INS-09 inspections are visible only to the right role
+      √ TC-INS-09.1 inspector sees only own inspections in the list (42 ms)
+      √ TC-INS-09.3 technician sees only completed inspections in the list (37 ms)
+      √ TC-INS-09.4 technician cannot open a scheduled inspection (37 ms)
+  White-box cases WB-SI for submitInspection()
+    √ WB-SI-01 inspection not found (DT1-B R3) (552 ms)
+    √ WB-SI-02 already completed (DT1-B R4) (73 ms)
+    √ WB-SI-03 not assigned inspector (DT1-B R5) (49 ms)
+    √ WB-SI-04 item still pending (DT1-B R6) (46 ms)
+    √ WB-SI-05 failed item without remarks (DT1-B R6) (48 ms)
+    √ WB-SI-06 successful submit (DT1-B R7) (71 ms)
+    √ WB-SI-07 admin can submit (54 ms)
+    √ WB-SI-08 invalid result value (44 ms)
+    √ WB-SI-09 unknown item id (= EP-41) (characterisation, README silent) (52 ms)
+    √ WB-SI-10 responses missing (= EP-38) (40 ms)
+    √ WB-SI-11 critical item fails (46 ms)
+    √ WB-SI-12 rejected submit saves nothing (46 ms)
+    √ WB-SI-14 malformed id (44 ms)
+    √ WB-SI-15 technician blocked (DT1-B R2) (48 ms)
+    √ WB-SI-16 unauthenticated blocked (DT1-B R1) (35 ms)
+  Equivalence classes of a checklist result (EP-27 to EP-42)
+    √ EP-27 pass is accepted (49 ms)
+    √ EP-28 fail with remarks is accepted (43 ms)
+    √ EP-29 na is accepted (41 ms)
+    √ EP-30 fail without remarks is rejected (36 ms)
+    √ EP-31 fail with only spaces as remarks is rejected (38 ms)
+    √ EP-32 pending is rejected (33 ms)
+    √ EP-33 text not in the list is rejected (39 ms)
+    √ EP-34 wrong letter case is rejected (37 ms)
+    √ EP-35 wrong type is rejected (43 ms)
+    √ EP-36 result missing is rejected (34 ms)
+    √ EP-37 item left out of the list is rejected (37 ms)
+    √ EP-42 same item answered twice, the last answer wins (characterisation, README silent) (57 ms)
+
+PASS 06-automation-cicd/api/rateLimit.test.js (14.002 s)
+  √ TC-AUTH-08.1 requests 1 to 50 give 401, request 51 gives 429 with a message (6525 ms)
+  √ TC-AUTH-08.2 other routes still work after that (7 ms)
+
+PASS 06-automation-cicd/api/permissions.test.js (16.393 s)
+  √ TC-PERM-05.3 admin submits the inspection of another inspector (34 ms)
+  DT1-01 health check
+    √ DT1-01 admin -> 200 (2648 ms)
+    √ DT1-01 inspector -> 200 (287 ms)
+    √ DT1-01 inspector2 -> 200 (71 ms)
+    √ DT1-01 technician -> 200 (44 ms)
+    √ DT1-01 unauthenticated -> 200 (44 ms)
+  DT1-02 register
+    √ DT1-02 admin -> 201 (235 ms)
+    √ DT1-02 inspector -> 201 (204 ms)
+    √ DT1-02 inspector2 -> 201 (161 ms)
+    √ DT1-02 technician -> 201 (159 ms)
+    √ DT1-02 unauthenticated -> 201 (171 ms)
+  DT1-03 log in
+    √ DT1-03 admin -> 200 (147 ms)
+    √ DT1-03 inspector -> 200 (157 ms)
+    √ DT1-03 inspector2 -> 200 (144 ms)
+    √ DT1-03 technician -> 200 (157 ms)
+    √ DT1-03 unauthenticated -> 200 (176 ms)
+  DT1-04 / TC-PERM-01.1 own profile
+    √ DT1-04 / TC-PERM-01.1 admin -> 200 (39 ms)
+    √ DT1-04 / TC-PERM-01.1 inspector -> 200 (41 ms)
+    √ DT1-04 / TC-PERM-01.1 inspector2 -> 200 (41 ms)
+    √ DT1-04 / TC-PERM-01.1 technician -> 200 (39 ms)
+    √ DT1-04 / TC-PERM-01.1 unauthenticated -> 401 (66 ms)
+  DT1-05 dashboard
+    √ DT1-05 admin -> 200 (89 ms)
+    √ DT1-05 inspector -> 200 (68 ms)
+    √ DT1-05 inspector2 -> 200 (60 ms)
+    √ DT1-05 technician -> 200 (50 ms)
+    √ DT1-05 unauthenticated -> 401 (39 ms)
+  DT1-06 list labs
+    √ DT1-06 admin -> 200 (51 ms)
+    √ DT1-06 inspector -> 200 (46 ms)
+    √ DT1-06 inspector2 -> 200 (50 ms)
+    √ DT1-06 technician -> 200 (43 ms)
+    √ DT1-06 unauthenticated -> 401 (35 ms)
+  DT1-06 open a lab
+    √ DT1-06 admin -> 200 (45 ms)
+    √ DT1-06 inspector -> 200 (48 ms)
+    √ DT1-06 inspector2 -> 200 (39 ms)
+    √ DT1-06 technician -> 200 (39 ms)
+    √ DT1-06 unauthenticated -> 401 (34 ms)
+  DT1-07 / TC-PERM-03.1 create lab
+    √ DT1-07 / TC-PERM-03.1 admin -> 201 (34 ms)
+    √ DT1-07 / TC-PERM-03.1 inspector -> 403 (46 ms)
+    √ DT1-07 / TC-PERM-03.1 inspector2 -> 403 (42 ms)
+    √ DT1-07 / TC-PERM-03.1 technician -> 403 (43 ms)
+    √ DT1-07 / TC-PERM-03.1 unauthenticated -> 401 (41 ms)
+  DT1-08 / TC-PERM-03.2 edit lab
+    √ DT1-08 / TC-PERM-03.2 admin -> 200 (49 ms)
+    √ DT1-08 / TC-PERM-03.2 inspector -> 403 (42 ms)
+    √ DT1-08 / TC-PERM-03.2 inspector2 -> 403 (43 ms)
+    √ DT1-08 / TC-PERM-03.2 technician -> 403 (49 ms)
+    √ DT1-08 / TC-PERM-03.2 unauthenticated -> 401 (32 ms)
+  DT1-09 / TC-PERM-03.3 delete lab
+    √ DT1-09 / TC-PERM-03.3 admin -> 200 (36 ms)
+    √ DT1-09 / TC-PERM-03.3 inspector -> 403 (39 ms)
+    √ DT1-09 / TC-PERM-03.3 inspector2 -> 403 (37 ms)
+    √ DT1-09 / TC-PERM-03.3 technician -> 403 (37 ms)
+    √ DT1-09 / TC-PERM-03.3 unauthenticated -> 401 (46 ms)
+  DT1-10 list templates
+    √ DT1-10 admin -> 200 (37 ms)
+    √ DT1-10 inspector -> 200 (32 ms)
+    √ DT1-10 inspector2 -> 200 (39 ms)
+    √ DT1-10 technician -> 200 (44 ms)
+    √ DT1-10 unauthenticated -> 401 (35 ms)
+  DT1-10 open a template
+    √ DT1-10 admin -> 200 (37 ms)
+    √ DT1-10 inspector -> 200 (40 ms)
+    √ DT1-10 inspector2 -> 200 (42 ms)
+    √ DT1-10 technician -> 200 (34 ms)
+    √ DT1-10 unauthenticated -> 401 (26 ms)
+  DT1-11 / TC-PERM-04.1 create template
+    √ DT1-11 / TC-PERM-04.1 admin -> 201 (29 ms)
+    √ DT1-11 / TC-PERM-04.1 inspector -> 403 (40 ms)
+    √ DT1-11 / TC-PERM-04.1 inspector2 -> 403 (44 ms)
+    √ DT1-11 / TC-PERM-04.1 technician -> 403 (48 ms)
+    √ DT1-11 / TC-PERM-04.1 unauthenticated -> 401 (41 ms)
+  DT1-12 / TC-PERM-04.2 edit template
+    √ DT1-12 / TC-PERM-04.2 admin -> 200 (47 ms)
+    √ DT1-12 / TC-PERM-04.2 inspector -> 403 (45 ms)
+    √ DT1-12 / TC-PERM-04.2 inspector2 -> 403 (37 ms)
+    √ DT1-12 / TC-PERM-04.2 technician -> 403 (39 ms)
+    √ DT1-12 / TC-PERM-04.2 unauthenticated -> 401 (32 ms)
+  DT1-13 / TC-PERM-04.3 delete template
+    √ DT1-13 / TC-PERM-04.3 admin -> 200 (41 ms)
+    √ DT1-13 / TC-PERM-04.3 inspector -> 403 (50 ms)
+    √ DT1-13 / TC-PERM-04.3 inspector2 -> 403 (56 ms)
+    √ DT1-13 / TC-PERM-04.3 technician -> 403 (28 ms)
+    √ DT1-13 / TC-PERM-04.3 unauthenticated -> 401 (33 ms)
+  DT1-14 list inspections (content)
+    √ DT1-14 admin -> 200 (42 ms)
+    √ DT1-14 inspector -> 200 (31 ms)
+    √ DT1-14 inspector2 -> 200 (30 ms)
+    √ DT1-14 technician -> 200 (39 ms)
+    √ DT1-14 unauthenticated -> 401 (26 ms)
+  DT1-15 open a scheduled inspection
+    √ DT1-15 admin -> 200 (34 ms)
+    √ DT1-15 inspector -> 200 (41 ms)
+    √ DT1-15 technician -> 403 (44 ms)
+    √ DT1-15 unauthenticated -> 401 (28 ms)
+  DT1-16 open a completed inspection
+    √ DT1-16 admin -> 200 (39 ms)
+    √ DT1-16 inspector -> 200 (40 ms)
+    √ DT1-16 technician -> 200 (35 ms)
+    √ DT1-16 unauthenticated -> 401 (24 ms)
+  DT1-17 / TC-PERM-05.1 schedule for self
+    √ DT1-17 / TC-PERM-05.1 admin -> 201 (52 ms)
+    √ DT1-17 / TC-PERM-05.1 inspector -> 201 (51 ms)
+    √ DT1-17 / TC-PERM-05.1 inspector2 -> 201 (43 ms)
+    √ DT1-17 / TC-PERM-05.1 technician -> 403 (29 ms)
+    √ DT1-17 / TC-PERM-05.1 unauthenticated -> 401 (20 ms)
+  DT1-18 schedule for another inspector
+    √ DT1-18 admin -> 201 (36 ms)
+    √ DT1-18 inspector -> 201 (51 ms)
+    √ DT1-18 inspector2 -> 201 (47 ms)
+    √ DT1-18 technician -> 403 (34 ms)
+    √ DT1-18 unauthenticated -> 401 (32 ms)
+  DT1-19 / TC-PERM-05.2 submit an inspection
+    √ DT1-19 / TC-PERM-05.2 admin -> 200 (78 ms)
+    √ DT1-19 / TC-PERM-05.2 inspector -> 200 (67 ms)
+    √ DT1-19 / TC-PERM-05.2 inspector2 -> 403 (46 ms)
+    √ DT1-19 / TC-PERM-05.2 technician -> 403 (37 ms)
+    √ DT1-19 / TC-PERM-05.2 unauthenticated -> 401 (34 ms)
+  DT1-20 / TC-PERM-05.4 delete inspection
+    √ DT1-20 / TC-PERM-05.4 admin -> 200 (37 ms)
+    √ DT1-20 / TC-PERM-05.4 inspector -> 403 (48 ms)
+    √ DT1-20 / TC-PERM-05.4 inspector2 -> 403 (46 ms)
+    √ DT1-20 / TC-PERM-05.4 technician -> 403 (40 ms)
+    √ DT1-20 / TC-PERM-05.4 unauthenticated -> 401 (46 ms)
+  DT1-21 list incidents (content)
+    √ DT1-21 admin -> 200 (46 ms)
+    √ DT1-21 inspector -> 200 (39 ms)
+    √ DT1-21 inspector2 -> 200 (52 ms)
+    √ DT1-21 technician -> 200 (54 ms)
+    √ DT1-21 unauthenticated -> 401 (35 ms)
+  DT1-22 report incident
+    √ DT1-22 admin -> 201 (47 ms)
+    √ DT1-22 inspector -> 201 (54 ms)
+    √ DT1-22 inspector2 -> 201 (50 ms)
+    √ DT1-22 technician -> 201 (55 ms)
+    √ DT1-22 unauthenticated -> 401 (42 ms)
+  DT1-23 / TC-PERM-06.1 update incident
+    √ DT1-23 / TC-PERM-06.1 admin -> 200 (46 ms)
+    √ DT1-23 / TC-PERM-06.1 inspector -> 200 (51 ms)
+    √ DT1-23 / TC-PERM-06.1 inspector2 -> 200 (51 ms)
+    √ DT1-23 / TC-PERM-06.1 technician -> 403 (42 ms)
+    √ DT1-23 / TC-PERM-06.1 unauthenticated -> 401 (37 ms)
+  DT1-24 / TC-PERM-06.2 delete incident
+    √ DT1-24 / TC-PERM-06.2 admin -> 200 (39 ms)
+    √ DT1-24 / TC-PERM-06.2 inspector -> 403 (50 ms)
+    √ DT1-24 / TC-PERM-06.2 inspector2 -> 403 (44 ms)
+    √ DT1-24 / TC-PERM-06.2 technician -> 403 (37 ms)
+    √ DT1-24 / TC-PERM-06.2 unauthenticated -> 401 (48 ms)
+  DT1-25 list staff names
+    √ DT1-25 admin -> 200 (38 ms)
+    √ DT1-25 inspector -> 200 (39 ms)
+    √ DT1-25 inspector2 -> 200 (37 ms)
+    √ DT1-25 technician -> 403 (44 ms)
+    √ DT1-25 unauthenticated -> 401 (39 ms)
+  DT1-26 / TC-PERM-06.3 list users
+    √ DT1-26 / TC-PERM-06.3 admin -> 200 (38 ms)
+    √ DT1-26 / TC-PERM-06.3 inspector -> 403 (45 ms)
+    √ DT1-26 / TC-PERM-06.3 inspector2 -> 403 (43 ms)
+    √ DT1-26 / TC-PERM-06.3 technician -> 403 (31 ms)
+    √ DT1-26 / TC-PERM-06.3 unauthenticated -> 401 (36 ms)
+  DT1-27 / TC-PERM-06.4 create user
+    √ DT1-27 / TC-PERM-06.4 admin -> 201 (156 ms)
+    √ DT1-27 / TC-PERM-06.4 inspector -> 403 (27 ms)
+    √ DT1-27 / TC-PERM-06.4 inspector2 -> 403 (43 ms)
+    √ DT1-27 / TC-PERM-06.4 technician -> 403 (34 ms)
+    √ DT1-27 / TC-PERM-06.4 unauthenticated -> 401 (42 ms)
+  DT1-28 / TC-PERM-06.5 change role
+    √ DT1-28 / TC-PERM-06.5 admin -> 200 (31 ms)
+    √ DT1-28 / TC-PERM-06.5 inspector -> 403 (38 ms)
+    √ DT1-28 / TC-PERM-06.5 inspector2 -> 403 (34 ms)
+    √ DT1-28 / TC-PERM-06.5 technician -> 403 (44 ms)
+    √ DT1-28 / TC-PERM-06.5 unauthenticated -> 401 (32 ms)
+  DT1-29 / TC-PERM-06.6 delete user
+    √ DT1-29 / TC-PERM-06.6 admin -> 200 (34 ms)
+    √ DT1-29 / TC-PERM-06.6 inspector -> 403 (31 ms)
+    √ DT1-29 / TC-PERM-06.6 inspector2 -> 403 (25 ms)
+    √ DT1-29 / TC-PERM-06.6 technician -> 403 (47 ms)
+    √ DT1-29 / TC-PERM-06.6 unauthenticated -> 401 (37 ms)
+  TC-PERM-01 only a valid token gives access
+    √ TC-PERM-01.2 one character changed in the middle part of the token (16 ms)
+    √ TC-PERM-01.3 token of a deleted user (47 ms)
+    √ TC-PERM-01.4 expired token (27 ms)
+  DT1-A the permission is checked before the input
+    √ DT1-A admin sends a bad body to POST /api/labs -> 400 (45 ms)
+    √ DT1-A inspector sends a bad body to POST /api/labs -> 403 (55 ms)
+    √ DT1-A technician sends a bad body to POST /api/labs -> 403 (25 ms)
+    √ DT1-A unauthenticated sends a bad body to POST /api/labs -> 401 (68 ms)
+
+--------------------------|---------|----------|---------|---------|----------------------
+File                      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s    
+--------------------------|---------|----------|---------|---------|----------------------
+All files                 |    94.3 |       85 |   96.87 |   96.94 |                      
+ backend                  |   96.15 |       75 |     100 |     100 |                      
+  app.js                  |   96.15 |       75 |     100 |     100 | 13                   
+ backend/config           |       0 |        0 |       0 |       0 |                      
+  db.js                   |       0 |        0 |       0 |       0 | 1-6                  
+ backend/controllers      |   93.23 |    84.37 |     100 |   97.41 |                      
+  authController.js       |     100 |      100 |     100 |     100 |                      
+  dashboardController.js  |     100 |       75 |     100 |     100 | 48                   
+  incidentController.js   |   88.09 |    77.77 |     100 |   89.18 | 29-30,46-47          
+  inspectionController.js |   92.59 |     86.2 |     100 |     100 | 18,20,31,47-48,94-99 
+  labController.js        |   92.68 |    81.25 |     100 |     100 | 14,36-42             
+  templateController.js   |   92.85 |       75 |     100 |     100 | 23,33                
+  userController.js       |   94.59 |    86.66 |     100 |   94.59 | 30-31                
+ backend/middleware       |      96 |    96.15 |    87.5 |   95.83 |                      
+  auth.js                 |     100 |      100 |     100 |     100 |                      
+  errorHandler.js         |   88.23 |    92.85 |   66.66 |    87.5 | 2-3                  
+  validate.js             |     100 |      100 |     100 |     100 |                      
+ backend/models           |   97.72 |    92.85 |     100 |     100 |                      
+  Incident.js             |     100 |      100 |     100 |     100 |                      
+  Inspection.js           |     100 |      100 |     100 |     100 |                      
+  Lab.js                  |     100 |      100 |     100 |     100 |                      
+  Template.js             |     100 |      100 |     100 |     100 |                      
+  User.js                 |    90.9 |       50 |     100 |     100 | 15                   
+ backend/routes           |     100 |      100 |     100 |     100 |                      
+  authRoutes.js           |     100 |      100 |     100 |     100 |                      
+  dashboardRoutes.js      |     100 |      100 |     100 |     100 |                      
+  incidentRoutes.js       |     100 |      100 |     100 |     100 |                      
+  inspectionRoutes.js     |     100 |      100 |     100 |     100 |                      
+  labRoutes.js            |     100 |      100 |     100 |     100 |                      
+  templateRoutes.js       |     100 |      100 |     100 |     100 |                      
+  userRoutes.js           |     100 |      100 |     100 |     100 |                      
+ backend/utils            |     100 |    66.66 |     100 |     100 |                      
+  asyncHandler.js         |     100 |      100 |     100 |     100 |                      
+  sort.js                 |     100 |    66.66 |     100 |     100 | 3,5                  
+--------------------------|---------|----------|---------|---------|----------------------
+Test Suites: 10 passed, 10 total
+Tests:       335 passed, 335 total
+Snapshots:   0 total
+Time:        18.03 s, estimated 30 s
+Ran all test suites.
+exit 0

@@ -1,0 +1,962 @@
+$ npm test : FIRST run of all unit and API tests, before any test was moved to known-defects 2026-11-25T10:32:36+05:30
+
+> lab-safety-qa@1.0.0 test
+> jest --config jest.config.js
+
+FAIL 05-tdd-bdd/unit/calculateResult.test.js
+  White-box cases (WB-CR)
+    √ WB-CR-01 all N/A (= BVA-11, DT2-01) (characterisation, README silent) (31 ms)
+    √ WB-CR-02 critical item fails (= DT2-03) (4 ms)
+    √ WB-CR-03 score below 60 (= DT2-05) (2 ms)
+    √ WB-CR-04 score 60 to 79 (= DT2-06) (6 ms)
+    √ WB-CR-05 score 80 or more (= DT2-07) (6 ms)
+    √ WB-CR-06 critical item passes (3 ms)
+    √ WB-CR-07 score 59 (= BVA-03) (26 ms)
+    √ WB-CR-08 score 60 (= BVA-04) (2 ms)
+    √ WB-CR-09 score 79 (= BVA-06) (25 ms)
+    √ WB-CR-10 na and pending ignored (3 ms)
+    √ WB-CR-11 empty responses (characterisation, README silent) (1 ms)
+    √ WB-CR-12 critical wins over high score (= DT2-04) (4 ms)
+  Boundary values of the score (BVA-01 to BVA-13, the others are WB-CR cases above)
+    √ BVA-01 minimum score 0 (4 ms)
+    √ BVA-02 just above 0 (24 ms)
+    √ BVA-05 just above 60 (20 ms)
+    √ BVA-07 on 80 (3 ms)
+    √ BVA-08 just above 80 (20 ms)
+    √ BVA-09 just below 100 (19 ms)
+    √ BVA-10 maximum score 100 (2 ms)
+    √ BVA-12 smallest total, passed (3 ms)
+    √ BVA-13 smallest total, failed (2 ms)
+  Rounding near the limits (BVA-14 to BVA-22)
+    √ BVA-14 raw 59.49 (16 ms)
+    × BVA-15 raw 59.5 (61 ms)
+    √ BVA-16 raw 79.49 (9 ms)
+    × BVA-17 raw 79.5 (38 ms)
+    × BVA-18 raw 59.52, smallest list that crosses 60 (10 ms)
+    × BVA-19 raw 79.55, smallest list that crosses 80 (9 ms)
+    √ BVA-20 raw 99.5 (43 ms)
+    √ BVA-21 raw 0.5 (47 ms)
+    √ BVA-22 raw 0.4975 (40 ms)
+  Decision table DT2 (the other rules are WB-CR cases above)
+    √ DT2-02 rule R2, 1 pass and 1 critical fail (1 ms)
+    √ DT2-08 rule R7, a critical item marked N/A (characterisation, README silent) (3 ms)
+
+  ● Rounding near the limits (BVA-14 to BVA-22) › BVA-15 raw 59.5
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "high"
+    Received: "medium"
+
+      73 |     ['BVA-22 raw 0.4975', 1, 200, 'high'],
+      74 |   ])('%s', (_name, pass, fail, riskLevel) => {
+    > 75 |     expect(calculate({ pass, fail }).riskLevel).toBe(riskLevel);
+         |                                                 ^
+      76 |   });
+      77 | });
+      78 |
+
+      at qa/05-tdd-bdd/unit/calculateResult.test.js:75:49
+
+  ● Rounding near the limits (BVA-14 to BVA-22) › BVA-17 raw 79.5
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "medium"
+    Received: "low"
+
+      73 |     ['BVA-22 raw 0.4975', 1, 200, 'high'],
+      74 |   ])('%s', (_name, pass, fail, riskLevel) => {
+    > 75 |     expect(calculate({ pass, fail }).riskLevel).toBe(riskLevel);
+         |                                                 ^
+      76 |   });
+      77 | });
+      78 |
+
+      at qa/05-tdd-bdd/unit/calculateResult.test.js:75:49
+
+  ● Rounding near the limits (BVA-14 to BVA-22) › BVA-18 raw 59.52, smallest list that crosses 60
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "high"
+    Received: "medium"
+
+      73 |     ['BVA-22 raw 0.4975', 1, 200, 'high'],
+      74 |   ])('%s', (_name, pass, fail, riskLevel) => {
+    > 75 |     expect(calculate({ pass, fail }).riskLevel).toBe(riskLevel);
+         |                                                 ^
+      76 |   });
+      77 | });
+      78 |
+
+      at qa/05-tdd-bdd/unit/calculateResult.test.js:75:49
+
+  ● Rounding near the limits (BVA-14 to BVA-22) › BVA-19 raw 79.55, smallest list that crosses 80
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "medium"
+    Received: "low"
+
+      73 |     ['BVA-22 raw 0.4975', 1, 200, 'high'],
+      74 |   ])('%s', (_name, pass, fail, riskLevel) => {
+    > 75 |     expect(calculate({ pass, fail }).riskLevel).toBe(riskLevel);
+         |                                                 ^
+      76 |   });
+      77 | });
+      78 |
+
+      at qa/05-tdd-bdd/unit/calculateResult.test.js:75:49
+
+FAIL 06-automation-cicd/api/incidents.test.js (10.54 s)
+  √ TC-INC-01 technician reports an incident but cannot set its status (2609 ms)
+  × TC-INC-05 editing a resolved incident keeps the original resolved date (116 ms)
+  TC-INC-02 invalid incident data is rejected
+    √ TC-INC-02a no description (98 ms)
+    √ TC-INC-02b unknown severity (73 ms)
+    √ TC-INC-02c invalid lab id (71 ms)
+    √ TC-INC-02d unknown lab id (85 ms)
+  TC-INC-03 technician sees only own incidents
+    √ TC-INC-03.1 technician sees 2 own incidents (79 ms)
+    √ TC-INC-03.2 filter does not show incidents of others (72 ms)
+    √ TC-INC-03.3 inspector sees all 3 (80 ms)
+    √ TC-INC-03.4 admin sees all 3 (91 ms)
+  TC-INC-04 inspector triages an incident
+    √ TC-INC-04a investigating (112 ms)
+    √ TC-INC-04b resolved with a resolution (113 ms)
+    √ TC-INC-04c unknown status is rejected and the record does not change (96 ms)
+
+  ● TC-INC-05 editing a resolved incident keeps the original resolved date
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "2026-11-22T05:02:47.697Z"
+    Received: "2026-11-25T05:02:49.159Z"
+
+      80 |   expectStatus(res, 200);
+      81 |   expect(res.body.resolution).toBe('Stand is now required');
+    > 82 |   expect(res.body.resolvedAt).toBe(burn.resolvedAt);
+         |                               ^
+      83 | });
+      84 |
+
+      at Object.<anonymous> (qa/06-automation-cicd/api/incidents.test.js:82:31)
+
+FAIL 06-automation-cicd/api/dashboard.test.js (10.54 s)
+  √ DASH-01 totals are the same as the demo data (2520 ms)
+  √ DASH-02 inspections by risk and incidents by severity (193 ms)
+  √ DASH-03 score trend is ordered from old to new (139 ms)
+  √ DASH-04 overdue: never inspected or more than 90 days ago, only active labs (121 ms)
+  √ DASH-05 empty database gives zeros and no error (113 ms)
+  × DASH-06 technician does not see incidents of other people (202 ms)
+
+  ● DASH-06 technician does not see incidents of other people
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected value: not "Reported by the inspector"
+    Received array:     ["Reported by the inspector", "Capacitor bank discharge spark", "Damaged earth-leakage warning lamp"]
+
+      58 |   const list = await call('get', '/api/incidents', d.tokens.technician);
+      59 |   expect(list.body.map((i) => i.title)).not.toContain('Reported by the inspector');
+    > 60 |   expect((await dashboard('technician')).recentIncidents.map((i) => i.title)).not.toContain('Reported by the inspector');
+         |                                                                                   ^
+      61 | });
+      62 |
+
+      at Object.<anonymous> (qa/06-automation-cicd/api/dashboard.test.js:60:83)
+
+FAIL 06-automation-cicd/api/templates.test.js (10.737 s)
+  √ TC-TPL-01 admin creates a template with a critical item (2528 ms)
+  √ TC-TPL-03 editing a template does not change existing inspections (302 ms)
+  TC-TPL-02 invalid templates are rejected
+    √ TC-TPL-02a empty title (224 ms)
+    √ TC-TPL-02b no items (116 ms)
+    √ TC-TPL-02c item text has only spaces (104 ms)
+    √ TC-TPL-02d unknown category (139 ms)
+  TC-TPL-04 deleting a template used by a scheduled inspection
+    × TC-TPL-04.1 the delete is refused with 409 (76 ms)
+    × TC-TPL-04.2 the template still exists after the delete request (77 ms)
+    √ TC-TPL-04.3 the scheduled inspection still shows its 8 items after the delete request (87 ms)
+  TC-TPL-05 invalid id, unknown id and delete of an unused template
+    √ TC-TPL-05.1 GET abc (130 ms)
+    √ TC-TPL-05.2 GET unknown id (93 ms)
+    √ TC-TPL-05.3, 05.4 an unused template is deleted (88 ms)
+
+  ● TC-TPL-04 deleting a template used by a scheduled inspection › TC-TPL-04.1 the delete is refused with 409
+
+    DELETE /api/templates/6b066bf78c67041b16277cce
+    Expected status: 409
+    Actual status:   200
+    Actual body:     {"message":"Template deleted"}
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/api/templates.test.js:61:5)
+
+  ● TC-TPL-04 deleting a template used by a scheduled inspection › TC-TPL-04.2 the template still exists after the delete request
+
+    GET /api/templates/6b066bf78c67041b16277cce
+    Expected status: 200
+    Actual status:   404
+    Actual body:     {"message":"Template not found"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/api/templates.test.js:66:5)
+
+FAIL 06-automation-cicd/api/labs.test.js (12.089 s)
+  √ TC-LAB-01 admin creates, reads and updates a lab (3406 ms)
+  × TC-LAB-04 search sent as an array must not crash the API (138 ms)
+  TC-LAB-02 invalid or duplicate lab data is rejected
+    √ TC-LAB-02a no name (137 ms)
+    √ TC-LAB-02b / BVA-26 capacity 0 (92 ms)
+    √ TC-LAB-02c unknown hazard level (89 ms)
+    √ TC-LAB-02d duplicate code (136 ms)
+    √ TC-LAB-02e duplicate code in lower case (82 ms)
+  TC-LAB-03 search and hazard filter
+    √ TC-LAB-03.1 search=electronics (101 ms)
+    √ TC-LAB-03.2 hazardLevel=high (84 ms)
+    √ TC-LAB-03.3 search=.* is plain text, not a pattern (80 ms)
+  TC-LAB-05 invalid and unknown lab ids
+    √ TC-LAB-05.1 GET abc (88 ms)
+    √ TC-LAB-05.2 PUT abc (63 ms)
+    √ TC-LAB-05.3 DELETE abc (75 ms)
+    √ TC-LAB-05.4 GET unknown id (66 ms)
+  TC-LAB-06 deleting a lab with linked records leaves no orphans
+    √ TC-LAB-06.1 to 06.3 lab with linked records is kept (141 ms)
+    √ TC-LAB-06.4, 06.5 lab without linked records is deleted (88 ms)
+  TC-LAB-07 error body does not show a stack trace
+    √ TC-LAB-07a NODE_ENV=production (61 ms)
+    × TC-LAB-07b NODE_ENV not set, as in README section 3 (74 ms)
+  Lab capacity: equivalence classes and boundary values
+    √ EP-17 whole number is accepted (64 ms)
+    √ EP-18 whole number sent as text is accepted (68 ms)
+    √ EP-19 field missing, default is used is accepted (72 ms)
+    √ EP-26 very large number (characterisation, README silent) is accepted (78 ms)
+    √ BVA-27 on the limit is accepted (67 ms)
+    √ BVA-28 just above is accepted (65 ms)
+    √ EP-20 negative number is rejected (66 ms)
+    √ EP-21 decimal number is rejected (61 ms)
+    √ EP-22 text is rejected (59 ms)
+    √ EP-23 empty text is rejected (63 ms)
+    √ EP-24 null is rejected (68 ms)
+    √ EP-25 boolean is rejected (58 ms)
+
+  ● TC-LAB-04 search sent as an array must not crash the API
+
+    GET /api/labs?search[]=x
+    Expected status: 200 or 400
+    Actual status:   500
+    Actual body:     {"message":"req.query.search.replace is not a function"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/api/labs.test.js:58:3)
+
+  ● TC-LAB-07 error body does not show a stack trace › TC-LAB-07b NODE_ENV not set, as in README section 3
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "message",
+    +   "stack",
+      ]
+
+      109 |     const res = await errorBodyWith(undefined);
+      110 |     expectStatus(res, 404);
+    > 111 |     expect(Object.keys(res.body)).toEqual(['message']);
+          |                                   ^
+      112 |   });
+      113 | });
+      114 |
+
+      at Object.<anonymous> (qa/06-automation-cicd/api/labs.test.js:111:35)
+
+FAIL 06-automation-cicd/api/users.test.js (12.444 s)
+  √ TC-USR-01 admin creates a user and the password is never returned (4055 ms)
+  TC-USR-02 invalid or duplicate user data is rejected
+    √ TC-USR-02a unknown role (187 ms)
+    √ TC-USR-02b password with 5 characters (87 ms)
+    √ TC-USR-02c invalid email (78 ms)
+    √ TC-USR-02d duplicate email (314 ms)
+  TC-USR-03 changing roles works at once, and not on yourself
+    √ TC-USR-03.1 to 03.3 the new role works with the old token (143 ms)
+    √ TC-USR-03.4 unknown role (78 ms)
+    √ TC-USR-03.5 an admin cannot change the own role (74 ms)
+    × TC-USR-03.6 the same id in capital letters is also refused (70 ms)
+  TC-USR-04 deleting a user with linked records leaves no orphans
+    √ TC-USR-04.1 inspector with linked records (78 ms)
+    √ TC-USR-04.2 technician with linked records (71 ms)
+    √ TC-USR-04.3 the inspector name is still shown in the inspection (134 ms)
+    √ TC-USR-04.4 user without linked records is deleted (91 ms)
+    √ TC-USR-04.5 an admin cannot delete the own account (73 ms)
+  TC-USR-05 invalid and unknown user ids
+    √ TC-USR-05.1 PUT abc (74 ms)
+    √ TC-USR-05.2 DELETE abc (63 ms)
+    √ TC-USR-05.3 DELETE unknown id (60 ms)
+
+  ● TC-USR-03 changing roles works at once, and not on yourself › TC-USR-03.6 the same id in capital letters is also refused
+
+    PUT /api/users/6B066BF8A2A1C37228DEAC40/role
+    Expected status: 400
+    Actual status:   200
+    Actual body:     {"_id":"6b066bf8a2a1c37228deac40","name":"Second Admin","email":"admin2@lab.com","role":"technician","createdAt":"2026-11-25T05:02:48.224Z","updatedAt":"2026-11-25T05:02:50.855Z","__v":0}
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/api/users.test.js:59:5)
+
+FAIL 06-automation-cicd/api/auth.test.js (15.619 s)
+  × TC-AUTH-07 malformed JSON body gives 400 (62 ms)
+  TC-AUTH-03 login API works for the three demo accounts
+    √ TC-AUTH-03.1 admin (2768 ms)
+    √ TC-AUTH-03.2 inspector (339 ms)
+    √ TC-AUTH-03.3 technician (348 ms)
+  TC-AUTH-04 login API rejects bad credentials safely
+    √ TC-AUTH-04a, 04b wrong password and unknown email give the same 401 (324 ms)
+    × TC-AUTH-04c password sent as a number gives 400 or 401, not 500 (95 ms)
+  TC-AUTH-05 self-registration cannot choose a role
+    √ TC-AUTH-05.1 the new user is a technician (332 ms)
+    √ TC-AUTH-05.2 the new user cannot list users (308 ms)
+  TC-AUTH-06 registration validation and duplicate email
+    √ TC-AUTH-06a empty name (81 ms)
+    √ TC-AUTH-06b / EP-05 email without @ (71 ms)
+    √ TC-AUTH-06c / BVA-23 password with 5 characters (78 ms)
+    √ TC-AUTH-06d / BVA-24 password with 6 characters (522 ms)
+    √ TC-AUTH-06e / EP-03 email already registered (286 ms)
+    √ BVA-25 password with 7 characters (264 ms)
+  Equivalence classes: email (EP-01 to EP-09)
+    √ EP-01 correct new email (277 ms)
+    √ EP-02 capital letters (lower case in the answer: characterisation) (281 ms)
+    √ EP-04 existing email in capital letters (49 ms)
+    √ EP-06 no domain part (52 ms)
+    √ EP-07 empty email (51 ms)
+    √ EP-08 email missing (57 ms)
+    √ EP-09 Gmail alias of a registered address (characterisation, README silent) (300 ms)
+  Equivalence classes: password (EP-10 to EP-16)
+    √ EP-10 six or more characters, password is not returned and is stored as a hash (381 ms)
+    √ EP-11 shorter than 6 (52 ms)
+    √ EP-12 empty password (49 ms)
+    √ EP-13 password missing (53 ms)
+    √ EP-14 only spaces (characterisation, README silent) (285 ms)
+    √ EP-15 number instead of text (characterisation, README silent) (276 ms)
+    √ EP-16 100 characters, only the first 72 matter (characterisation, README silent) (813 ms)
+
+  ● TC-AUTH-04 login API rejects bad credentials safely › TC-AUTH-04c password sent as a number gives 400 or 401, not 500
+
+    POST /api/auth/login
+    Expected status: 400 or 401
+    Actual status:   500
+    Actual body:     {"message":"Illegal arguments: number, string"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/api/auth.test.js:40:5)
+
+  ● TC-AUTH-07 malformed JSON body gives 400
+
+    POST /api/auth/login
+    Expected status: 400
+    Actual status:   500
+    Actual body:     {"message":"Expected double-quoted property name in JSON at position 25 (line 1 column 26)"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/api/auth.test.js:107:3)
+
+FAIL 06-automation-cicd/api/inspections.test.js (16.815 s)
+  Test cases TC-INS (demo data)
+    × TC-INS-07 unknown response id is rejected on submit (131 ms)
+    TC-INS-01 scheduling follows the assignment rules
+      √ TC-INS-01.1 admin assigns an inspector (3596 ms)
+      √ TC-INS-01.2 inspector cannot assign another inspector (177 ms)
+      √ TC-INS-01.3 a technician cannot be assigned (87 ms)
+    TC-INS-02 invalid scheduled date is rejected
+      √ TC-INS-02a / BVA-32 not a date (143 ms)
+      × TC-INS-02b 2027-02-30 does not exist (124 ms)
+      × BVA-36 2027-02-29 does not exist (123 ms)
+      × BVA-39 2028-02-30 does not exist (106 ms)
+      √ BVA-40 2027-02-32 does not exist (99 ms)
+    TC-INS-03 scheduled date in the past is rejected
+      × TC-INS-03 2020-01-01 (100 ms)
+      × BVA-29 yesterday (98 ms)
+    Valid scheduled dates
+      √ BVA-30 today (101 ms)
+      √ BVA-31 tomorrow (106 ms)
+      √ BVA-35 last day of February, normal year (97 ms)
+      √ BVA-37 first day of March (82 ms)
+      √ BVA-38 valid leap day (99 ms)
+      √ BVA-33 missing, time of the request is used (96 ms)
+      √ BVA-34 empty text, time of the request is used (characterisation, README silent) (98 ms)
+    TC-INS-04 score and risk level are calculated correctly
+      √ TC-INS-04.1, 04.2 4 of 5 passed, N/A ignored, lab is updated (158 ms)
+      √ TC-INS-04.3, 04.4 a failed critical item gives critical risk (132 ms)
+    TC-INS-05 all items N/A must not be reported as 100 / low
+      × TC-INS-05.1 the inspection is not score 100 and not low risk (102 ms)
+      × TC-INS-05.2 the last score of the lab is not 100 (110 ms)
+    TC-INS-06 incomplete or repeated submit is rejected
+      √ TC-INS-06a item 8 left out (65 ms)
+      √ TC-INS-06b failed item without remarks (69 ms)
+      √ TC-INS-06c already completed (68 ms)
+    TC-INS-08 wrong type for responses must not crash the API
+      × TC-INS-08a text (64 ms)
+      × TC-INS-08b object (70 ms)
+      × TC-INS-08c / EP-40 list with null (59 ms)
+    TC-INS-09 inspections are visible only to the right role
+      √ TC-INS-09.1 inspector sees only own inspections in the list (76 ms)
+      × TC-INS-09.2 inspector cannot open the inspection of another inspector (70 ms)
+      √ TC-INS-09.3 technician sees only completed inspections in the list (71 ms)
+      √ TC-INS-09.4 technician cannot open a scheduled inspection (73 ms)
+  White-box cases WB-SI for submitInspection()
+    √ WB-SI-01 inspection not found (DT1-B R3) (1067 ms)
+    √ WB-SI-02 already completed (DT1-B R4) (122 ms)
+    √ WB-SI-03 not assigned inspector (DT1-B R5) (69 ms)
+    √ WB-SI-04 item still pending (DT1-B R6) (63 ms)
+    √ WB-SI-05 failed item without remarks (DT1-B R6) (66 ms)
+    √ WB-SI-06 successful submit (DT1-B R7) (98 ms)
+    √ WB-SI-07 admin can submit (107 ms)
+    √ WB-SI-08 invalid result value (79 ms)
+    √ WB-SI-09 unknown item id (= EP-41) (characterisation, README silent) (93 ms)
+    √ WB-SI-10 responses missing (= EP-38) (72 ms)
+    √ WB-SI-11 critical item fails (117 ms)
+    √ WB-SI-12 rejected submit saves nothing (109 ms)
+    × WB-SI-13 responses not an array (= EP-39) (65 ms)
+    √ WB-SI-14 malformed id (71 ms)
+    √ WB-SI-15 technician blocked (DT1-B R2) (80 ms)
+    √ WB-SI-16 unauthenticated blocked (DT1-B R1) (65 ms)
+  Equivalence classes of a checklist result (EP-27 to EP-42)
+    √ EP-27 pass is accepted (87 ms)
+    √ EP-28 fail with remarks is accepted (70 ms)
+    √ EP-29 na is accepted (77 ms)
+    √ EP-30 fail without remarks is rejected (70 ms)
+    √ EP-31 fail with only spaces as remarks is rejected (63 ms)
+    √ EP-32 pending is rejected (83 ms)
+    √ EP-33 text not in the list is rejected (72 ms)
+    √ EP-34 wrong letter case is rejected (83 ms)
+    √ EP-35 wrong type is rejected (115 ms)
+    √ EP-36 result missing is rejected (76 ms)
+    √ EP-37 item left out of the list is rejected (70 ms)
+    √ EP-42 same item answered twice, the last answer wins (characterisation, README silent) (87 ms)
+
+  ● Test cases TC-INS (demo data) › TC-INS-02 invalid scheduled date is rejected › TC-INS-02b 2027-02-30 does not exist
+
+    POST /api/inspections
+    Expected status: 400
+    Actual status:   201
+    Actual body:     {"_id":"6b066bf942316c45aec9a5e4","lab":{"_id":"6b066bf714ba626d351ba30a","name":"Computer Networks Laboratory","code":"CN-04","building":"EIE Block C","hazardLevel":"low"},"template":"6b066bf714ba626d351ba30d","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b066bf714ba626d351ba301","name":"Dr. Admin","email":"admin@lab.com"},"scheduledDate":"2027-03-02T00:00:00.000Z","s
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at qa/06-automation-cicd/api/inspections.test.js:61:7
+
+  ● Test cases TC-INS (demo data) › TC-INS-02 invalid scheduled date is rejected › BVA-36 2027-02-29 does not exist
+
+    POST /api/inspections
+    Expected status: 400
+    Actual status:   201
+    Actual body:     {"_id":"6b066bfa42316c45aec9a63f","lab":{"_id":"6b066bf714ba626d351ba30a","name":"Computer Networks Laboratory","code":"CN-04","building":"EIE Block C","hazardLevel":"low"},"template":"6b066bf714ba626d351ba30d","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b066bf714ba626d351ba301","name":"Dr. Admin","email":"admin@lab.com"},"scheduledDate":"2027-03-01T00:00:00.000Z","s
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at qa/06-automation-cicd/api/inspections.test.js:61:7
+
+  ● Test cases TC-INS (demo data) › TC-INS-02 invalid scheduled date is rejected › BVA-39 2028-02-30 does not exist
+
+    POST /api/inspections
+    Expected status: 400
+    Actual status:   201
+    Actual body:     {"_id":"6b066bfa42316c45aec9a69a","lab":{"_id":"6b066bf714ba626d351ba30a","name":"Computer Networks Laboratory","code":"CN-04","building":"EIE Block C","hazardLevel":"low"},"template":"6b066bf714ba626d351ba30d","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b066bf714ba626d351ba301","name":"Dr. Admin","email":"admin@lab.com"},"scheduledDate":"2028-03-01T00:00:00.000Z","s
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at qa/06-automation-cicd/api/inspections.test.js:61:7
+
+  ● Test cases TC-INS (demo data) › TC-INS-03 scheduled date in the past is rejected › TC-INS-03 2020-01-01
+
+    POST /api/inspections
+    Expected status: 400
+    Actual status:   201
+    Actual body:     {"_id":"6b066bfa42316c45aec9a745","lab":{"_id":"6b066bf714ba626d351ba30a","name":"Computer Networks Laboratory","code":"CN-04","building":"EIE Block C","hazardLevel":"low"},"template":"6b066bf714ba626d351ba30d","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b066bf714ba626d351ba301","name":"Dr. Admin","email":"admin@lab.com"},"scheduledDate":"2020-01-01T00:00:00.000Z","s
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at qa/06-automation-cicd/api/inspections.test.js:74:7
+
+  ● Test cases TC-INS (demo data) › TC-INS-03 scheduled date in the past is rejected › BVA-29 yesterday
+
+    POST /api/inspections
+    Expected status: 400
+    Actual status:   201
+    Actual body:     {"_id":"6b066bfa42316c45aec9a7a0","lab":{"_id":"6b066bf714ba626d351ba30a","name":"Computer Networks Laboratory","code":"CN-04","building":"EIE Block C","hazardLevel":"low"},"template":"6b066bf714ba626d351ba30d","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b066bf714ba626d351ba301","name":"Dr. Admin","email":"admin@lab.com"},"scheduledDate":"2026-11-24T00:00:00.000Z","s
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at qa/06-automation-cicd/api/inspections.test.js:74:7
+
+  ● Test cases TC-INS (demo data) › TC-INS-05 all items N/A must not be reported as 100 / low › TC-INS-05.1 the inspection is not score 100 and not low risk
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /score=100|risk=low/
+    Received string:      "status 200, score=100, risk=low"
+
+      131 |       const res = await submitAllNa();
+      132 |       expectStatus(res, 200, 400);
+    > 133 |       expect(`status ${res.status}, score=${res.body.score}, risk=${res.body.riskLevel}`).not.toMatch(/score=100|risk=low/);
+          |                                                                                               ^
+      134 |     });
+      135 |
+      136 |     test('TC-INS-05.2 the last score of the lab is not 100', async () => {
+
+      at Object.<anonymous> (qa/06-automation-cicd/api/inspections.test.js:133:95)
+
+  ● Test cases TC-INS (demo data) › TC-INS-05 all items N/A must not be reported as 100 / low › TC-INS-05.2 the last score of the lab is not 100
+
+    expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not 100
+
+      138 |       const lab = await call('get', `/api/labs/${d.labs['CH-05']}`, d.tokens.inspector);
+      139 |       expectStatus(lab, 200);
+    > 140 |       expect(lab.body.lastScore).not.toBe(100);
+          |                                      ^
+      141 |     });
+      142 |   });
+      143 |
+
+      at Object.<anonymous> (qa/06-automation-cicd/api/inspections.test.js:140:38)
+
+  ● Test cases TC-INS (demo data) › TC-INS-07 unknown response id is rejected on submit
+
+    PUT /api/inspections/6b066bf714ba626d351ba34b/submit
+    Expected status: 400
+    Actual status:   200
+    Actual body:     {"_id":"6b066bf714ba626d351ba34b","lab":{"_id":"6b066bf714ba626d351ba30b","name":"Chemistry Support Laboratory","code":"CH-05","building":"Science Block","hazardLevel":"high"},"template":"6b066bf714ba626d351ba30d","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b066bf714ba626d351ba303","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-11-25T05:02:4
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/api/inspections.test.js:170:5)
+
+  ● Test cases TC-INS (demo data) › TC-INS-08 wrong type for responses must not crash the API › TC-INS-08a text
+
+    PUT /api/inspections/6b066bf714ba626d351ba34b/submit
+    Expected status: 400
+    Actual status:   500
+    Actual body:     {"message":"answers.forEach is not a function"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at qa/06-automation-cicd/api/inspections.test.js:182:7
+
+  ● Test cases TC-INS (demo data) › TC-INS-08 wrong type for responses must not crash the API › TC-INS-08b object
+
+    PUT /api/inspections/6b066bf714ba626d351ba34b/submit
+    Expected status: 400
+    Actual status:   500
+    Actual body:     {"message":"answers.forEach is not a function"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at qa/06-automation-cicd/api/inspections.test.js:182:7
+
+  ● Test cases TC-INS (demo data) › TC-INS-08 wrong type for responses must not crash the API › TC-INS-08c / EP-40 list with null
+
+    PUT /api/inspections/6b066bf714ba626d351ba34b/submit
+    Expected status: 400
+    Actual status:   500
+    Actual body:     {"message":"Cannot read properties of null (reading '_id')"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at qa/06-automation-cicd/api/inspections.test.js:182:7
+
+  ● Test cases TC-INS (demo data) › TC-INS-09 inspections are visible only to the right role › TC-INS-09.2 inspector cannot open the inspection of another inspector
+
+    GET /api/inspections/6b066bf842316c45aec9a444
+    Expected status: 403 or 404
+    Actual status:   200
+    Actual body:     {"_id":"6b066bf842316c45aec9a444","lab":{"_id":"6b066bf714ba626d351ba307","name":"High Voltage Laboratory","code":"HV-01","building":"EIE Block A","hazardLevel":"high"},"template":"6b066bf714ba626d351ba30d","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b066bf742316c45aec9a432","name":"Second Inspector","email":"inspector2@lab.com"},"status":"scheduled","responses":[{"t
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/api/inspections.test.js:195:7)
+
+  ● White-box cases WB-SI for submitInspection() › WB-SI-13 responses not an array (= EP-39)
+
+    PUT /api/inspections/6b066bfe42316c45aec9b06d/submit
+    Expected status: 400
+    Actual status:   500
+    Actual body:     {"message":"answers.forEach is not a function"} (the body also has a "stack" field)
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at Object.<anonymous> (qa/06-automation-cicd/api/inspections.test.js:318:5)
+
+PASS 06-automation-cicd/api/rateLimit.test.js (21.276 s)
+  √ TC-AUTH-08.1 requests 1 to 50 give 401, request 51 gives 429 with a message (12729 ms)
+  √ TC-AUTH-08.2 other routes still work after that (17 ms)
+
+FAIL 06-automation-cicd/api/permissions.test.js (26.288 s)
+  √ TC-PERM-05.3 admin submits the inspection of another inspector (93 ms)
+  DT1-01 health check
+    √ DT1-01 admin -> 200 (3358 ms)
+    √ DT1-01 inspector -> 200 (109 ms)
+    √ DT1-01 inspector2 -> 200 (105 ms)
+    √ DT1-01 technician -> 200 (76 ms)
+    √ DT1-01 unauthenticated -> 200 (105 ms)
+  DT1-02 register
+    √ DT1-02 admin -> 201 (456 ms)
+    √ DT1-02 inspector -> 201 (297 ms)
+    √ DT1-02 inspector2 -> 201 (291 ms)
+    √ DT1-02 technician -> 201 (312 ms)
+    √ DT1-02 unauthenticated -> 201 (311 ms)
+  DT1-03 log in
+    √ DT1-03 admin -> 200 (297 ms)
+    √ DT1-03 inspector -> 200 (290 ms)
+    √ DT1-03 inspector2 -> 200 (294 ms)
+    √ DT1-03 technician -> 200 (294 ms)
+    √ DT1-03 unauthenticated -> 200 (292 ms)
+  DT1-04 / TC-PERM-01.1 own profile
+    √ DT1-04 / TC-PERM-01.1 admin -> 200 (156 ms)
+    √ DT1-04 / TC-PERM-01.1 inspector -> 200 (93 ms)
+    √ DT1-04 / TC-PERM-01.1 inspector2 -> 200 (75 ms)
+    √ DT1-04 / TC-PERM-01.1 technician -> 200 (71 ms)
+    √ DT1-04 / TC-PERM-01.1 unauthenticated -> 401 (90 ms)
+  DT1-05 dashboard
+    √ DT1-05 admin -> 200 (151 ms)
+    √ DT1-05 inspector -> 200 (98 ms)
+    √ DT1-05 inspector2 -> 200 (112 ms)
+    √ DT1-05 technician -> 200 (100 ms)
+    √ DT1-05 unauthenticated -> 401 (71 ms)
+  DT1-06 list labs
+    √ DT1-06 admin -> 200 (74 ms)
+    √ DT1-06 inspector -> 200 (85 ms)
+    √ DT1-06 inspector2 -> 200 (91 ms)
+    √ DT1-06 technician -> 200 (84 ms)
+    √ DT1-06 unauthenticated -> 401 (93 ms)
+  DT1-06 open a lab
+    √ DT1-06 admin -> 200 (93 ms)
+    √ DT1-06 inspector -> 200 (84 ms)
+    √ DT1-06 inspector2 -> 200 (76 ms)
+    √ DT1-06 technician -> 200 (109 ms)
+    √ DT1-06 unauthenticated -> 401 (61 ms)
+  DT1-07 / TC-PERM-03.1 create lab
+    √ DT1-07 / TC-PERM-03.1 admin -> 201 (86 ms)
+    √ DT1-07 / TC-PERM-03.1 inspector -> 403 (94 ms)
+    √ DT1-07 / TC-PERM-03.1 inspector2 -> 403 (88 ms)
+    √ DT1-07 / TC-PERM-03.1 technician -> 403 (77 ms)
+    √ DT1-07 / TC-PERM-03.1 unauthenticated -> 401 (81 ms)
+  DT1-08 / TC-PERM-03.2 edit lab
+    √ DT1-08 / TC-PERM-03.2 admin -> 200 (84 ms)
+    √ DT1-08 / TC-PERM-03.2 inspector -> 403 (72 ms)
+    √ DT1-08 / TC-PERM-03.2 inspector2 -> 403 (92 ms)
+    √ DT1-08 / TC-PERM-03.2 technician -> 403 (85 ms)
+    √ DT1-08 / TC-PERM-03.2 unauthenticated -> 401 (102 ms)
+  DT1-09 / TC-PERM-03.3 delete lab
+    √ DT1-09 / TC-PERM-03.3 admin -> 200 (117 ms)
+    √ DT1-09 / TC-PERM-03.3 inspector -> 403 (86 ms)
+    √ DT1-09 / TC-PERM-03.3 inspector2 -> 403 (75 ms)
+    √ DT1-09 / TC-PERM-03.3 technician -> 403 (79 ms)
+    √ DT1-09 / TC-PERM-03.3 unauthenticated -> 401 (78 ms)
+  DT1-10 list templates
+    √ DT1-10 admin -> 200 (76 ms)
+    √ DT1-10 inspector -> 200 (74 ms)
+    √ DT1-10 inspector2 -> 200 (77 ms)
+    √ DT1-10 technician -> 200 (61 ms)
+    √ DT1-10 unauthenticated -> 401 (66 ms)
+  DT1-10 open a template
+    √ DT1-10 admin -> 200 (142 ms)
+    √ DT1-10 inspector -> 200 (63 ms)
+    √ DT1-10 inspector2 -> 200 (63 ms)
+    √ DT1-10 technician -> 200 (67 ms)
+    √ DT1-10 unauthenticated -> 401 (86 ms)
+  DT1-11 / TC-PERM-04.1 create template
+    √ DT1-11 / TC-PERM-04.1 admin -> 201 (74 ms)
+    √ DT1-11 / TC-PERM-04.1 inspector -> 403 (73 ms)
+    √ DT1-11 / TC-PERM-04.1 inspector2 -> 403 (77 ms)
+    √ DT1-11 / TC-PERM-04.1 technician -> 403 (56 ms)
+    √ DT1-11 / TC-PERM-04.1 unauthenticated -> 401 (62 ms)
+  DT1-12 / TC-PERM-04.2 edit template
+    √ DT1-12 / TC-PERM-04.2 admin -> 200 (78 ms)
+    √ DT1-12 / TC-PERM-04.2 inspector -> 403 (107 ms)
+    √ DT1-12 / TC-PERM-04.2 inspector2 -> 403 (61 ms)
+    √ DT1-12 / TC-PERM-04.2 technician -> 403 (85 ms)
+    √ DT1-12 / TC-PERM-04.2 unauthenticated -> 401 (120 ms)
+  DT1-13 / TC-PERM-04.3 delete template
+    √ DT1-13 / TC-PERM-04.3 admin -> 200 (61 ms)
+    √ DT1-13 / TC-PERM-04.3 inspector -> 403 (60 ms)
+    √ DT1-13 / TC-PERM-04.3 inspector2 -> 403 (62 ms)
+    √ DT1-13 / TC-PERM-04.3 technician -> 403 (66 ms)
+    √ DT1-13 / TC-PERM-04.3 unauthenticated -> 401 (63 ms)
+  DT1-14 list inspections (content)
+    √ DT1-14 admin -> 200 (97 ms)
+    √ DT1-14 inspector -> 200 (77 ms)
+    √ DT1-14 inspector2 -> 200 (138 ms)
+    √ DT1-14 technician -> 200 (98 ms)
+    √ DT1-14 unauthenticated -> 401 (61 ms)
+  DT1-15 open a scheduled inspection
+    √ DT1-15 admin -> 200 (63 ms)
+    √ DT1-15 inspector -> 200 (61 ms)
+    × DT1-15 inspector2 -> 403 (79 ms)
+    √ DT1-15 technician -> 403 (162 ms)
+    √ DT1-15 unauthenticated -> 401 (85 ms)
+  DT1-16 open a completed inspection
+    √ DT1-16 admin -> 200 (74 ms)
+    √ DT1-16 inspector -> 200 (63 ms)
+    × DT1-16 inspector2 -> 403 (68 ms)
+    √ DT1-16 technician -> 200 (62 ms)
+    √ DT1-16 unauthenticated -> 401 (65 ms)
+  DT1-17 / TC-PERM-05.1 schedule for self
+    √ DT1-17 / TC-PERM-05.1 admin -> 201 (86 ms)
+    √ DT1-17 / TC-PERM-05.1 inspector -> 201 (89 ms)
+    √ DT1-17 / TC-PERM-05.1 inspector2 -> 201 (79 ms)
+    √ DT1-17 / TC-PERM-05.1 technician -> 403 (63 ms)
+    √ DT1-17 / TC-PERM-05.1 unauthenticated -> 401 (92 ms)
+  DT1-18 schedule for another inspector
+    √ DT1-18 admin -> 201 (87 ms)
+    √ DT1-18 inspector -> 201 (85 ms)
+    √ DT1-18 inspector2 -> 201 (80 ms)
+    √ DT1-18 technician -> 403 (115 ms)
+    √ DT1-18 unauthenticated -> 401 (70 ms)
+  DT1-19 / TC-PERM-05.2 submit an inspection
+    √ DT1-19 / TC-PERM-05.2 admin -> 200 (125 ms)
+    √ DT1-19 / TC-PERM-05.2 inspector -> 200 (139 ms)
+    √ DT1-19 / TC-PERM-05.2 inspector2 -> 403 (109 ms)
+    √ DT1-19 / TC-PERM-05.2 technician -> 403 (62 ms)
+    √ DT1-19 / TC-PERM-05.2 unauthenticated -> 401 (72 ms)
+  DT1-20 / TC-PERM-05.4 delete inspection
+    √ DT1-20 / TC-PERM-05.4 admin -> 200 (74 ms)
+    √ DT1-20 / TC-PERM-05.4 inspector -> 403 (77 ms)
+    √ DT1-20 / TC-PERM-05.4 inspector2 -> 403 (69 ms)
+    √ DT1-20 / TC-PERM-05.4 technician -> 403 (62 ms)
+    √ DT1-20 / TC-PERM-05.4 unauthenticated -> 401 (69 ms)
+  DT1-21 list incidents (content)
+    √ DT1-21 admin -> 200 (81 ms)
+    √ DT1-21 inspector -> 200 (69 ms)
+    √ DT1-21 inspector2 -> 200 (76 ms)
+    √ DT1-21 technician -> 200 (58 ms)
+    √ DT1-21 unauthenticated -> 401 (65 ms)
+  DT1-22 report incident
+    √ DT1-22 admin -> 201 (76 ms)
+    √ DT1-22 inspector -> 201 (72 ms)
+    √ DT1-22 inspector2 -> 201 (70 ms)
+    √ DT1-22 technician -> 201 (88 ms)
+    √ DT1-22 unauthenticated -> 401 (57 ms)
+  DT1-23 / TC-PERM-06.1 update incident
+    √ DT1-23 / TC-PERM-06.1 admin -> 200 (87 ms)
+    √ DT1-23 / TC-PERM-06.1 inspector -> 200 (102 ms)
+    √ DT1-23 / TC-PERM-06.1 inspector2 -> 200 (113 ms)
+    √ DT1-23 / TC-PERM-06.1 technician -> 403 (81 ms)
+    √ DT1-23 / TC-PERM-06.1 unauthenticated -> 401 (63 ms)
+  DT1-24 / TC-PERM-06.2 delete incident
+    √ DT1-24 / TC-PERM-06.2 admin -> 200 (59 ms)
+    √ DT1-24 / TC-PERM-06.2 inspector -> 403 (62 ms)
+    √ DT1-24 / TC-PERM-06.2 inspector2 -> 403 (60 ms)
+    √ DT1-24 / TC-PERM-06.2 technician -> 403 (154 ms)
+    √ DT1-24 / TC-PERM-06.2 unauthenticated -> 401 (80 ms)
+  DT1-25 list staff names
+    √ DT1-25 admin -> 200 (68 ms)
+    √ DT1-25 inspector -> 200 (100 ms)
+    √ DT1-25 inspector2 -> 200 (69 ms)
+    √ DT1-25 technician -> 403 (83 ms)
+    √ DT1-25 unauthenticated -> 401 (69 ms)
+  DT1-26 / TC-PERM-06.3 list users
+    √ DT1-26 / TC-PERM-06.3 admin -> 200 (58 ms)
+    √ DT1-26 / TC-PERM-06.3 inspector -> 403 (66 ms)
+    √ DT1-26 / TC-PERM-06.3 inspector2 -> 403 (75 ms)
+    √ DT1-26 / TC-PERM-06.3 technician -> 403 (112 ms)
+    √ DT1-26 / TC-PERM-06.3 unauthenticated -> 401 (93 ms)
+  DT1-27 / TC-PERM-06.4 create user
+    √ DT1-27 / TC-PERM-06.4 admin -> 201 (298 ms)
+    √ DT1-27 / TC-PERM-06.4 inspector -> 403 (50 ms)
+    √ DT1-27 / TC-PERM-06.4 inspector2 -> 403 (113 ms)
+    √ DT1-27 / TC-PERM-06.4 technician -> 403 (136 ms)
+    √ DT1-27 / TC-PERM-06.4 unauthenticated -> 401 (58 ms)
+  DT1-28 / TC-PERM-06.5 change role
+    √ DT1-28 / TC-PERM-06.5 admin -> 200 (60 ms)
+    √ DT1-28 / TC-PERM-06.5 inspector -> 403 (73 ms)
+    √ DT1-28 / TC-PERM-06.5 inspector2 -> 403 (75 ms)
+    √ DT1-28 / TC-PERM-06.5 technician -> 403 (73 ms)
+    √ DT1-28 / TC-PERM-06.5 unauthenticated -> 401 (68 ms)
+  DT1-29 / TC-PERM-06.6 delete user
+    √ DT1-29 / TC-PERM-06.6 admin -> 200 (67 ms)
+    √ DT1-29 / TC-PERM-06.6 inspector -> 403 (70 ms)
+    √ DT1-29 / TC-PERM-06.6 inspector2 -> 403 (68 ms)
+    √ DT1-29 / TC-PERM-06.6 technician -> 403 (86 ms)
+    √ DT1-29 / TC-PERM-06.6 unauthenticated -> 401 (116 ms)
+  TC-PERM-01 only a valid token gives access
+    √ TC-PERM-01.2 one character changed in the middle part of the token (37 ms)
+    √ TC-PERM-01.3 token of a deleted user (91 ms)
+    √ TC-PERM-01.4 expired token (72 ms)
+  DT1-A the permission is checked before the input
+    √ DT1-A admin sends a bad body to POST /api/labs -> 400 (88 ms)
+    √ DT1-A inspector sends a bad body to POST /api/labs -> 403 (55 ms)
+    √ DT1-A technician sends a bad body to POST /api/labs -> 403 (49 ms)
+    √ DT1-A unauthenticated sends a bad body to POST /api/labs -> 401 (60 ms)
+
+  ● DT1-15 open a scheduled inspection › DT1-15 inspector2 -> 403
+
+    GET /api/inspections/6b066bf7edf21a168d6da2e0
+    Expected status: 403
+    Actual status:   200
+    Actual body:     {"_id":"6b066bf7edf21a168d6da2e0","lab":{"_id":"6b066bf7edf21a168d6da2a0","name":"Chemistry Support Laboratory","code":"CH-05","building":"Science Block","hazardLevel":"high"},"template":"6b066bf7edf21a168d6da2a2","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b066bf7edf21a168d6da298","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-11-25T05:02:4
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at qa/06-automation-cicd/api/permissions.test.js:91:5
+
+  ● DT1-16 open a completed inspection › DT1-16 inspector2 -> 403
+
+    GET /api/inspections/6b066bf7edf21a168d6da2b4
+    Expected status: 403
+    Actual status:   200
+    Actual body:     {"_id":"6b066bf7edf21a168d6da2b4","lab":{"_id":"6b066bf7edf21a168d6da29c","name":"High Voltage Laboratory","code":"HV-01","building":"EIE Block A","hazardLevel":"high"},"template":"6b066bf7edf21a168d6da2a2","templateTitle":"General Laboratory Safety Checklist","inspector":{"_id":"6b066bf7edf21a168d6da298","name":"Nimal Perera","email":"inspector@lab.com"},"scheduledDate":"2026-11-05T05:02:47.872Z"
+
+      16 |   const { stack, ...body } = res.body || {};
+      17 |   const text = JSON.stringify(Array.isArray(res.body) ? res.body : body).slice(0, 400);
+    > 18 |   throw new Error(
+         |         ^
+      19 |     `${res.req.method} ${res.req.path}\nExpected status: ${allowed.join(' or ')}\nActual status:   ${res.status}\n` +
+      20 |       `Actual body:     ${text}${stack ? ' (the body also has a "stack" field)' : ''}`
+      21 |   );
+
+      at expectStatus (qa/06-automation-cicd/helpers/http.js:18:9)
+      at qa/06-automation-cicd/api/permissions.test.js:91:5
+
+Test Suites: 9 failed, 1 passed, 10 total
+Tests:       28 failed, 335 passed, 363 total
+Snapshots:   0 total
+Time:        26.877 s
+Ran all test suites.
+exit 1

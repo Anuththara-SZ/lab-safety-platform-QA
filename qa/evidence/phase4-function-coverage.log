@@ -1,0 +1,8 @@
+2026-11-25T11:19:52+05:30
+calculateResult() lines 29-39: lines 10/10, branches 10/10
+submitInspection() lines 63-90: lines 22/22, branches 22/22
+SF paths relative to repo root: 26 of 26
+statements 447/474 94.3
+branches 153/180 85
+functions 62/64 96.87
+lines 413/426 96.94
