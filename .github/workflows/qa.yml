@@ -77,7 +77,7 @@ jobs:
       # Skipped when the repository has no SONAR_TOKEN. See qa/09-quality-metrics/sonarcloud-steps.md
       - name: SonarCloud scan
         if: ${{ env.SONAR_TOKEN != '' }}
-        uses: SonarSource/sonarqube-scan-action@v5   # check the latest version
+        uses: SonarSource/sonarqube-scan-action@v8.5.1   # check the latest version
         with:
           args: >
             -Dproject.settings=qa/09-quality-metrics/sonar-project.properties
