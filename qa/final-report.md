@@ -1,32 +1,25 @@
 # Testing the Smart Laboratory Safety Inspection Platform
 
-**Project report (DRAFT for group review)**
+**Project report**
 
 | | |
 |---|---|
 | Module | EC4206 Software Testing and Quality Assurance |
 | Project | Group project, Option A: testing an existing project |
 | System under test | Smart Laboratory Safety Inspection Platform |
-| University / department | [PLACEHOLDER: university and department] |
-| Lecturer | [PLACEHOLDER: lecturer name] |
-| Submission date | 25 November 2026 (deadline in `qa/01-test-plan/test-plan.md`) [VERIFY] |
+| University / department | ______________________________ |
+| Lecturer | ______________________________ |
+| Submission date | 25 November 2026 |
+| Code repository | github.com/Anuththara-SZ/lab-safety-platform-QA |
 
 | Group member | Registration number | Tasks |
 |---|---|---|
-| [PLACEHOLDER: name] | [PLACEHOLDER: reg. no.] | [PLACEHOLDER: tasks 3.1 to 3.10] |
-| [PLACEHOLDER: name] | [PLACEHOLDER: reg. no.] | [PLACEHOLDER: tasks 3.1 to 3.10] |
-| [PLACEHOLDER: name] | [PLACEHOLDER: reg. no.] | [PLACEHOLDER: tasks 3.1 to 3.10] |
-| [PLACEHOLDER: name] | [PLACEHOLDER: reg. no.] | [PLACEHOLDER: tasks 3.1 to 3.10] |
+| ____________________ | ____________ | ____________________ |
+| ____________________ | ____________ | ____________________ |
+| ____________________ | ____________ | ____________________ |
+| ____________________ | ____________ | ____________________ |
 
-**How to read the marks in this draft**
-
-| Mark | Meaning |
-|---|---|
-| [VERIFY] | Not proven by a file in `qa/evidence`, or needs a decision or check by the group |
-| [PLACEHOLDER] | The group must fill this in |
-| NOT EXECUTED | Not run. No result exists |
-
-Log names in this report are files in `qa/evidence/`. Remove this box before submission.
+**Notation.** NOT EXECUTED means the step was not run and no result exists. Names such as `phase3-jmeter-run1-summary.log` are files in the folder `qa/evidence/`. Screenshots are the original files and are not edited.
 
 <!-- pagebreak -->
 
@@ -41,11 +34,16 @@ An AI assistant (Claude, used through Claude Code) helped with this project. It 
 
 The application source code was not changed.
 
-[VERIFY] The group ran, reviewed and checked the results. *Keep this sentence only after it is true, and say which suites the group ran again and when. The saved logs come from runs started by the AI assistant.*
+The saved logs come from runs that were started with the help of the AI assistant on a group member's laptop. The GitHub Actions runs (section 6.5) and the SonarCloud analysis (section 9.3) were started from the group's own GitHub and SonarCloud accounts.
 
-**Contribution of the group:** [PLACEHOLDER: describe in your own words what each member decided, ran, checked, corrected and learned]
+**Contribution of each member:**
 
-[VERIFY] Check this page against the AI policy of the module.
+| Member | Decided, ran, checked or corrected |
+|---|---|
+| ____________________ | ______________________________________________ |
+| ____________________ | ______________________________________________ |
+| ____________________ | ______________________________________________ |
+| ____________________ | ______________________________________________ |
 
 <!-- pagebreak -->
 
@@ -84,7 +82,7 @@ There are three roles (admin, inspector, technician) and 29 API routes (counted 
 
 ### 1.2 Why this project
 
-We used Option A, reuse of an existing project. [PLACEHOLDER: the group's own reason for choosing it]
+We used Option A, reuse of an existing project: we test a finished application and do not change it.
 
 Facts that make it suitable for testing:
 
@@ -134,10 +132,10 @@ Full document: `qa/01-test-plan/test-plan.md`.
 
 | Role | Responsibility | Person |
 |---|---|---|
-| Test lead | Plan, schedule, final check | [PLACEHOLDER] |
-| Test designer | Test cases, black-box, white-box | [PLACEHOLDER] |
-| Automation tester | Jest, Supertest, Cucumber, Selenium, CI | [PLACEHOLDER] |
-| Performance / security tester, defect manager | JMeter, OWASP, defects, metrics | [PLACEHOLDER] |
+| Test lead | Plan, schedule, final check | ____________ |
+| Test designer | Test cases, black-box, white-box | ____________ |
+| Automation tester | Jest, Supertest, Cucumber, Selenium, CI | ____________ |
+| Performance / security tester, defect manager | JMeter, OWASP, defects, metrics | ____________ |
 
 Hardware: one Windows 11 laptop. Client, server and database ran on the same machine. Tool versions are in section 3.2.
 
@@ -196,11 +194,11 @@ Full documents: `stlc-mapping.md`, `test-environment.md` and `test-cases.md` in 
 | STLC phase | In this project | Deliverable | State |
 |---|---|---|---|
 | 1. Requirement analysis | Read the README and the code, list requirements R1 to R15 and unclear points G1 to G11 | `stlc-mapping.md` | Written |
-| 2. Test planning | Scope, levels, tools, risks, ISO 25010 | `qa/01-test-plan` | Written. Group review [VERIFY] |
+| 2. Test planning | Scope, levels, tools, risks, ISO 25010 | `qa/01-test-plan` | Written |
 | 3. Test case design | 45 test cases, 42 EP, 40 BVA, 2 decision tables, 28 white-box cases | `qa/02`, `qa/03`, `qa/04` | Written |
 | 4. Environment setup | Install, seed data, baseline | `test-environment.md` | Done, logs saved |
-| 5. Test execution | Automated tests, UI, load, security, defect reports | `qa/05` to `qa/08` | Run locally. GitHub Actions: NOT EXECUTED [VERIFY] |
-| 6. Closure | Coverage, defect density, lessons | `qa/09`, `qa/10` | Written. SonarCloud: NOT EXECUTED |
+| 5. Test execution | Automated tests, UI, load, security, defect reports | `qa/05` to `qa/08` | Run locally and on GitHub Actions (section 6.5) |
+| 6. Closure | Coverage, defect density, lessons | `qa/09`, `qa/10` | Written. SonarCloud analysis done (section 9.3) |
 
 ### 3.2 Test environment
 
@@ -512,6 +510,20 @@ LCOV counts executed lines, so line coverage is shown. The branch numbers are th
 
 **Why the main suite has no failures.** The first run of all unit and API tests gave 335 passed and 28 failed (`phase2-jest-all-first-run.log`). These 28 checks were moved to a separate known-defects suite, and one more was added later. No test is skipped. The 335 also include 11 checks that only record the present behaviour, because the README is silent. Two of these 11 (all N/A and unknown item id) record behaviour that a known-defect check says is wrong.
 
+Figures 4 to 9 are screenshots of these runs on the laptop.
+
+![Figure 4. Jest run with coverage, start](evidence/screenshots/01-jest-coverage-run-start.png)
+
+![Figure 5. Jest summary: 335 passed](evidence/screenshots/02-jest-coverage-summary-335-passed.png)
+
+![Figure 6. Cucumber.js: 2 scenarios passed](evidence/screenshots/03-cucumber-bdd-2-scenarios-passed.png)
+
+![Figure 7. selenium-webdriver: 3 UI tests passed](evidence/screenshots/04-selenium-ui-3-tests-passed.png)
+
+![Figure 8. Known-defects run, start](evidence/screenshots/05-known-defects-run-start.png)
+
+![Figure 9. Known-defects summary: 29 failed](evidence/screenshots/06-known-defects-summary-29-failed.png)
+
 ### 6.2 TDD
 
 The application was finished before our project, so our unit tests are test-after and not real TDD. The known-defect checks are the "red" step. For BUG-004 a fix was tried in a throwaway copy outside the repository: 2 tests failed before and passed after, and the main suite stayed at 335 passed (`phase3-bug004-fix-in-copy.log`). For TC-INS-05 the green, check and refactor steps are NOT EXECUTED.
@@ -552,11 +564,15 @@ Scenario: One failed critical item gives critical risk even when the score is 80
 | TC-AUTH-02 | Wrong password shows an error and stays on login | Passed |
 | TC-PERM-02 | Technician does not see admin-only controls, admin does | Passed |
 
-![Figure 4. TC-AUTH-02: wrong password. Screenshot saved by the Selenium run](evidence/ui-TC-AUTH-02-wrong-password.png)
+![Figure 11. TC-AUTH-02: wrong password. Screenshot saved by the Selenium run](evidence/ui-TC-AUTH-02-wrong-password.png)
 
-![Figure 5. TC-PERM-02: lab page as admin. Screenshot saved by the Selenium run](evidence/ui-TC-PERM-02-admin.png)
+![Figure 12. TC-PERM-02: lab page as admin. Screenshot saved by the Selenium run](evidence/ui-TC-PERM-02-admin.png)
 
-![Figure 6. TC-PERM-02: lab page as technician. Screenshot saved by the Selenium run](evidence/ui-TC-PERM-02-technician.png)
+![Figure 13. TC-PERM-02: lab page as technician. Screenshot saved by the Selenium run](evidence/ui-TC-PERM-02-technician.png)
+
+The wrong-password case was also checked by hand in the browser (Figure 14). The page shows the message "Invalid email or password" and stays on the login page, as in TC-AUTH-02.
+
+![Figure 14. Manual check in the browser: login page after a wrong password](evidence/screenshots/11-login-wrong-password-manual.png)
 
 ### 6.5 GitHub Actions
 
@@ -576,7 +592,19 @@ File: `.github/workflows/qa.yml`, runs on every push and pull request on `ubuntu
 
 The known-defects step shows its failures but does not block the pipeline. So a red main result means that something new is broken.
 
-**Result on GitHub: NOT EXECUTED** in our evidence. Locally, only the YAML was parsed and the script names were checked. [VERIFY] If the workflow has run after the push, add the result, the link and screenshots here: [PLACEHOLDER: GitHub Actions screenshots]
+**Result on GitHub.** The workflow ran 5 times on the `main` branch of `Anuththara-SZ/lab-safety-platform-QA` (Figure 10). The list shows these runs:
+
+| Run | Commit message | Result | Time |
+|---|---|---|---|
+| QA #1 | Add QA deliverables for EC4206 STQA project | Passed | 1 min 24 s |
+| QA #4 | Add SonarQube Cloud screenshots | **Failed** | 1 min 34 s |
+| QA #5 | Fix SonarCloud settings and update scan action to v8.5.1 | Passed | 2 min 51 s |
+| QA #6 | Add project report, screenshots and consistency fixes | Passed | 2 min 23 s |
+| QA #7 | Fix SonarCloud settings and update scan action to v8.5.1 | Passed | 2 min 29 s |
+
+Run #4 failed. We did not save its log, so the exact reason is not in our evidence. The next run (#5) used a commit that changed the SonarCloud settings and the scan action, and it passed. The list shows 5 runs, and the run numbers #2 and #3 are not in it. The Sonar scan ran on GitHub (section 9.3). The screenshot shows only the run list. It does not show the step output, so the test counts on GitHub were not compared with the local counts.
+
+![Figure 10. GitHub Actions run list, workflow QA, 25 November 2026](evidence/screenshots/07-github-actions-run.png)
 
 ## 7. Performance and security (3.7)
 
@@ -628,11 +656,11 @@ Times in ms. Source: `phase3-jmeter-<run>-summary.log`.
 
 - run2 measures the limiter and not the capacity. Exactly 50 logins passed.
 - In run1 only 4 to 15 users were active at once, so run3 was added.
-- Successful logins ran at about 11 per second in run2, run3 and run3b. A likely reason is password hashing with `bcryptjs` in one process. This was not profiled [VERIFY].
+- Successful logins ran at about 11 per second in run2, run3 and run3b. A likely reason is password hashing with `bcryptjs` in one process. This was not profiled.
 - The same test gave an average of 71.7, 10.2 and 78.1 ms. The reason is unknown, because CPU load was not recorded during the runs.
 - One laptop ran everything, so these are not production figures. The real capacity is unknown.
 
-[VERIFY] The targets were proposed by the AI assistant, to be confirmed by the group (`phase3-jmeter-environment.log`). The group must confirm or change them.
+The targets were proposed by the AI assistant, to be confirmed by the group (`phase3-jmeter-environment.log`). The README has no targets.
 
 ### 7.3 Security checks
 
@@ -704,7 +732,7 @@ Full documents: `qa/08-defects`. All six bugs were reproduced.
 
 16 of the 29 failing checks belong to these reports. The other 13 belong to 8 observations.
 
-**Severity rule.** A bug that only breaks a reasonable expectation is Moderate or lower. BUG-002 is the one exception, because it shows an unchecked lab as safe. [VERIFY] The group agrees with this rating.
+**Severity rule.** A bug that only breaks a reasonable expectation is Moderate or lower. BUG-002 is the one exception, because it shows an unchecked lab as safe.
 
 | Severity | Meaning |
 |---|---|
@@ -762,13 +790,15 @@ Problem: an admin sent the own id in capitals. Change role gave 200 and delete g
 
 | State | Date | Owner | Action | Evidence |
 |---|---|---|---|---|
-| New | 25 Nov 2026 (real) | [PLACEHOLDER: reporter] | TC-USR-03.6 failed, bug reported | `phase2-jest-all-first-run.log`, `phase2-known-defects.log` |
-| Assigned | 25 Nov 2026 (simulated) | [PLACEHOLDER: test lead] | Report checked and given to the developer | None, simulated |
-| Fixed | 25 Nov 2026 (simulated) | [PLACEHOLDER: developer] | Change tried in a throwaway copy, repository not changed | Real run: `phase3-bug004-fix-in-copy.log` |
-| Verified | 25 Nov 2026 (simulated) | [PLACEHOLDER: tester] | Both tests failed before and passed after; main suite 335 passed | Real run: same log |
-| Closed | 25 Nov 2026 (simulated) | [PLACEHOLDER: test lead] | Would be closed after the fix is merged | None, simulated |
+| New | 25 Nov 2026 (real) | Reporter: ________ | TC-USR-03.6 failed, bug reported | `phase2-jest-all-first-run.log`, `phase2-known-defects.log` |
+| Assigned | 25 Nov 2026 (simulated) | Test lead: ________ | Report checked and given to the developer | None, simulated |
+| Fixed | 25 Nov 2026 (simulated) | Developer: ________ | Change tried in a throwaway copy, repository not changed | Real run: `phase3-bug004-fix-in-copy.log` |
+| Verified | 25 Nov 2026 (simulated) | Tester: ________ | Both tests failed before and passed after; main suite 335 passed | Real run: same log |
+| Closed | 25 Nov 2026 (simulated) | Test lead: ________ | Would be closed after the fix is merged | None, simulated |
 
-**GitHub Issues:** NOT EXECUTED. The text is ready in `qa/08-defects/github-issues`. [PLACEHOLDER: screenshot of the issue list]
+**GitHub Issues.** The six reports were created as issues in `Anuththara-SZ/lab-safety-platform-QA` from the texts in `qa/08-defects/github-issues`. The list shows 6 open issues, 0 closed, each with the label `bug` (Figure 15). They match the table in section 8.1. The other observations were not raised as issues.
+
+![Figure 15. GitHub Issues list: BUG-001 to BUG-006, all open](evidence/screenshots/08-github-issues-list.png)
 
 ## 9. Quality metrics (3.9)
 
@@ -804,16 +834,34 @@ The backend was tested much more than the frontend, so the frontend may have def
 
 ### 9.3 SonarQube / SonarCloud
 
-Docker and the scanner were not found on the machine (`phase1-sonar-availability.log`). SonarCloud is prepared in `sonar-project.properties`, `sonarcloud-steps.md` and `qa.yml`.
+Docker and the scanner were not found on the machine (`phase1-sonar-availability.log`), so the scan ran through GitHub Actions on SonarCloud (project `Anuththara-SZ_lab-safety-platform-QA`, branch `main`, settings in `qa/09-quality-metrics/sonar-project.properties`). It scans `backend` and `frontend/src`. The Jest coverage file is `qa/coverage/lcov.info`. The values below are read from two screenshots (Figures 16 and 17). They are not in a log file.
 
-| Metric | Value |
-|---|---|
-| Bugs | NOT EXECUTED |
-| Vulnerabilities | NOT EXECUTED |
-| Code smells | NOT EXECUTED |
-| Duplication % | NOT EXECUTED |
-| Technical debt | NOT EXECUTED |
-| Coverage % in Sonar | NOT EXECUTED |
+| Metric (SonarCloud) | First analysis, no coverage (Figure 16) | Later analysis, with coverage (Figure 17) |
+|---|---|---|
+| Quality gate (Sonar way) | Not computed | **Failed** |
+| Lines of code | 5.3k | 5.5k |
+| Security, open issues (rating) | 19 (E) | 20 (E) |
+| Reliability, open issues (rating) | 55 (D) | 68 (D) |
+| Maintainability, open issues (rating) | 41 (A) | 41 (A) |
+| Security hotspots | 0 | 100% reviewed |
+| Dependency risks (rating) | 23 (C) | 23 (C) |
+| Coverage | Not set up | **28.2%** |
+| Duplications | 0.4% | 0.4% |
+| Technical debt | Not shown | Not shown |
+
+The first analysis was of commit `2dd53e8`. Figure 17 shows the analysis of 25 November 2026, 17:50.
+
+![Figure 16. SonarCloud summary before coverage was imported](evidence/screenshots/09-sonarcloud-baseline-no-coverage.png)
+
+![Figure 17. SonarCloud project list after coverage was imported: gate Failed, coverage 28.2%](evidence/screenshots/10-sonarcloud-after-with-coverage.png)
+
+**What we can and cannot say**
+
+- Coverage was only measured after the coverage file was added. Sonar shows 28.2%, our Jest report shows 94.3% statements (section 9.1). The two numbers may use different scopes and we did not investigate the difference. We rely on the Jest figure for the backend, because it comes from a saved log.
+- The quality gate failed. The screenshots do not show which condition failed, so we do not state the reason.
+- The number of issues is higher in the later analysis (security 19 to 20, reliability 55 to 68). We did not compare the two analyses, so the reason is unknown.
+- We did not open the individual issues. We do not know how many are real defects, so none of them was added to the defect list (section 8).
+- Sonar duplication (0.4%) and jscpd (about 4.9%) differ. We did not check why, but the tools count in different ways.
 
 | Measured without Sonar | Value | Source |
 |---|---|---|
@@ -829,11 +877,15 @@ Docker and the scanner were not found on the machine (`phase1-sonar-availability
 | 2 | Write the missing rules in the README and fix the code: nothing assessed, who may read an inspection, id comparison | BUG-002, BUG-003, BUG-004 | TC-INS-05, TC-INS-09, TC-USR-03 pass |
 | 3 | Fix the Vite conflict, review the `npm audit` findings, keep CI on every push | BUG-001 | `npm ci` works without `--legacy-peer-deps` |
 
-[WRITE IN YOUR OWN WORDS: what do these metrics tell you about the quality of the system, which number surprised you, and which improvement would you do first and why?]
+**What the metrics tell us.** The backend is covered well by tests (94.3% statements, 85% branches) and the 335 main checks pass, but 6 defects and 8 observations were still found, so the system is not defect-free. The defect density is 2.23 per KLOC for all code and 7.17 per KLOC for the backend, which was tested much more than the frontend. SonarCloud reports many open issues and a failed quality gate, so the code has maintainability and reliability work to do, even though we did not review those issues one by one.
+
+**Which number is most important.** The 100% branch coverage of `calculateResult()` together with BUG-002 is the number that taught us most: a function can be fully covered and still give an unsafe answer when nothing was checked. A second surprise is the gap between Sonar coverage (28.2%) and Jest coverage (94.3%).
+
+**Which improvement first.** Improvement 2 (write the missing rules and fix BUG-002), because an unchecked lab that is shown as safe is the only defect that can mislead a person about safety. Improvements 1 and 3 are cheaper and can follow.
 
 ## 10. Agile and DevOps reflection (3.10)
 
-This is a shortened draft of `qa/10-reflection/reflection.md`.
+This is a short version of `qa/10-reflection/reflection.md`.
 
 **Shift-left.** The application was finished, so testing during development was not possible. Reading the README and the code first still found unclear rules before any test ran: who may read an inspection, and the score when every item is N/A. Both became bugs. BUG-001 was found during installation.
 
@@ -843,7 +895,11 @@ This is a shortened draft of `qa/10-reflection/reflection.md`.
 
 **Defect feedback loop.** Each failure went from test to log, observation and bug report. Every report says if it breaks a documented requirement or only a reasonable expectation. Two of the five first suspects did not reproduce, and this is reported. The loop is not complete, because the application could not be changed.
 
-[WRITE IN YOUR OWN WORDS: what did your group really do in an Agile or DevOps way, what was hard, and what would you do differently? Change or delete every sentence above that does not match your own experience.]
+**What we did in a DevOps way.** We pushed our work to GitHub in several commits on one day, and each push started the QA workflow. Of the 5 runs in Figure 10, 4 passed and 1 failed (run #4). The failed run was followed by a commit that fixed the SonarCloud settings, and the next run passed. This is a small example of the feedback loop: push, see the result, fix, push again.
+
+**What was hard.** The application could not be changed, so a defect stayed open after it was found. Several expected results had to be our own judgement because the README is silent (section 11.2). The one-day time limit meant that the frontend got only 3 UI cases.
+
+**What we would do differently.** Start CI and SonarCloud earlier, so that the first failed run (#4) would have appeared sooner. Save the log of every failed run. Agree the performance targets with the group before the load test. Add frontend unit tests.
 
 ## 11. Limitations
 
@@ -851,9 +907,9 @@ This is a shortened draft of `qa/10-reflection/reflection.md`.
 
 | Item | State |
 |---|---|
-| GitHub Actions run | NOT EXECUTED in our evidence [VERIFY] |
-| SonarCloud: bugs, vulnerabilities, code smells, duplication, technical debt, coverage | NOT EXECUTED |
-| GitHub Issues | NOT EXECUTED, texts are ready |
+| GitHub Actions logs and step counts | Only the run list was captured (Figure 10). Log of failed run #4 not saved |
+| SonarCloud: technical debt, reason for the failed gate, review of single issues, reason for 28.2% coverage | Not shown by the screenshots, not investigated |
+| GitHub Issues for the 8 observations | Not created, only the 6 bug reports |
 | Login timing for known and unknown email | NOT EXECUTED, steps in `security-checks.md` section 6 |
 | TDD green, check and refactor steps for TC-INS-05 | NOT EXECUTED, proposed only |
 | Life cycle states Assigned to Closed of BUG-004 | Simulated |
@@ -861,7 +917,7 @@ This is a shortened draft of `qa/10-reflection/reflection.md`.
 | BUG-003 in the browser | Not tested, API only |
 | Database state after the failing status checks of BUG-004 and BUG-005 | Not shown by the Jest logs, tests stop at the status |
 | Manual typing of the 45 test cases | Not done, run as automated tests |
-| PowerShell examples in `test-cases.md` and `test-environment.md`, and the commands in section 6 of `boundary-value-analysis.md` | No saved run [VERIFY] |
+| PowerShell examples in `test-cases.md` and `test-environment.md`, and the commands in section 6 of `boundary-value-analysis.md` | No saved run |
 | Expected scores of the seed data in `test-environment.md` section 5 | Worked out by hand there |
 | Frontend unit tests | None exist |
 | Printed report (R14), security headers and CORS (R15), inactive labs (G10), resolution text rule (G8) | Not covered |
@@ -869,7 +925,7 @@ This is a shortened draft of `qa/10-reflection/reflection.md`.
 | Other OWASP items, HTTPS, proxy, other browsers | Not tested |
 | CPU load during load tests, long runs, real capacity | Not measured |
 | MongoDB download failure (ECONNRESET) | Seen in setup, no log saved |
-| Group review of plan, cases and results | [VERIFY] |
+| Review of plan, cases and results by every member | To be confirmed by the group |
 
 ### 11.2 Tests based on a reasonable expectation
 
@@ -899,7 +955,7 @@ The other 7 are marked as documented requirements: BVA-15, 17, 18, 19, TC-INS-09
 
 **d) Security checks with a reasonable expectation as basis:** A01-05e, A01-09a to d, A01-11a, A07-01a to c, A07-02a to e, A07-03a, A07-03b, A07-05a to f, A07-06a, A07-06b, A07-07c, A07-07d, A07-08, A07-09 (`security-checks.md`).
 
-**e) Load test targets** were proposed by the AI assistant, to be confirmed by the group [VERIFY].
+**e) Load test targets** were proposed by the AI assistant, to be confirmed by the group.
 
 ### 11.3 README contradictions and gaps
 
@@ -923,7 +979,9 @@ The original project had no tests. After this work, 45 test cases were executed 
 
 Role checks on the API worked in 153 of 155 matrix requests (`phase2-defect-observations.md`). The main problems are in special cases: an inspection where nothing was checked is shown as safe, some inputs of the wrong type give a server error, and impossible dates are accepted. Six defects are reported. Four of the six rest on our reasonable expectation, so the owner of the system must confirm them.
 
-The results have limits. GitHub Actions and SonarCloud have no results in our evidence, the load test ran on one laptop, and the frontend was tested with only three UI cases.
+GitHub Actions ran 5 times (4 passed, 1 failed) and 6 issues were created on GitHub. SonarCloud reports a failed quality gate and 28.2% coverage, but we did not investigate its findings.
+
+The results have limits. The load test ran on one laptop, the frontend was tested with only three UI cases, and the Sonar issues were not reviewed.
 
 **Lessons from the evidence**
 
@@ -933,7 +991,9 @@ The results have limits. GitHub Actions and SonarCloud have no results in our ev
 4. Not every suspicion is a bug. Two of the five first suspects did not reproduce.
 5. Known failures should stay visible, without blocking the pipeline.
 
-[PLACEHOLDER: lessons of the group, in your own words]
+6. A pipeline gives fast feedback. One failed run (#4) was followed by a fix and a passing run.
+7. Tool numbers must be compared with care. Sonar coverage (28.2%) and Jest coverage (94.3%) differ.
+8. Evidence should be saved when it appears. The log of the failed run #4 was not saved, so its reason is unknown.
 
 ## 13. Appendix: evidence index
 
@@ -960,7 +1020,10 @@ The results have limits. GitHub Actions and SonarCloud have no results in our ev
 | Duplication 4.92% and 4.86% | `phase1-jscpd.log` |
 | npm audit findings | `phase0-npm-audit-backend.log`, `phase1-npm-audit-frontend.log` |
 | Docker and scanner not found | `phase1-sonar-availability.log` |
-| 29 routes; V(G), E and N; 307 and 28 test split; group counts of the 45 cases | Counted in documents, no log: `test-plan.md`, `cyclomatic-complexity.md`, `qa/06-automation-cicd/README.md`, `test-cases.md` [VERIFY] |
+| 5 GitHub Actions runs, 4 passed, 1 failed | Screenshot `evidence/screenshots/07-github-actions-run.png` |
+| 6 open GitHub issues | Screenshot `evidence/screenshots/08-github-issues-list.png` |
+| SonarCloud values (19/20, 55/68, 41, 0.4%, 23, 28.2%) | Screenshots `09-sonarcloud-baseline-no-coverage.png` and `10-sonarcloud-after-with-coverage.png` |
+| 29 routes; V(G), E and N; 307 and 28 test split; group counts of the 45 cases | Counted in documents, no log: `test-plan.md`, `cyclomatic-complexity.md`, `qa/06-automation-cicd/README.md`, `test-cases.md` |
 | 50/45/5 and 41/36/5 security request counts | `security-checks.md`, from the two security logs |
 
 ### 13.2 All evidence files
@@ -984,10 +1047,20 @@ The results have limits. GitHub Actions and SonarCloud have no results in our ev
 
 Local paths and tokens in the logs were masked, and one wording about the load-test targets was corrected (noted in `phase3-jmeter-environment.log`). No result was changed.
 
-### 13.3 Screenshots still missing
+### 13.3 Screenshots
 
-| Screenshot | State |
-|---|---|
-| GitHub Actions run | [PLACEHOLDER] |
-| GitHub Issues list | [PLACEHOLDER] |
-| SonarCloud dashboard | [PLACEHOLDER] |
+All screenshots are in `qa/evidence/screenshots/` (the Selenium ones in `qa/evidence/`).
+
+| File | Content | Figure |
+|---|---|---|
+| `01-jest-coverage-run-start.png` | Jest run with coverage, start | 4 |
+| `02-jest-coverage-summary-335-passed.png` | Jest summary, 335 passed | 5 |
+| `03-cucumber-bdd-2-scenarios-passed.png` | Cucumber.js, 2 scenarios passed | 6 |
+| `04-selenium-ui-3-tests-passed.png` | Selenium, 3 tests passed | 7 |
+| `05-known-defects-run-start.png` | Known-defects run, start | 8 |
+| `06-known-defects-summary-29-failed.png` | Known-defects summary, 29 failed | 9 |
+| `07-github-actions-run.png` | GitHub Actions run list | 10 |
+| `08-github-issues-list.png` | GitHub Issues list | 15 |
+| `09-sonarcloud-baseline-no-coverage.png` | SonarCloud, first analysis | 16 |
+| `10-sonarcloud-after-with-coverage.png` | SonarCloud, with coverage | 17 |
+| `11-login-wrong-password-manual.png` | Login page, wrong password, checked by hand | 14 |
